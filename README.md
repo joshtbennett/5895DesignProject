@@ -21,5 +21,5 @@ Score is calculated based on
 * how many mirrors used ( -5 points per mirror)
 * how much time the level took to be completed(-1 point per couple seconds)
 * how many attempts(or how many trys the level took, 1-5 tries = no penalty, 6-10 = -5 points, 11-15 = -10 points, etc)
-  *(once mirrors are set up the player presses play and the light is turned on, if a receiver doesnt receive its correct color the player must reattempt)
+  * (once mirrors are set up the player presses play and the light is turned on, if a receiver doesnt receive its correct color the player must reattempt)
 * potentially add some kind of coin that light must travel through to collect (+ 10 points per coin)
