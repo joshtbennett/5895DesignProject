@@ -69,6 +69,24 @@ public class Level
     }
 
     /**
+     * Deletes a mirror from the board
+     *
+     * @param xlocation = the x position of the mirror to be deleted
+     * @param ylocation = the y position of the mirror to be deleted
+     */
+    public void deleteMirror(int xlocation, int ylocation)
+    {
+        if(mirrorgrid[xlocation][ylocation] != null)
+        {
+            mirrorgrid[xlocation][ylocation] = null;
+            numberofmirrors--;
+        }
+        else
+            ERROR MESSAGE: THERE ISNT A MIRROR IN THIS LOCATION
+
+    }
+
+    /**
      *Place an emitter on the board
      *
      * @param xlocation = x position where the emitter will be placed
