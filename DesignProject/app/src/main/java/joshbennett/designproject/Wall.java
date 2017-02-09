@@ -4,13 +4,13 @@ package joshbennett.designproject;
  * Created by Josh Bennett on 2/1/2017.
  */
 
-public class Wall
+public class Wall implements LevelEntity
 {
     private int xlocation, ylocation;
 
-    Wall(int x_location, int y_location)
+    Wall(int xlocation, int ylocation)
     {
-        this.xlocation = x_location;
-        this.ylocation = y_location;
+        this.xlocation = xlocation;
+        this.ylocation = ylocation;
     }
 }
