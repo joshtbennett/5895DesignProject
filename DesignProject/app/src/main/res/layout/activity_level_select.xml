@@ -11,16 +11,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="joshbennett.designproject.LevelSelectActivity">
 
-    <GridView
+    <GridLayout
+        android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:columnWidth="100dp"
-        android:numColumns="auto_fit"
-        android:horizontalSpacing="5dp"
-        android:verticalSpacing="5dp"
-        android:gravity="center"
-        android:id="@+id/grid"
-        android:stretchMode="spacingWidthUniform" />
+        android:layout_margin="0dp">
+        </GridLayout>
 </RelativeLayout>
