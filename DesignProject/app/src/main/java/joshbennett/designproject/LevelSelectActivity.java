@@ -1,6 +1,9 @@
 package joshbennett.designproject;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +41,13 @@ public class LevelSelectActivity extends AppCompatActivity {
             final int j = i;
             ImageButton level = new ImageButton(this);
             level.setImageResource(R.drawable.penis);
-            level.setsca
+            level.setScaleType(ImageView.ScaleType.FIT_XY);
+            /*BitmapFactory.Options dimensions = new BitmapFactory.Options();
+            dimensions.inJustDecodeBounds = true;
+            Bitmap penis = BitmapFactory.decodeResource(getResources(), R.drawable.penis, dimensions);
+
+            level.setScaleX(pxToDp(100)/dimensions.outWidth);
+            level.setScaleY(pxToDp(100)/dimensions.outHeight); */
             level.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -53,5 +62,13 @@ public class LevelSelectActivity extends AppCompatActivity {
         for(int i = 0; i < 12; i++) {
             grid.addView(buttons.get(i));
         }
+    }
+
+    public static int dpToPx(int dp){
+        return (int) (dp*Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px){
+        return (int) (px/Resources.getSystem().getDisplayMetrics().density);
     }
 }
