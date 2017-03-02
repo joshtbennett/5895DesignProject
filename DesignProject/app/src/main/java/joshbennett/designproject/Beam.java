@@ -19,5 +19,5 @@ public class Beam implements ColorableEntity{
         this.ylocation = ylocation;
     }
 
-    LevelEntity checkNextSquare(){}
+    //LevelEntity checkNextSquare(){ }
 }
