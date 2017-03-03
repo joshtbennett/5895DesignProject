@@ -9,9 +9,9 @@ public class Level
     private LevelEntity[] emitters, collectors, mirrors, walls;
     private int boardHeight, boardWidth;
 
-    boolean checkWin(){}
+    boolean checkWin(){return false;}
 
-    int calculateScore(){}
+    int calculateScore(){return 1;}
 
     void start(){}
 }

@@ -6,9 +6,9 @@ package joshbennett.designproject;
 
 public class EntityHandler {
 
-    boolean checkCollision(){}
+    boolean checkCollision(){ return false;}
 
-    boolean placeEntity(LevelEntity levelentity){}
+    boolean placeEntity(LevelEntity levelentity){return false;}
 
-    LevelEntity checkPosition(){}
+    //LevelEntity checkPosition(){}
 }
