@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -24,6 +26,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static java.security.AccessController.getContext;
+
 public class LevelSelectActivity extends AppCompatActivity {
 
     @Override
@@ -37,17 +41,17 @@ public class LevelSelectActivity extends AppCompatActivity {
         //LayoutParams params = new LinearLayout().LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         ArrayList<ImageButton> buttons = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 30; i++) {
             final int j = i;
             ImageButton level = new ImageButton(this);
-            level.setImageResource(R.drawable.penis);
-            level.setScaleType(ImageView.ScaleType.FIT_XY);
-            /*BitmapFactory.Options dimensions = new BitmapFactory.Options();
-            dimensions.inJustDecodeBounds = true;
-            Bitmap penis = BitmapFactory.decodeResource(getResources(), R.drawable.penis, dimensions);
+            BitmapFactory.Options dimensions = new BitmapFactory.Options();
+            Bitmap testimage = BitmapFactory.decodeResource(getResources(), R.drawable.testimage, dimensions);
 
-            level.setScaleX(pxToDp(100)/dimensions.outWidth);
-            level.setScaleY(pxToDp(100)/dimensions.outHeight); */
+            int newDimensions = dpToPx(100);
+
+            testimage = android.graphics.Bitmap.createScaledBitmap(testimage, newDimensions, newDimensions, true);
+
+            level.setImageBitmap(testimage);
             level.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -59,16 +63,21 @@ public class LevelSelectActivity extends AppCompatActivity {
 
         GridLayout grid = (GridLayout) findViewById(R.id.grid);
 
-        for(int i = 0; i < 12; i++) {
+        for(int i = 0; i < 30; i++) {
             grid.addView(buttons.get(i));
         }
     }
 
-    public static int dpToPx(int dp){
-        return (int) (dp*Resources.getSystem().getDisplayMetrics().density);
+    public int dpToPx(int dp){
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        return (int) ((dp * metrics.density) + 0.5);
     }
 
-    public static int pxToDp(int px){
-        return (int) (px/Resources.getSystem().getDisplayMetrics().density);
+    public int pxToDp(int px){
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        return (int) ((px/metrics.density) + 0.5);
     }
 }
+
+
+
