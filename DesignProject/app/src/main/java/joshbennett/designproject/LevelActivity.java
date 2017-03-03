@@ -1,5 +1,6 @@
 package joshbennett.designproject;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -10,6 +11,8 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class LevelActivity extends AppCompatActivity {
@@ -34,9 +37,9 @@ public class LevelActivity extends AppCompatActivity {
                 final ImageView cell = new ImageView(this);
 
                 //get images to display on the grid
-                Bitmap bordercell = getBitmapImage(R.drawable.bordercell);
-                Bitmap cornercell = getBitmapImage(R.drawable.cornercell);
-                Bitmap emptycell = getBitmapImage(R.drawable.emptycell);
+                Bitmap bordercell = getBitmapFromAssets("bordercell.png", 40);
+                Bitmap cornercell = getBitmapFromAssets("cornercell.png", 40);
+                Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
 
 
                 //top row
@@ -108,13 +111,19 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
-    public Bitmap getBitmapImage(int id){
-        BitmapFactory.Options dimensions = new BitmapFactory.Options();
-        Bitmap image = BitmapFactory.decodeResource(getResources(), id, dimensions);
-        manipulator = new ImageManipulator(image, getApplicationContext());
-        int newDimensions = manipulator.dpToPx(40);
-        image = android.graphics.Bitmap.createScaledBitmap(image, newDimensions, newDimensions, true);
-        return image;
-    }
+    public Bitmap getBitmapFromAssets(String filename, int dptopx){
+        AssetManager assetManager = getAssets();
 
+        try {
+            InputStream istr = assetManager.open(filename);
+            Bitmap image = BitmapFactory.decodeStream(istr);
+            manipulator = new ImageManipulator(image, getApplicationContext());
+            int newdimensions = manipulator.dpToPx(dptopx);
+            image = manipulator.scale(newdimensions);
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

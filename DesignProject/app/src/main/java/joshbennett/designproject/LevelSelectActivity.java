@@ -1,6 +1,7 @@
 package joshbennett.designproject;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,9 +11,13 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class LevelSelectActivity extends AppCompatActivity {
+
+    private ImageManipulator manipulator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +36,7 @@ public class LevelSelectActivity extends AppCompatActivity {
             final ImageButton level = new ImageButton(this);
 
             //scale the image for the button
-            BitmapFactory.Options dimensions = new BitmapFactory.Options();
-            Bitmap testimage = BitmapFactory.decodeResource(getResources(), R.drawable.testimage, dimensions);
-            ImageManipulator manipulator = new ImageManipulator(testimage, getApplicationContext());
-            int newDimensions = manipulator.dpToPx(100);
-            testimage = manipulator.scale(newDimensions);
+            Bitmap testimage = getBitmapFromAssets("testimage.png", 100);
 
             //put the scaled image on the button
             level.setImageBitmap(testimage);
@@ -61,6 +62,22 @@ public class LevelSelectActivity extends AppCompatActivity {
             //add all the buttons to the grid
             grid.addView(buttons.get(i));
         }
+    }
+
+    public Bitmap getBitmapFromAssets(String filename, int dptopx){
+        AssetManager assetManager = getAssets();
+
+        try {
+            InputStream istr = assetManager.open(filename);
+            Bitmap image = BitmapFactory.decodeStream(istr);
+            manipulator = new ImageManipulator(image, getApplicationContext());
+            int newdimensions = manipulator.dpToPx(dptopx);
+            image = manipulator.scale(newdimensions);
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

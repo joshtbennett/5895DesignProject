@@ -27,7 +27,10 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     void TutorialButton(View v) {
-        Intent i = new Intent(this, Level.class);
-        startActivity(i);
+        Intent intent = new Intent(this, LevelActivity.class);
+        intent.putExtra("Level Number", 0);
+        startActivity(intent);
     }
+
+
 }
