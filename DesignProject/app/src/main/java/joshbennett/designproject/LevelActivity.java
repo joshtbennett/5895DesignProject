@@ -7,9 +7,11 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +21,8 @@ public class LevelActivity extends AppCompatActivity {
 
 
     private ImageManipulator manipulator;
+    private ToggleButton deleteButton;
+    private ToggleButton placeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +31,14 @@ public class LevelActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_level);
 
+        deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
+        placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
+
         //LayoutParams params = new LinearLayout().LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         ArrayList<ImageView> cells = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                final int k = (9*i)+j;
 
                 final ImageView cell = new ImageView(this);
 
@@ -125,5 +131,15 @@ public class LevelActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void DeleteButton(View v){
+        if(placeButton.isChecked() == true)
+            placeButton.setChecked(false);
+    }
+
+    public void PlaceButton(View v){
+        if(deleteButton.isChecked() == true)
+            deleteButton.setChecked(false);
     }
 }
