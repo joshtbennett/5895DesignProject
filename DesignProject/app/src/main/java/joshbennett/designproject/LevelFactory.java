@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class LevelFactory {
 
     private ArrayList<LevelEntity> entities;
-    private LevelEntity temp;
 
     //get entites array from database
 
@@ -34,6 +33,7 @@ public class LevelFactory {
         }
     }
 
+    //instantiates a Level and passes in the entity array
     public Level generateLevel(){
         Level level = new Level(entities);
         return level;

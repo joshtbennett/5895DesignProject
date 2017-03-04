@@ -6,19 +6,14 @@ package joshbennett.designproject;
 
 public class Mirror implements LevelEntity, ColorableEntity
 {
-    private boolean red, green, blue;
-    private int angle, xlocation, ylocation;
+    private int angle;
     private char identifier;
+    private String color;
 
-    Mirror(int xlocation, int ylocation, boolean red, boolean blue, boolean green)
+    Mirror(String color)
     {
         identifier = 'm';
-
-        this.xlocation = xlocation;
-        this.ylocation = ylocation;
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.color = color;
         angle = 45;
     }
 
@@ -32,7 +27,5 @@ public class Mirror implements LevelEntity, ColorableEntity
     }
 
     @Override
-    public String getColor() {
-        return null;
-    }
+    public String getColor() { return color; }
 }

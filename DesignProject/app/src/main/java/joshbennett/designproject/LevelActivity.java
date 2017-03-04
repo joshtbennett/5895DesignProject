@@ -206,6 +206,8 @@ public class LevelActivity extends AppCompatActivity {
                         cell.setImageBitmap(offboardemitter);
                     }
                 }
+
+                //placeable area
                 else {
 
                     if(entities.get((10 *i) + j) == null){
@@ -233,6 +235,7 @@ public class LevelActivity extends AppCompatActivity {
             Bitmap onboardcollectoroff;
             Bitmap onboardemitteroff;
 
+            //top row in placeable area
             if(i > 0 && i <  9) {
                 if(entities.get(i) != null) {
                     if (entities.get(i).getIdentifier() == 'c') {
@@ -252,6 +255,8 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            //bottom row in placeable area
             else if(i>90 && i < 99){
                 if(entities.get(i) != null) {
                     if (entities.get(i).getIdentifier() == 'c') {
@@ -271,6 +276,8 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            //leftmost colum in placeable area
             else if(i > 0 && i < 90 && i % 10 == 0){
                 if(entities.get(i) != null) {
                     if (entities.get(i).getIdentifier() == 'c') {
@@ -288,6 +295,8 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            //rightmost column in placeable area
             else if(i > 9 && i < 89 && i % 10 == 9){
                 if(entities.get(i) != null) {
                     if (entities.get(i).getIdentifier() == 'c') {
