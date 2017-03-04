@@ -22,14 +22,18 @@ public class LevelFactory {
         Collector collector  = new Collector("Yellow");
         Wall wall = new Wall();
         for(int i = 0; i < 100; i++) {
-            if(i == 4)
+            if(i == 4) {
                 entities.add(collector);
-            else if(i ==  97)
+            }
+            else if(i ==  97){
                 entities.add(emitter);
-            else if(i == 32)
-                entities.add(wall);
-            else
+            }
+            else if(i == 32) {
                 entities.add(null);
+            }
+            else{
+                entities.add(null);
+            }
         }
     }
 
