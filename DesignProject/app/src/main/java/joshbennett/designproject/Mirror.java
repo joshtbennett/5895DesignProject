@@ -19,7 +19,12 @@ public class Mirror implements LevelEntity, ColorableEntity
 
     void setPosition(){}
 
-    void setAngle(int angle){}
+    void flip(){
+        if(angle == 45)
+            angle = 135;
+        if(angle == 135)
+            angle =  45;
+    }
 
     @Override
     public char getIdentifier() {

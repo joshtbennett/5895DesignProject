@@ -23,4 +23,12 @@ public class Level
     public ArrayList<LevelEntity> getEntities(){
         return entities;
     }
+
+    public void addEntity(LevelEntity entity, int position){
+        entities.set(position, entity);
+    }
+
+    public void removeEntity(int position){
+        entities.set(position, null);
+    }
 }
