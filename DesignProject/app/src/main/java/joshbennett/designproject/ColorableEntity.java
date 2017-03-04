@@ -5,4 +5,6 @@ package joshbennett.designproject;
  */
 
 public interface ColorableEntity {
+    public char getIdentifier();
+    public String getColor();
 }

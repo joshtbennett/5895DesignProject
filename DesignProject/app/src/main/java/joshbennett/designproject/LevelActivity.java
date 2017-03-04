@@ -25,14 +25,17 @@ public class LevelActivity extends AppCompatActivity {
 
     private Level level;
     private ImageManipulator manipulator;
-    private ToggleButton deleteButton;
-    private ToggleButton placeButton;
-    private ToggleButton flipButton;
+    private EntityHandler entityHandler;
     private LevelFactory levelFactory = new LevelFactory();
-    private ArrayList<LevelEntity> entities;
+    private ArrayList<ColorableEntity> entities;
+    private ArrayList<Wall> walls;
+    private ArrayList<Mirror> mirrors;
     private CheckBox redCheckBox;
     private CheckBox greenCheckBox;
     private CheckBox blueCheckBox;
+    private ToggleButton deleteButton;
+    private ToggleButton placeButton;
+    private ToggleButton flipButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class LevelActivity extends AppCompatActivity {
 
         levelFactory.setEntities();level = levelFactory.generateLevel();
         entities = level.getEntities();
+        walls = level.getWalls();
 
         drawLevel();
     }
@@ -92,6 +96,7 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     public void drawLevel(){
+        entityHandler = new EntityHandler();
         ArrayList<ImageView> cells = new ArrayList<>();
         String color;
 
@@ -232,15 +237,14 @@ public class LevelActivity extends AppCompatActivity {
 
                 //placeable area
                 else {
-
-                    if(entities.get((10 *i) + j) == null){
-                        emptycell = getBitmapFromAssets("emptycell.png", 40);
-                        cell.setImageBitmap(emptycell);
-
-                    }
-                    else if(entities.get((10 * i) + j).getIdentifier() == 'w'){
+                    if(walls.get((10 * i) + j) != null) {
                         wallcell = getBitmapFromAssets("wallcell.png", 40);
                         cell.setImageBitmap(wallcell);
+                    }
+
+                    else if(entities.get((10 *i) + j) == null){
+                        emptycell = getBitmapFromAssets("emptycell.png", 40);
+                        cell.setImageBitmap(emptycell);
                     }
                 }
 
@@ -273,7 +277,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Collector collector = new Collector(color);
-                        level.addEntity(collector, i+10);
+                        entityHandler.addEntity(level, collector, i+10);
                     }
                     else if (entities.get(i).getIdentifier() == 'e') {
 
@@ -287,7 +291,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Emitter emitter = new Emitter(color);
-                        level.addEntity(emitter, i+10);
+                        entityHandler.addEntity(level, emitter, i+10);
                     }
                 }
             }
@@ -307,7 +311,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Collector collector = new Collector(color);
-                        level.addEntity(collector, i-10);
+                        entityHandler.addEntity(level, collector, i-10);
                     }
                     else if (entities.get(i).getIdentifier() == 'e') {
 
@@ -321,7 +325,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Emitter emitter = new Emitter(color);
-                        level.addEntity(emitter, i-10);
+                        entityHandler.addEntity(level, emitter, i-10);
                     }
                 }
             }
@@ -340,7 +344,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Collector collector = new Collector(color);
-                        level.addEntity(collector, i+1);
+                        entityHandler.addEntity(level, collector, i+1);
                     }
                     else if (entities.get(i).getIdentifier() == 'e') {
                         color = entities.get(i).getColor();
@@ -351,7 +355,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Emitter emitter = new Emitter(color);
-                        level.addEntity(emitter, i+1);
+                        entityHandler.addEntity(level, emitter, i+1);
                     }
                 }
             }
@@ -371,7 +375,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Collector collector = new Collector(color);
-                        level.addEntity(collector, i-1);
+                        entityHandler.addEntity(level, collector, i-1);
                     }
                     else if (entities.get(i).getIdentifier() == 'e') {
 
@@ -385,7 +389,7 @@ public class LevelActivity extends AppCompatActivity {
 
                         //update entity array
                         Emitter emitter = new Emitter(color);
-                        level.addEntity(emitter, i-1);
+                        entityHandler.addEntity(level, emitter, i-1);
                     }
                 }
             }
@@ -404,70 +408,121 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
-    private void setOnClick(final ImageView clickableimage, final int location){
-        clickableimage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String color;
+    private void setOnClick(final ImageView clickableimage, final int position) {
+            clickableimage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String color;
+                    color = "purple";
+                    if(level.getWalls().get(position) != null){
+                        color = "orange";
+                    }
 
+                    else if(level.getEntities().get(position) != null){
 
-                if(entities.get(location) == null) {
-                    if (redCheckBox.isChecked())
-                        if (greenCheckBox.isChecked())
-                            if (blueCheckBox.isChecked())
-                                color = "White";
+                        color = "orange";
+                    }
+
+                    //if a mirror is tapped
+                    else if(level.getMirrors().get(position) != null) {
+                        //delete
+                        if (deleteButton.isChecked()) {
+                            Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
+                            clickableimage.setImageBitmap(emptycell);
+                            entityHandler.removeMirror(level, position);
+                        }
+                        //flip
+                        else if (flipButton.isChecked()) {
+
+                            if (clickableimage.getScaleX() == -1)
+                                clickableimage.setScaleX(1);
                             else
-                                color = "Yellow";
-                        else if (blueCheckBox.isChecked())
-                            color = "Magenta";
-                        else
-                            color = "Red";
+                                clickableimage.setScaleX(-1);
 
-                    else if (greenCheckBox.isChecked())
-                        if (blueCheckBox.isChecked())
-                            color = "Cyan";
-                        else
-                            color = "Green";
-                    else
-                        color = "Blue";
+                            if (level.getMirrors().get(position).getAngle() == 45) {
+                                Mirror mirror = level.getMirrors().get(position);
+                                entityHandler.flipMirror(level, mirror, position);
+                            }
+                            else if(level.getMirrors().get(position).getAngle() == 135) {
+                                Mirror mirror = level.getMirrors().get(position);
+                                entityHandler.flipMirror(level, mirror, position);
+                            }
+                        }
+                        // add
+                        else {
+                            if (redCheckBox.isChecked())
+                                if (greenCheckBox.isChecked())
+                                    if (blueCheckBox.isChecked())
+                                        color = "White";
+                                    else
+                                        color = "Yellow";
+                                else if (blueCheckBox.isChecked())
+                                    color = "Magenta";
+                                else
+                                    color = "Red";
 
+                            else if (greenCheckBox.isChecked())
+                                if (blueCheckBox.isChecked())
+                                    color = "Cyan";
+                                else
+                                    color = "Green";
+                            else
+                                color = "Blue";
 
-                    if(placeButton.isChecked()) {
-                        //update image
-                        Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
-                        Bitmap layontop = getBitmapFromAssets(color + "/45mirror.png", 40);
-                        manipulator.newimage(current, getApplicationContext());
-                        Bitmap overlayed = manipulator.overlayImages(layontop);
-                        clickableimage.setImageBitmap(overlayed);
+                            //update image
+                            Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
+                            Bitmap layontop = getBitmapFromAssets(color + "/45mirror.png", 40);
+                            manipulator.newimage(current, getApplicationContext());
+                            Bitmap overlayed = manipulator.overlayImages(layontop);
+                            clickableimage.setImageBitmap(overlayed);
 
-                        //update entity array
-                        Mirror mirror = new Mirror(color);
-                        level.addEntity(mirror, location);
+                            //update entity array
+                            Mirror mirror = new Mirror(color);
+                            entityHandler.addMirror(level, mirror, position);
+                        }
+
+                    }
+
+                    else if(level.getEntities().get(position) == null && level.getWalls().get(position) == null && level.getEntities().get(position) == null){
+                        if (placeButton.isChecked()) {
+                            if (redCheckBox.isChecked())
+                                if (greenCheckBox.isChecked())
+                                    if (blueCheckBox.isChecked())
+                                        color = "White";
+                                    else
+                                        color = "Yellow";
+                                else if (blueCheckBox.isChecked())
+                                    color = "Magenta";
+                                else
+                                    color = "Red";
+
+                            else if (greenCheckBox.isChecked())
+                                if (blueCheckBox.isChecked())
+                                    color = "Cyan";
+                                else
+                                    color = "Green";
+                            else
+                                color = "Blue";
+
+                            //update image
+                            Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
+                            Bitmap layontop = getBitmapFromAssets(color + "/45mirror.png", 40);
+                            manipulator.newimage(current, getApplicationContext());
+                            Bitmap overlayed = manipulator.overlayImages(layontop);
+                            clickableimage.setImageBitmap(overlayed);
+
+                            //update entity array
+                            Mirror mirror = new Mirror(color);
+                            entityHandler.addMirror(level, mirror, position);
+                        }
+                        else if(deleteButton.isChecked()){
+
+                        }
+                        else if(flipButton.isChecked()){
+
+                        }
                     }
                 }
-                else if(entities.get(location).getIdentifier() == 'm'){
-                    //update image
-                    if(deleteButton.isChecked()) {
-                        Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
-                        clickableimage.setImageBitmap(emptycell);
-
-                        //update entity array
-                        level.removeEntity(location);
-                    }
-                    else if(flipButton.isChecked()){
-                        if(clickableimage.getScaleX() == -1)
-                            clickableimage.setScaleX(1);
-                        else
-                            clickableimage.setScaleX(-1);
-
-                        //figure out how to actually flip the mirror
-
-
-                    }
-
-                }
-                else if(entities.get(location).getIdentifier() == 'e' || entities.get(location).getIdentifier() == 'c' || entities.get(location).getIdentifier() == 'w'){}
-            }
-        });
+            });
     }
 }

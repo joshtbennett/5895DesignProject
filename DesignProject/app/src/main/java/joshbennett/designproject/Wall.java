@@ -18,9 +18,4 @@ public class Wall implements LevelEntity
     public char getIdentifier() {
         return identifier;
     }
-
-    @Override
-    public String getColor() {
-        return "none";
-    }
 }

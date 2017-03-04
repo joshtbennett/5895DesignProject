@@ -8,10 +8,17 @@ import java.util.ArrayList;
 
 public class Level
 {
-    ArrayList<LevelEntity> entities;
+    ArrayList<ColorableEntity> entities;
+    private ArrayList<Wall> walls;
+    private ArrayList<Mirror> mirrors;
 
-    public Level(ArrayList<LevelEntity> entities){
+    public Level(ArrayList<ColorableEntity> entities, ArrayList<Wall> walls){
         this.entities = entities;
+        this.walls = walls;
+        mirrors = new ArrayList<>(100);
+        for(int i = 0; i < 100; i++){
+            mirrors.add(null);
+        }
     }
 
     boolean checkWin(){return false;}
@@ -20,15 +27,19 @@ public class Level
 
     void start(){}
 
-    public ArrayList<LevelEntity> getEntities(){
+    public ArrayList<ColorableEntity> getEntities(){
         return entities;
     }
 
-    public void addEntity(LevelEntity entity, int position){
-        entities.set(position, entity);
+    public ArrayList<Wall> getWalls(){
+        return walls;
     }
 
-    public void removeEntity(int position){
-        entities.set(position, null);
+    public ArrayList<Mirror> getMirrors (){
+        return mirrors;
     }
+
+    public void setEntities(ArrayList<ColorableEntity> entities){ this.entities = entities; }
+    public void setWalls(ArrayList<Wall> wallss){ this.walls = walls; }
+    public void setMirrors(ArrayList<Mirror> mirrors){ this.mirrors = mirrors; }
 }
