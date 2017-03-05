@@ -100,34 +100,55 @@ public class LevelActivity extends AppCompatActivity {
     public void start(View v){
         ImageView cell;
         Bitmap image;
-        int position = -1;
+        Beam beam;
 
         for(int i = 0; i < 100; i++) {
             if(i > 10 && i < 89 && i%10!=9 && i%10!=0) {
+                //display beam at the emitters
                 if (entities.get(i) != null && entities.get(i).getIdentifier() == 'e') {
                     color = entities.get(i).getColor();
                     cell = cells.get(i);
                     image = getBitmapFromAssets(color + "/onboardemitteron.png", 40);
                     manipulator.newimage(image, getApplicationContext());
+
+                    //enitter in the top row
                     if (i <19) {
                         if(i == 11 && entities.get(i-10) != null){
+                            beam = new Beam('d', color);
                             image = manipulator.rotateImage(90);
                         }
                         else if(i == 18 && entities.get(i-10) != null){
+                            beam = new Beam('d', color);
                             image = manipulator.rotateImage(90);
                         }
-                    } else if (i % 10 == 8) {
+                        else{
+                            beam = new Beam('d', color);
+                        }
+                    }
+
+                    //emitter in the right column
+                    else if (i % 10 == 8) {
+                        beam = new Beam('l', color);
                         image = manipulator.rotateImage(180);
-                    } else if (i > 80) {
+                    }
+
+                    //emitter in the bottom row
+                    else if (i > 80) {
                         if(i == 11 && entities.get(i+10) != null){
+                            beam = new Beam('u', color);
                             image = manipulator.rotateImage(270);
                         }
                         else if(i == 18 && entities.get(i+10) != null){
+                            beam = new Beam('u', color);
                             image = manipulator.rotateImage(270);
                         }
                     }
+
+                    //beam in the left column
+                    beam = new Beam('r', color);
                     cell.setImageBitmap(image);
                     cells.set(i, cell);
+
 
                 }
             }

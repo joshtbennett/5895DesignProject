@@ -6,11 +6,11 @@ package joshbennett.designproject;
 
 public class Beam implements ColorableEntity{
 
-    private String direction;
+    private char direction;
     private char identifier;
     private String color;
 
-    Beam(String direction, String color){
+    Beam(char direction, String color){
 
         identifier = 'b';
         this.direction = direction;
