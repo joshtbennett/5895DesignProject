@@ -28,7 +28,7 @@ public class LevelFactory {
                 entities.add(collector);
                 walls.add(null);
             }
-            else if(i ==  97){
+            else if(i ==  8){
                 entities.add(emitter);
                 walls.add(null);
 

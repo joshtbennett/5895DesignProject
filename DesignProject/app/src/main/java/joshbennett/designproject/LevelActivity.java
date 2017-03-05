@@ -3,12 +3,9 @@ package joshbennett.designproject;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -26,6 +23,7 @@ public class LevelActivity extends AppCompatActivity {
 
     private Level level;
     private String color;
+    private ArrayList<ImageView> cells;
     private ImageManipulator manipulator;
     private EntityHandler entityHandler;
     private LevelFactory levelFactory = new LevelFactory();
@@ -50,6 +48,7 @@ public class LevelActivity extends AppCompatActivity {
         deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
         flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
+        start = (Button)findViewById(R.id.startButton);
         redCheckBox = (CheckBox)  findViewById(R.id.Red);
         greenCheckBox = (CheckBox)  findViewById(R.id.Green);
         blueCheckBox = (CheckBox)  findViewById(R.id.Blue);
@@ -99,11 +98,45 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     public void start(View v){
+        ImageView cell;
+        Bitmap image;
+        int position = -1;
+
+        for(int i = 0; i < 100; i++) {
+            if(i > 10 && i < 89 && i%10!=9 && i%10!=0) {
+                if (entities.get(i) != null && entities.get(i).getIdentifier() == 'e') {
+                    color = entities.get(i).getColor();
+                    cell = cells.get(i);
+                    image = getBitmapFromAssets(color + "/onboardemitteron.png", 40);
+                    manipulator.newimage(image, getApplicationContext());
+                    if (i <19) {
+                        if(i == 11 && entities.get(i-10) != null){
+                            image = manipulator.rotateImage(90);
+                        }
+                        else if(i == 18 && entities.get(i-10) != null){
+                            image = manipulator.rotateImage(90);
+                        }
+                    } else if (i % 10 == 8) {
+                        image = manipulator.rotateImage(180);
+                    } else if (i > 80) {
+                        if(i == 11 && entities.get(i+10) != null){
+                            image = manipulator.rotateImage(270);
+                        }
+                        else if(i == 18 && entities.get(i+10) != null){
+                            image = manipulator.rotateImage(270);
+                        }
+                    }
+                    cell.setImageBitmap(image);
+                    cells.set(i, cell);
+
+                }
+            }
+        }
     }
 
     public void drawLevel(){
         entityHandler = new EntityHandler();
-        ArrayList<ImageView> cells = new ArrayList<>();
+        cells = new ArrayList<>();
 
 
         //get images to display on the grid
