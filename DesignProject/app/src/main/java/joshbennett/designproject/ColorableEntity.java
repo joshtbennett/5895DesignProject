@@ -7,4 +7,7 @@ package joshbennett.designproject;
 public interface ColorableEntity {
     public char getIdentifier();
     public String getColor();
+    public int getPosition();
+    public void setReceived();
+    public boolean getReceived();
 }

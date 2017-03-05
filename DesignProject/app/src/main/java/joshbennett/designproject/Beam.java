@@ -9,9 +9,10 @@ public class Beam implements ColorableEntity{
     private char direction;
     private char identifier;
     private String color;
+    private int position;
 
-    Beam(char direction, String color){
-
+    Beam(char direction, String color, int position){
+        this.position = position;
         identifier = 'b';
         this.direction = direction;
         this.color = color;
@@ -25,6 +26,23 @@ public class Beam implements ColorableEntity{
     public String getColor() {
         return color;
     }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setReceived() {
+
+    }
+
+    @Override
+    public boolean getReceived() {
+        return false;
+    }
+
+    public char getDirection(){ return direction; }
 
     //LevelEntity checkNextSquare(){ }
 }

@@ -10,43 +10,38 @@ public class LevelFactory {
 
     private ArrayList<ColorableEntity> entities;
     private ArrayList<Wall> walls;
+    private int sideLength;
 
     //get entites array from database
 
     public void setEntities(){
-        entities = new ArrayList<>(100);
-        walls = new ArrayList<>(100);
+        entities = new ArrayList<>();
+        walls = new ArrayList<>();
 
         //test code to add elements to the level
         //will be taken from database
-
-        Emitter emitter = new Emitter("Red");
-        Collector collector  = new Collector("White");
-        Wall wall = new Wall();
-        for(int i = 0; i < 100; i++) {
-            if(i == 4) {
-                entities.add(collector);
-                walls.add(null);
-            }
-            else if(i ==  8){
-                entities.add(emitter);
-                walls.add(null);
-
-            }
-            else if(i == 32) {
-                entities.add(null);
-                walls.add(wall);
-            }
-            else{
-                entities.add(null);
-                walls.add(null);
-            }
-        }
+        sideLength = 10;
+        Emitter emitter = new Emitter("Red", 2);
+        entities.add(emitter);
+        Emitter emitter2 = new Emitter("Blue", 20);
+        entities.add(emitter2);
+        Emitter emitter3 = new Emitter("Green", 94);
+        entities.add(emitter3);
+        Emitter emitter4 = new Emitter("Yellow" , 59);
+        entities.add(emitter4);
+        Collector collector  = new Collector("Red", 92);
+        entities.add(collector);
+        Collector collector1  = new Collector("Blue", 29);
+        entities.add(collector1);
+        Collector collector4  = new Collector("Green", 4);
+        entities.add(collector4);
+        Collector collector3  = new Collector("Yellow", 50);
+        entities.add(collector3);
     }
 
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
-        Level level = new Level(entities, walls);
+        Level level = new Level(entities, walls, sideLength);
         return level;
     }
 
