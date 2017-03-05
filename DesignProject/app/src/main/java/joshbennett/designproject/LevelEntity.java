@@ -5,8 +5,6 @@ package joshbennett.designproject;
  */
 
 public interface LevelEntity {
-
     public char getIdentifier();
-    public String getColor();
 
 }

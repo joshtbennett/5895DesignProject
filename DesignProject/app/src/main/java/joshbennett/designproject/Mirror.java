@@ -17,10 +17,6 @@ public class Mirror implements LevelEntity, ColorableEntity
         angle = 45;
     }
 
-    void setPosition(){}
-
-    void setAngle(int angle){}
-
     @Override
     public char getIdentifier() {
         return identifier;
@@ -28,4 +24,10 @@ public class Mirror implements LevelEntity, ColorableEntity
 
     @Override
     public String getColor() { return color; }
+
+    public int getAngle() { return angle; }
+
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
 }

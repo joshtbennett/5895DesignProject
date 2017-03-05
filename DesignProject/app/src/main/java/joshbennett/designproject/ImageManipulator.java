@@ -3,6 +3,7 @@ package joshbennett.designproject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.DisplayMetrics;
 
@@ -46,5 +47,13 @@ public class ImageManipulator {
         matrix.postRotate(degree);
         Bitmap bmp = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
         return bmp;
+    }
+
+    public Bitmap overlayImages(Bitmap imageToGoOnTop){
+        Bitmap bmOverlay = Bitmap.createBitmap(src.getWidth(), src.getHeight(), src.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(src, new Matrix(), null);
+        canvas.drawBitmap(imageToGoOnTop, 0, 0, null);
+        return bmOverlay;
     }
 }
