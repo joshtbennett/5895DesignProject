@@ -205,4 +205,46 @@ public class EntityHandler {
         //White is a combination of all colors
         return true;
     }
+
+    String combineColors(String color1, String color2){
+        if(color1 == color2)
+            return color1;
+        if(color1 == "Red"){
+            if(color2 == "Green"){
+                return "Yellow";
+            }
+            else if(color2 == "Blue"){
+                return "Magenta";
+            }
+            else if(color2 == "Cyan"){
+                return "White";
+            }
+            else{
+                return color2;
+            }
+        }
+        else if(color1 == "Green") {
+            if (color2 == "Red") {
+                return "Yellow";
+            } else if (color2 == "Blue") {
+                return "Cyan";
+            } else if (color2 == "Magenta") {
+                return "White";
+            } else {
+                return color2;
+            }
+        }
+        else if(color1 == "Blue") {
+            if (color2 == "Green") {
+                return "Cyan";
+            } else if (color2 == "Red") {
+                return "Magenta";
+            } else if (color2 == "Yellow") {
+                return "White";
+            } else {
+                return color2;
+            }
+        }
+        return "White";
+    }
 }

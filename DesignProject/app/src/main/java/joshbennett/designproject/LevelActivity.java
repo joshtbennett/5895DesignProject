@@ -195,8 +195,17 @@ public class LevelActivity extends AppCompatActivity {
         char direction;
 
         for(int i = 0; i < level.getBeams().size(); i++){
-            int beamposition = level.getBeams().get(i).getPosition();
+
             color = level.getBeams().get(i).getColor();
+
+            for(int k = 0; k < level.getBeams().size(); k++){
+                if(level.getBeams().get(i).getPosition() == level.getBeams().get(k).getPosition()){
+                    color = entityHandler.combineColors(level.getBeams().get(i).getColor(), level.getBeams().get(k).getColor());
+                    level.getBeams().get(i).setColor(color);
+                    level.getBeams().get(k).setColor(color);
+                }
+            }
+            int beamposition = level.getBeams().get(i).getPosition();
             Bitmap current = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
             //leaving direction (after its hit the mirror
             direction = level.getBeams().get(i).getDirection();
@@ -426,7 +435,6 @@ public class LevelActivity extends AppCompatActivity {
         }
 
         //create a grid to display the buttons
-
         for (int i = 0; i < 100; i++) {
             //add all the buttons to the grid
             grid.addView(cells.get(i));
