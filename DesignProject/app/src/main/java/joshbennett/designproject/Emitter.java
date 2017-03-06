@@ -8,9 +8,11 @@ public class Emitter implements LevelEntity, ColorableEntity
 {
     private char identifier;
     private String color;
+    private int position;
 
-    Emitter(String color)
+    Emitter(String color, int position)
     {
+        this.position = position;
         identifier = 'e';
         this.color = color;
     }
@@ -26,4 +28,20 @@ public class Emitter implements LevelEntity, ColorableEntity
     public String getColor() {
         return color;
     }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setReceived() {
+
+    }
+
+    @Override
+    public boolean getReceived() {
+        return false;
+    }
+
 }

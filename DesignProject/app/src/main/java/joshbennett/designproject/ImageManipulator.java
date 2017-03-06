@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 
 /**
@@ -49,11 +50,19 @@ public class ImageManipulator {
         return bmp;
     }
 
-    public Bitmap overlayImages(Bitmap imageToGoOnTop){
-        Bitmap bmOverlay = Bitmap.createBitmap(src.getWidth(), src.getHeight(), src.getConfig());
+    public Bitmap overlayImages(Bitmap image1, Bitmap image2){
+        Bitmap bmOverlay = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), image1.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(src, new Matrix(), null);
-        canvas.drawBitmap(imageToGoOnTop, 0, 0, null);
+        canvas.drawBitmap(image1, new Matrix(), null);
+        canvas.drawBitmap(image2, 0, 0, null);
         return bmOverlay;
+    }
+    public Bitmap flipHorizontally() {
+        Bitmap bInput = src;
+        Bitmap bOutput;
+        Matrix matrix = new Matrix();
+        matrix.preScale(-1.0f, 1.0f);
+        bOutput = Bitmap.createBitmap(bInput, 0, 0, bInput.getWidth(), bInput.getHeight(), matrix, true);
+        return  bOutput;
     }
 }

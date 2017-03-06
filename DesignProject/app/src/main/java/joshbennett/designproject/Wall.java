@@ -7,9 +7,11 @@ package joshbennett.designproject;
 public class Wall implements LevelEntity
 {
     private char identifier;
+    private int position;
 
-    public Wall()
+    public Wall(int position)
     {
+        this.position = position;
         identifier = 'w';
     }
 
@@ -17,5 +19,9 @@ public class Wall implements LevelEntity
     @Override
     public char getIdentifier() {
         return identifier;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

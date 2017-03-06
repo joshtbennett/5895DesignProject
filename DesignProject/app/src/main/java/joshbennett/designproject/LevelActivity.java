@@ -3,12 +3,9 @@ package joshbennett.designproject;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,6 +16,7 @@ import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LevelActivity extends AppCompatActivity {
@@ -26,12 +24,13 @@ public class LevelActivity extends AppCompatActivity {
 
     private Level level;
     private String color;
+    private ArrayList<ImageView> cells;
     private ImageManipulator manipulator;
     private EntityHandler entityHandler;
     private LevelFactory levelFactory = new LevelFactory();
     private ArrayList<ColorableEntity> entities;
     private ArrayList<Wall> walls;
-    private ArrayList<Mirror> mirrors;
+    private ArrayList<Mirror> mirrors = new ArrayList<>();
     private CheckBox redCheckBox;
     private CheckBox greenCheckBox;
     private CheckBox blueCheckBox;
@@ -39,6 +38,7 @@ public class LevelActivity extends AppCompatActivity {
     private ToggleButton placeButton;
     private ToggleButton flipButton;
     private Button start;
+    private int length;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +50,14 @@ public class LevelActivity extends AppCompatActivity {
         deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
         flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
+        start = (Button)findViewById(R.id.startButton);
         redCheckBox = (CheckBox)  findViewById(R.id.Red);
         greenCheckBox = (CheckBox)  findViewById(R.id.Green);
         blueCheckBox = (CheckBox)  findViewById(R.id.Blue);
 
-        levelFactory.setEntities();level = levelFactory.generateLevel();
+        levelFactory.setEntities();
+        level = levelFactory.generateLevel();
+        length = level.getSideLength();
         entities = level.getEntities();
         walls = level.getWalls();
 
@@ -99,317 +102,339 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     public void start(View v){
+
+        ImageView cell;
+
+        for(int i = 0; i < length*length; i++){
+            cell = cells.get(i);
+            cell.setOnClickListener(null);
+        }
+
+        Bitmap image;
+        Beam beam;
+        int position;
+
+        for(int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).getIdentifier() == 'e') {
+                position = entities.get(i).getPosition();
+                color = entities.get(i).getColor();
+                int size = length * length;
+
+                image = getBitmapFromAssets(color + "/onboardemitteron.png", 40);
+                manipulator.newimage(image, getApplicationContext());
+
+
+                if (position < length - 1) {
+                    cell = cells.get(position + length);
+                    image = manipulator.rotateImage(90);
+                    cell.setImageBitmap(image);
+                    cells.set(position, cell);
+
+                    beam = new Beam('d', color, position + length);
+                    entityHandler.moveBeam(level, beam, position + length);
+
+                }
+                else if (position > (size - length)) {
+                    cell = cells.get(position - length);
+                    image = manipulator.rotateImage(270);
+                    cell.setImageBitmap(image);
+                    cells.set(position, cell);
+
+                    beam = new Beam('u', color, position - length);
+                    entityHandler.moveBeam(level, beam, position - length);
+
+                }
+                else if (position % length == 0) {
+                    cell = cells.get(position + 1);
+                    cell.setImageBitmap(image);
+                    cells.set(position, cell);
+
+                    beam = new Beam('r', color, position + 1);
+                    entityHandler.moveBeam(level, beam, position + 1);
+
+                }
+                else if (position % length == length - 1) {
+                    cell = cells.get(position - 1);
+                    image = manipulator.rotateImage(180);
+                    cell.setImageBitmap(image);
+                    cells.set(position, cell);
+
+                    beam = new Beam('l', color, position - 1);
+                    entityHandler.moveBeam(level, beam, position - 1);
+
+                }
+            }
+        }
+
+        for(int i = 0; i < entities.size(); i++){
+            if(entities.get(i).getReceived() == true){
+                Bitmap onboardcollectoron = getBitmapFromAssets(entities.get(i).getColor()+"/onboardcollectoron.png", 40);
+                manipulator.newimage(onboardcollectoron, this);
+                int location = entities.get(i).getPosition();
+                if (location < 2*length - 1) {
+                   onboardcollectoron = manipulator.rotateImage(90);
+                }
+                else if (location > (length*length - 2 * length)) {
+                    onboardcollectoron = manipulator.rotateImage(270);
+
+                }
+                else if (location % length == 1) {
+                    onboardcollectoron = manipulator.rotateImage(0);
+
+                }
+                else if (location % length == length - 2) {
+                    onboardcollectoron = manipulator.rotateImage(180);
+                }
+                cell = cells.get(entities.get(i).getPosition());
+                cell.setImageBitmap(onboardcollectoron);
+                cells.set(location, cell);
+
+            }
+        }
+
+        char direction;
+
+        for(int i = 0; i < level.getBeams().size(); i++){
+            int beamposition = level.getBeams().get(i).getPosition();
+            color = level.getBeams().get(i).getColor();
+            Bitmap current = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
+            //leaving direction (after its hit the mirror
+            direction = level.getBeams().get(i).getDirection();
+
+            Bitmap straightbeam = getBitmapFromAssets(color + "/straightbeam.png", 40);
+            manipulator.newimage(straightbeam, getApplicationContext());
+            //going left or right
+            if(direction == 'l' || direction == 'r'){
+                straightbeam = manipulator.rotateImage(90);
+                cell = cells.get(beamposition);
+                cell.setImageBitmap(straightbeam);
+                cells.set(beamposition, cell);
+            }
+            //going up and down
+            if(direction == 'u' || direction == 'd') {
+                cell = cells.get(beamposition);
+                cell.setImageBitmap(straightbeam);
+                cells.set(beamposition, cell);
+            }
+
+            for(int j = 0; j < level.getMirrors().size(); j++) {
+                int mirrorposition = level.getMirrors().get(j).getPosition();
+                int angle = level.getMirrors().get(j).getAngle();
+                if(beamposition == mirrorposition)
+                {
+                    if(level.getMirrors().get(j).getColor() == level.getBeams().get(i).getColor()) {
+                        if (angle == 45 && (direction == 'd' || direction == 'l')) {
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(270);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+
+                        } else if (angle == 45 && (direction == 'u' || direction == 'r')) {
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            manipulator.newimage(beam1, getApplicationContext());
+                            beam1 = manipulator.rotateImage(180);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(90);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        } else if (angle == 135 && (direction == 'r' || direction == 'd')) {
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            manipulator.newimage(beam1, getApplicationContext());
+                            beam1 = manipulator.rotateImage(180);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(270);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        } else if (angle == 135 && (direction == 'l' || direction == 'u')) {
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(90);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        }
+                    }
+                    else{
+                        if((direction == 'u' || direction == 'd') && angle == 135){
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            manipulator.newimage(beam1, getApplicationContext());
+                            beam1 = manipulator.rotateImage(90);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(270);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        }
+                        else if((direction == 'l' || direction == 'r') && angle == 135){
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(180);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        }
+                        else if((direction == 'u' || direction == 'd') && angle == 45){
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            manipulator.newimage(beam1, getApplicationContext());
+                            beam1 = manipulator.rotateImage(90);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(270);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        }
+                        else if((direction == 'l' || direction == 'r') && angle == 45){
+                            Bitmap beam2;
+                            Bitmap beam1;
+                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
+                            manipulator.newimage(beam2, getApplicationContext());
+                            beam2 = manipulator.rotateImage(180);
+                            beam2 = manipulator.overlayImages(beam2, beam1);
+                            current = manipulator.overlayImages(current, beam2);
+                            cell = cells.get(beamposition);
+                            cell.setImageBitmap(current);
+                            cells.set(beamposition, cell);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void drawLevel(){
         entityHandler = new EntityHandler();
-        ArrayList<ImageView> cells = new ArrayList<>();
+        cells = new ArrayList<>((length) * (length));
 
 
         //get images to display on the grid
-        Bitmap bordercell;
-        Bitmap cornercell;
-        Bitmap emptycell;
-        Bitmap wallcell;
-        Bitmap offboardcollector;
-        Bitmap offboardemitter;
+        Bitmap bordercell = getBitmapFromAssets("bordercell.png", 40);
+        Bitmap cornercell = getBitmapFromAssets("cornercell.png", 40);
+        Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
+        Bitmap wallcell = getBitmapFromAssets("wallcell.png", 40);
 
+        char type;
+        int position;
+        GridLayout grid = (GridLayout) findViewById(R.id.grid);
 
-        //iterate throught the entity array adding entities to the board as they appear
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        //start with an empty board
+        for(int i = 0; i < length; i++){
+            for(int j = 0; j <  length; j++){
 
+                ImageView cell = new ImageView(this);
 
-                //get images to display on the grid
-                bordercell = getBitmapFromAssets("bordercell.png", 40);
-                cornercell = getBitmapFromAssets("cornercell.png", 40);
-
-                final ImageView cell = new ImageView(this);
-
-                //top row
-                if(i == 0) {
+                if(i == 0){
                     if(j == 0){
+                        //corner
                         cell.setImageBitmap(cornercell);
                     }
-                    else if(j == 9) {
-                        manipulator.newimage(cornercell, this.getApplicationContext());
-                        cornercell = manipulator.rotateImage(90);
-                        cell.setImageBitmap(cornercell);
+                    else if(j == length-1){
+                        //corner
+                        cell = addImage(cornercell, 90);
                     }
                     else{
-                        if(entities.get((10 *i) + j) == null){
-                            manipulator.newimage(bordercell, this.getApplicationContext());
-                            bordercell = manipulator.rotateImage(90);
-                            cell.setImageBitmap(bordercell);
-
-                        }
-                        else if(entities.get((10 * i) + j).getIdentifier() == 'c') {
-                            color  = entities.get((10 * i) + j).getColor();
-                            offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
-                            manipulator.newimage(offboardcollector, this.getApplicationContext());
-                            offboardcollector = manipulator.rotateImage(90);
-                            cell.setImageBitmap(offboardcollector);
-                        }
-                        else if (entities.get((10 * i) + j).getIdentifier() == 'e') {
-                            color  = entities.get((10 * i) + j).getColor();
-                            offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
-                            manipulator.newimage(offboardemitter, this.getApplicationContext());
-                            offboardemitter = manipulator.rotateImage(90);
-                            cell.setImageBitmap(offboardemitter);
-                        }
+                        //border
+                        cell = addImage(bordercell, 90);
                     }
                 }
-                //bottom row
-                else if(i == 9) {
+                else if(i == length-1){
                     if(j == 0){
-                        manipulator.newimage(cornercell, this.getApplicationContext());
-                        cornercell = manipulator.rotateImage(270);
-                        cell.setImageBitmap(cornercell);
+                        //corner
+                        cell = addImage(cornercell, 270);
                     }
-                    else if(j == 9){
-                        manipulator.newimage(cornercell, this.getApplicationContext());
-                        cornercell = manipulator.rotateImage(180);
-                        cell.setImageBitmap(cornercell);
-                    }
-                    else{
-                        if(entities.get((10 *i) + j) == null){
-                            manipulator.newimage(bordercell, this.getApplicationContext());
-                            bordercell = manipulator.rotateImage(270);
-                            cell.setImageBitmap(bordercell);
-
-                        }
-                        else if(entities.get((10 * i) + j).getIdentifier() == 'c') {
-                            color  = entities.get((10 * i) + j).getColor();
-                            offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
-                            manipulator.newimage(offboardcollector, this.getApplicationContext());
-                            offboardcollector = manipulator.rotateImage(270);
-                            cell.setImageBitmap(offboardcollector);
-                        }
-                        else if (entities.get((10 * i) + j).getIdentifier() == 'e') {
-                            color  = entities.get((10 * i) + j).getColor();
-                            offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
-                            manipulator.newimage(offboardemitter, this.getApplicationContext());
-                            offboardemitter = manipulator.rotateImage(270);
-                            cell.setImageBitmap(offboardemitter);
-                        }
-                    }
-                }
-                //leftmost column
-                else if(j== 0) {
-                    if(entities.get((10 *i) + j) == null){
-                        cell.setImageBitmap(bordercell);
-
-                    }
-                    else if(entities.get((10 * i) + j).getIdentifier() == 'c') {
-                        color  = entities.get((10 * i) + j).getColor();
-                        offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
-                        manipulator.newimage(offboardcollector, this.getApplicationContext());
-                        cell.setImageBitmap(offboardcollector);
-                    }
-                    else if (entities.get((10 * i) + j).getIdentifier() == 'e') {
-                        color  = entities.get((10 * i) + j).getColor();
-                        offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
-                        manipulator.newimage(offboardemitter, this.getApplicationContext());
-                        cell.setImageBitmap(offboardemitter);
+                    else if(j == length-1){
+                        //corner
+                        cell = addImage(cornercell, 180);
                     }
                     else {
-                        cell.setImageBitmap(bordercell);
+                        //border
+                        cell = addImage(bordercell, 270);
                     }
                 }
-                //rightmost column
-                else if(j==9){
-                    if(entities.get((10 *i) + j) == null){
-                        manipulator.newimage(bordercell, this.getApplicationContext());
-                        bordercell = manipulator.rotateImage(180);
-                        cell.setImageBitmap(bordercell);
-
-                    }
-                    else if(entities.get((10 * i) + j).getIdentifier() == 'c') {
-                        color  = entities.get((10 * i) + j).getColor();
-                        offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
-                        manipulator.newimage(offboardcollector, this.getApplicationContext());
-                        offboardcollector = manipulator.rotateImage(180);
-                        cell.setImageBitmap(offboardcollector);
-                    }
-                    else if (entities.get((10 * i) + j).getIdentifier() == 'e') {
-                        color  = entities.get((10 * i) + j).getColor();
-                        offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
-                        manipulator.newimage(offboardemitter, this.getApplicationContext());
-                        offboardemitter = manipulator.rotateImage(180);
-                        cell.setImageBitmap(offboardemitter);
-                    }
+                else if(j == 0){
+                    //border
+                    cell.setImageBitmap(bordercell);
                 }
-
-                //placeable area
-                else {
-                    if(walls.get((10 * i) + j) != null) {
-                        wallcell = getBitmapFromAssets("wallcell.png", 40);
-                        cell.setImageBitmap(wallcell);
-                    }
-
-                    else if(entities.get((10 *i) + j) == null){
-                        emptycell = getBitmapFromAssets("emptycell.png", 40);
-                        cell.setImageBitmap(emptycell);
-                    }
+                else if(j == length-1){
+                    //border
+                    cell = addImage(bordercell,  180);
                 }
-
-                //add the new cell to the cells array
+                else{
+                    //middle
+                    cell = addImage(emptycell, 0);
+                }
                 cells.add(cell);
             }
+
         }
 
+        //get emitters and collectors
+        for(int i = 0; i < entities.size(); i++){
+            //get attributes
+            type = entities.get(i).getIdentifier();
+            position = entities.get(i).getPosition();
+            color = entities.get(i).getColor();
 
-        //if theres a emitter/collector on the border, the cell infront of it must be changed to
-        // represent that as well
-        for(int i = 0; i < 100; i++){
-            final ImageView temp = new ImageView(this);
+            cells = displayIfCollector(type, position, color, cells);
+            cells = displayIfEmitter(type, position, color, cells);
+        }
 
-            Bitmap onboardcollectoroff;
-            Bitmap onboardemitteroff;
-
-            //top row in placeable area
-            if(i > 0 && i <  9) {
-                if(entities.get(i) != null) {
-                    if (entities.get(i).getIdentifier() == 'c') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardcollectoroff = getBitmapFromAssets(color + "/onboardcollectoroff.png", 40);
-                        manipulator.newimage(onboardcollectoroff, this.getApplicationContext());
-                        onboardcollectoroff = manipulator.rotateImage(90);
-                        temp.setImageBitmap(onboardcollectoroff);
-                        cells.set(i + 10, temp);
-
-                        //update entity array
-                        Collector collector = new Collector(color);
-                        entityHandler.addEntity(level, collector, i+10);
-                    }
-                    else if (entities.get(i).getIdentifier() == 'e') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardemitteroff = getBitmapFromAssets(color + "/onboardemitteroff.png", 40);
-                        manipulator.newimage(onboardemitteroff, this.getApplicationContext());
-                        onboardemitteroff = manipulator.rotateImage(90);
-                        temp.setImageBitmap(onboardemitteroff);
-                        cells.set(i + 10, temp);
-
-                        //update entity array
-                        Emitter emitter = new Emitter(color);
-                        entityHandler.addEntity(level, emitter, i+10);
-                    }
-                }
-            }
-
-            //bottom row in placeable area
-            else if(i>90 && i < 99){
-                if(entities.get(i) != null) {
-                    if (entities.get(i).getIdentifier() == 'c') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardcollectoroff = getBitmapFromAssets(color + "/onboardcollectoroff.png", 40);
-                        manipulator.newimage(onboardcollectoroff, this.getApplicationContext());
-                        onboardcollectoroff = manipulator.rotateImage(270);
-                        temp.setImageBitmap(onboardcollectoroff);
-                        cells.set(i - 10, temp);
-
-                        //update entity array
-                        Collector collector = new Collector(color);
-                        entityHandler.addEntity(level, collector, i-10);
-                    }
-                    else if (entities.get(i).getIdentifier() == 'e') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardemitteroff = getBitmapFromAssets(color + "/onboardemitteroff.png", 40);
-                        manipulator.newimage(onboardemitteroff, this.getApplicationContext());
-                        onboardemitteroff = manipulator.rotateImage(270);
-                        temp.setImageBitmap(onboardemitteroff);
-                        cells.set(i - 10, temp);
-
-                        //update entity array
-                        Emitter emitter = new Emitter(color);
-                        entityHandler.addEntity(level, emitter, i-10);
-                    }
-                }
-            }
-
-            //leftmost colum in placeable area
-            else if(i > 0 && i < 90 && i % 10 == 0){
-                if(entities.get(i) != null) {
-                    if (entities.get(i).getIdentifier() == 'c') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardcollectoroff = getBitmapFromAssets(color + "/onboardcollectoroff.png", 40);
-                        manipulator.newimage(onboardcollectoroff, this.getApplicationContext());
-                        temp.setImageBitmap(onboardcollectoroff);
-                        cells.set(i + 1, temp);
-
-                        //update entity array
-                        Collector collector = new Collector(color);
-                        entityHandler.addEntity(level, collector, i+1);
-                    }
-                    else if (entities.get(i).getIdentifier() == 'e') {
-                        color = entities.get(i).getColor();
-                        onboardemitteroff = getBitmapFromAssets(color + "/onboardemitteroff.png", 40);
-                        manipulator.newimage(onboardemitteroff, this.getApplicationContext());
-                        temp.setImageBitmap(onboardemitteroff);
-                        cells.set(i + 1, temp);
-
-                        //update entity array
-                        Emitter emitter = new Emitter(color);
-                        entityHandler.addEntity(level, emitter, i+1);
-                    }
-                }
-            }
-
-            //rightmost column in placeable area
-            else if(i > 9 && i < 89 && i % 10 == 9){
-                if(entities.get(i) != null) {
-                    if (entities.get(i).getIdentifier() == 'c') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardcollectoroff = getBitmapFromAssets(color + "/onboardcollectoroff.png", 40);
-                        manipulator.newimage(onboardcollectoroff, this.getApplicationContext());
-                        onboardcollectoroff = manipulator.rotateImage(180);
-                        temp.setImageBitmap(onboardcollectoroff);
-                        cells.set(i - 1, temp);
-
-                        //update entity array
-                        Collector collector = new Collector(color);
-                        entityHandler.addEntity(level, collector, i-1);
-                    }
-                    else if (entities.get(i).getIdentifier() == 'e') {
-
-                        //update image
-                        color = entities.get(i).getColor();
-                        onboardemitteroff = getBitmapFromAssets(color + "/onboardemitteroff.png", 40);
-                        manipulator.newimage(onboardemitteroff, this.getApplicationContext());
-                        onboardemitteroff = manipulator.rotateImage(180);
-                        temp.setImageBitmap(onboardemitteroff);
-                        cells.set(i - 1, temp);
-
-                        //update entity array
-                        Emitter emitter = new Emitter(color);
-                        entityHandler.addEntity(level, emitter, i-1);
-                    }
-                }
-            }
+        for(int i = 0; i < walls.size(); i++){
+            ImageView cell = new ImageView(getApplicationContext());
+            position = walls.get(i).getPosition();
+            cell.setImageBitmap(wallcell);
+            cells.set(position, cell);
         }
 
         //create a grid to display the buttons
-        GridLayout grid = (GridLayout) findViewById(R.id.grid);
+
         for (int i = 0; i < 100; i++) {
+            //add all the buttons to the grid
+            grid.addView(cells.get(i));
 
             //if current cell is in placeable area
             if(i > 10 && i < 89 && i%10!=9 && i%10!=0){
                 setOnClick(cells.get(i), i);
             }
-            //add all the buttons to the grid
-            grid.addView(cells.get(i));
         }
     }
 
@@ -417,114 +442,215 @@ public class LevelActivity extends AppCompatActivity {
         clickableimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            color = "purple";
-            if(level.getWalls().get(position) != null){
-                color = "orange";
-            }
 
-            else if(level.getEntities().get(position) != null){
+                walls = level.getWalls();
+                entities = level.getEntities();
+                mirrors = level.getMirrors();
+                boolean wallCheck = false;
+                boolean entityCheck = false;
+                boolean mirrorCheck = false;
+                String color;
 
-                color = "orange";
-            }
-
-            //if a mirror is tapped
-            else if(level.getMirrors().get(position) != null) {
-                //delete
-                if (deleteButton.isChecked()) {
-                    Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
-                    clickableimage.setImageBitmap(emptycell);
-                    entityHandler.removeMirror(level, position);
-                }
-                //flip
-                else if (flipButton.isChecked()) {
-
-
-                    Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
-                    manipulator.newimage(current, getApplicationContext());
-                    current = manipulator.rotateImage(90);
-                    clickableimage.setImageBitmap(current);
-
-                    if (level.getMirrors().get(position).getAngle() == 45) {
-                        Mirror mirror = level.getMirrors().get(position);
-                        entityHandler.flipMirror(level, mirror, position);
-                    }
-                    else if(level.getMirrors().get(position).getAngle() == 135) {
-                        Mirror mirror = level.getMirrors().get(position);
-                        entityHandler.flipMirror(level, mirror, position);
-                    }
-                }
-                // add
-                else {
-                    if (redCheckBox.isChecked())
-                        if (greenCheckBox.isChecked())
-                            if (blueCheckBox.isChecked())
-                                color = "White";
-                            else
-                                color = "Yellow";
-                        else if (blueCheckBox.isChecked())
-                            color = "Magenta";
-                        else
-                            color = "Red";
-
-                    else if (greenCheckBox.isChecked())
+                //get player selected color
+                if (redCheckBox.isChecked())
+                    if (greenCheckBox.isChecked())
                         if (blueCheckBox.isChecked())
-                            color = "Cyan";
+                            color = "White";
                         else
-                            color = "Green";
+                            color = "Yellow";
+                    else if (blueCheckBox.isChecked())
+                        color = "Magenta";
                     else
-                        color = "Blue";
+                        color = "Red";
 
-                    //update image
-                    Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
-                    Bitmap layontop = getBitmapFromAssets(color + "/45mirror.png", 40);
-                    manipulator.newimage(current, getApplicationContext());
-                    Bitmap overlayed = manipulator.overlayImages(layontop);
-                    clickableimage.setImageBitmap(overlayed);
-
-                    //update entity array
-                    Mirror mirror = new Mirror(color);
-                    entityHandler.addMirror(level, mirror, position);
-                }
-
-            }
-
-            else if(level.getEntities().get(position) == null && level.getWalls().get(position) == null && level.getEntities().get(position) == null){
-                if (placeButton.isChecked()) {
-                    if (redCheckBox.isChecked())
-                        if (greenCheckBox.isChecked())
-                            if (blueCheckBox.isChecked())
-                                color = "White";
-                            else
-                                color = "Yellow";
-                        else if (blueCheckBox.isChecked())
-                            color = "Magenta";
-                        else
-                            color = "Red";
-
-                    else if (greenCheckBox.isChecked())
-                        if (blueCheckBox.isChecked())
-                            color = "Cyan";
-                        else
-                            color = "Green";
+                else if (greenCheckBox.isChecked())
+                    if (blueCheckBox.isChecked())
+                        color = "Cyan";
                     else
-                        color = "Blue";
+                        color = "Green";
+                else
+                    color = "Blue";
 
-                    //update image
-                    Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
-                    Bitmap layontop = getBitmapFromAssets(color + "/45mirror.png", 40);
-                    manipulator.newimage(current, getApplicationContext());
-                    Bitmap overlayed = manipulator.overlayImages(layontop);
-                    clickableimage.setImageBitmap(overlayed);
+                //check contents of player selected cell
+                if(walls.size()>0)
+                    for(int i = 0; i < walls.size(); i++)
+                        if (position == walls.get(i).getPosition())
+                            wallCheck = true;
+                if(entities.size()>0)
+                    for(int i = 0; i < entities.size(); i++)
+                        if(position == entities.get(i).getPosition())
+                            entityCheck = true;
+                if(mirrors.size()>0)
+                    for(int i = 0; i < mirrors.size(); i++)
+                        if(position == mirrors.get(i).getPosition())
+                            mirrorCheck = true;
 
-                    //update entity array
-                    Mirror mirror = new Mirror(color);
-                    entityHandler.addMirror(level, mirror, position);
+                //touched cell containing mirror
+                if(mirrorCheck){
+                    if(placeButton.isChecked()){
+                        //replace current mirror
+
+                        Bitmap newimage = getBitmapFromAssets(color + "/45mirror.png", 40);
+                        ImageView cell = cells.get(position);
+                        cell.setImageBitmap(newimage);
+                        cells.set(position, cell);
+
+                        Mirror mirror = new Mirror(color, position);
+                        //remove current mirror
+                        entityHandler.removeMirror(level, position);
+                        //add new mirror
+                        entityHandler.addMirror(level, mirror, position);
+                    }
+                    else if(deleteButton.isChecked()){
+                        //delete current mirror
+                        Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
+                        clickableimage.setImageBitmap(emptycell);
+                        entityHandler.removeMirror(level, position);
+                    }
+                    else{
+                        //flip current mirror
+                        Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
+                        manipulator.newimage(current, getApplicationContext());
+                        current = manipulator.rotateImage(90);
+                        clickableimage.setImageBitmap(current);
+
+                        for(int i = 0; i < mirrors.size(); i++)
+                        {
+                            if(mirrors.get(i).getPosition() == position){
+                                if(mirrors.get(i).getAngle() == 45){
+                                    Mirror temp = mirrors.get(i);
+                                    entityHandler.flipMirror(level, temp, position);
+                                }
+                                else if(mirrors.get(i).getAngle() == 135){
+                                    Mirror temp = mirrors.get(i);
+                                    entityHandler.flipMirror(level, temp, position);
+                                }
+                            }
+                        }
+                    }
                 }
-                else{
-                    //do nothing
+
+                //touched empty cell
+                else if(!wallCheck && !entityCheck && !mirrorCheck){
+                    if(placeButton.isChecked()){
+                        //place a new mirror
+                        Bitmap newimage = getBitmapFromAssets(color + "/45mirror.png", 40);
+                        ImageView cell = cells.get(position);
+                        cell.setImageBitmap(newimage);
+                        cells.set(position, cell);
+
+                        Mirror mirror = new Mirror(color, position);
+                        entityHandler.addMirror(level, mirror, position);
+                    }
                 }
-            }
             }
         });
     }
+
+    public ArrayList<ImageView> displayIfCollector(char type, int position, String color, ArrayList<ImageView> cells){
+        ImageView cell = new ImageView(getApplicationContext());
+        Bitmap offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
+        Bitmap onboardcollectoroff = getBitmapFromAssets(color+"/onboardcollectoroff.png",  40);
+        if(type == 'c'){
+            //top
+            if(position < (length-1)){
+                cell = addImage(offboardcollector,90);
+                cells.set(position, cell);
+                cell = addImage(onboardcollectoroff, 90);
+                cells.set((position+length), cell);
+
+                Collector collector = new Collector(color, position+length);
+                entityHandler.addEntity(level, collector, position);
+            }
+            //left
+            else if(position % length == 0){
+                cell = addImage(offboardcollector,0);
+                cells.set(position, cell);
+                cell = addImage(onboardcollectoroff, 0);
+                cells.set((position+1), cell);
+
+                Collector collector = new Collector(color, position+1);
+                entityHandler.addEntity(level, collector, position);
+            }
+            //right
+            else if(position %  length == length-1){
+                cell = addImage(offboardcollector,180);
+                cells.set(position, cell);
+                cell = addImage(onboardcollectoroff, 180);
+                cells.set((position-1), cell);
+
+                Collector collector = new Collector(color, position-1);
+                entityHandler.addEntity(level, collector, position);
+            }
+            //bottom
+            else if(position > (length * (length-1))){
+                cell = addImage(offboardcollector,270);
+                cells.set(position, cell);
+                cell = addImage(onboardcollectoroff, 270);
+                cells.set((position-length), cell);
+
+                Collector collector = new Collector(color, position-length);
+                entityHandler.addEntity(level, collector, position);
+            }
+        }
+        return cells;
+    }
+
+    public ArrayList<ImageView> displayIfEmitter(char type, int position, String color, ArrayList<ImageView> cells){
+        ImageView cell = new ImageView(getApplicationContext());
+        Bitmap offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
+        Bitmap onboardemitteroff = getBitmapFromAssets(color+"/onboardemitteroff.png", 40);
+        if(type == 'e'){
+            //top
+            if(position < (length-1)){
+                cell = addImage(offboardemitter,90);
+                cells.set(position, cell);
+                cell = addImage(onboardemitteroff, 90);
+                cells.set((position+length), cell);
+
+                Emitter emitter = new Emitter(color, position+length);
+                entityHandler.addEntity(level, emitter, position);
+            }
+            //left
+            else if(position % length == 0){
+                cell = addImage(offboardemitter,0);
+                cells.set(position, cell);
+                cell = addImage(onboardemitteroff, 0);
+                cells.set((position+1), cell);
+
+                Emitter emitter = new Emitter(color, position+1);
+                entityHandler.addEntity(level, emitter, position);
+            }
+            //right
+            else if(position %  length == length-1){
+                cell = addImage(offboardemitter,180);
+                cells.set(position, cell);
+                cell = addImage(onboardemitteroff, 180);
+                cells.set((position-1), cell);
+
+                Emitter emitter = new Emitter(color, position-1);
+                entityHandler.addEntity(level, emitter, position);
+            }
+            //bottom
+            else if(position > (length * (length-1))){
+                cell = addImage(offboardemitter,270);
+                cells.set(position, cell);
+                cell = addImage(onboardemitteroff, 270);
+                cells.set((position-length), cell);
+
+                Emitter emitter = new Emitter(color, position-length);
+                entityHandler.addEntity(level, emitter, position);
+            }
+        }
+        return cells;
+    }
+
+    public ImageView addImage(Bitmap image, int angle){
+        ImageView cell = new ImageView(getApplicationContext());
+        manipulator.newimage(image, getApplicationContext());
+        image = manipulator.rotateImage(angle);
+        cell.setImageBitmap(image);
+        return cell;
+    }
+
 }
