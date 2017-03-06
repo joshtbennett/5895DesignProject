@@ -42,15 +42,16 @@ public class EntityHandler {
     public void flipMirror(Level level, Mirror mirror, int position) {
 
         ArrayList<Mirror> mirrors = level.getMirrors();
-        if (mirror.getAngle() == 45) {
-            mirror.setAngle(135);
-        } else if (mirror.getAngle() == 135) {
-            mirror.setAngle(45);
+        Mirror newMirror = mirror;
+        if (newMirror.getAngle() == 45) {
+            newMirror.setAngle(135);
+        } else if (newMirror.getAngle() == 135) {
+            newMirror.setAngle(45);
         }
         for (int i = 0; i < mirrors.size(); i++)
             if (mirrors.get(i).getPosition() == position) {
                 mirrors.remove(i);
-                mirrors.add(mirror);
+                mirrors.add(newMirror);
             }
         level.setMirrors(mirrors);
     }
@@ -112,36 +113,16 @@ public class EntityHandler {
                 return;
             }
         } else if (mirror != null) {
-            if (mirror.getColor() == "Red" && beam.getColor() == "Red") {
-                if (beam.getColor() == "Red") {
-                    reflect(beam.getDirection(), mirror.getAngle());
-                }
-                else if (beam.getColor() == "Green" || beam.getColor() == "Blue") {
-                    newDirection = beam.getDirection();
-                }
+            if (mirror.getColor() == beam.getColor()) {
+                newDirection = reflect(beam.getDirection(), mirror.getAngle());
             }
-
-            if (mirror.getColor() == "Blue") {
-                if(beam.getColor() == "Blue"){
-                    reflect(beam.getDirection(), mirror.getAngle());
-                }
-                else if (beam.getColor() == "Green" || beam.getColor() == "Red") {
-                    newDirection = beam.getDirection();
-                }
-            }
-
-            if (mirror.getColor() == "Green") {
-                if (beam.getColor() == "Green") {
-                    reflect(beam.getDirection(), mirror.getAngle());
-                }
-                else if (beam.getColor() == "Red" || beam.getColor() == "Blue") {
-                    newDirection = beam.getDirection();
-                }
-            }
+            else
+               newDirection = beam.getDirection();
 
             newBeam = new Beam(newDirection, beam.getColor(), newposition);
             level.getBeams().add(newBeam);
             moveBeam(level, newBeam, newposition);
+
         } else {
             //empty cell ahead
             newBeam = new Beam(newDirection, beam.getColor(), newposition);

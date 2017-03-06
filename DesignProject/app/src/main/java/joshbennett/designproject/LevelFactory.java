@@ -21,21 +21,23 @@ public class LevelFactory {
         //test code to add elements to the level
         //will be taken from database
         sideLength = 10;
+        Wall wall = new Wall(26);
+        walls.add(wall);
         Emitter emitter = new Emitter("Red", 2);
         entities.add(emitter);
-        Emitter emitter2 = new Emitter("Blue", 20);
+        Emitter emitter2 = new Emitter("Blue", 3);
         entities.add(emitter2);
-        Emitter emitter3 = new Emitter("Green", 94);
+        Emitter emitter3 = new Emitter("Green", 4);
         entities.add(emitter3);
-        Emitter emitter4 = new Emitter("Yellow" , 59);
+        Emitter emitter4 = new Emitter("Yellow" , 5);
         entities.add(emitter4);
         Collector collector  = new Collector("Red", 92);
         entities.add(collector);
-        Collector collector1  = new Collector("Blue", 29);
+        Collector collector1  = new Collector("Blue", 93);
         entities.add(collector1);
-        Collector collector4  = new Collector("Green", 4);
+        Collector collector4  = new Collector("Green", 94);
         entities.add(collector4);
-        Collector collector3  = new Collector("Yellow", 50);
+        Collector collector3  = new Collector("Yellow", 95);
         entities.add(collector3);
     }
 
