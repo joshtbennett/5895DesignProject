@@ -42,18 +42,16 @@ public class EntityHandler {
     public void flipMirror(Level level, Mirror mirror, int position) {
 
         ArrayList<Mirror> mirrors = level.getMirrors();
-        Mirror newMirror = mirror;
-        if (newMirror.getAngle() == 45) {
-            newMirror.setAngle(135);
-        } else if (newMirror.getAngle() == 135) {
-            newMirror.setAngle(45);
-        }
-        for (int i = 0; i < mirrors.size(); i++)
+        for (int i = 0; i < mirrors.size(); i++) {
             if (mirrors.get(i).getPosition() == position) {
-                mirrors.remove(i);
-                mirrors.add(newMirror);
+                if (mirrors.get(i).getAngle() == 45) {
+                    mirrors.get(i).setAngle(135);
+                } else if (mirrors.get(i).getAngle() == 135) {
+                    mirrors.get(i).setAngle(45);
+                }
             }
-        level.setMirrors(mirrors);
+            level.setMirrors(mirrors);
+        }
     }
 
     public void moveBeam(Level level, Beam beam, int pos) {
