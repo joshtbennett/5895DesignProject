@@ -222,7 +222,7 @@ public class LevelActivity extends AppCompatActivity {
                 int angle = level.getMirrors().get(j).getAngle();
                 if(beamposition == mirrorposition)
                 {
-                    if(level.getMirrors().get(j).getColor() == level.getBeams().get(i).getColor()) {
+                    if(entityHandler.isComponent(level.getBeams().get(i).getColor(), level.getMirrors().get(j).getColor())) {
                         if (angle == 45 && (direction == 'd' || direction == 'l')) {
                             Bitmap beam2;
                             Bitmap beam1;

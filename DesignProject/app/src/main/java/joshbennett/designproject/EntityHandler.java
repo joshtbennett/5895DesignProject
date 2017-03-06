@@ -111,7 +111,7 @@ public class EntityHandler {
                 return;
             }
         } else if (mirror != null) {
-            if (mirror.getColor() == beam.getColor()) {
+            if (isComponent(beam.getColor(), mirror.getColor())){
                 newDirection = reflect(beam.getDirection(), mirror.getAngle());
             }
             else
@@ -153,5 +153,56 @@ public class EntityHandler {
             }
         }
         return newDirection;
+    }
+
+    public boolean isComponent(String color1, String color2){
+        //Red Green and Blue are not combinations of colors and there for have no components other than themselves
+        if(color2 == "Red"){
+            if(color1 == "Red")
+                return true;
+            else
+                return false;
+        }
+        if(color2 == "Green"){
+            if(color1 == "Green")
+                return true;
+            else
+                return false;
+        }
+        if(color2 == "Blue"){
+            if(color1 == "Blue")
+                return true;
+            else
+                return false;
+        }
+
+        //cyan is a combination of blue and green
+        if(color2 == "Cyan"){
+            if(color1 == "Blue" || color1 == "Green" || color1 == "Cyan")
+                return true;
+            else
+                return false;
+        }
+
+        //yellow is a combination of red and green
+        if(color2 == "Yellow"){
+            if(color1 == "Red" || color1 == "Green" || color1 == "Yellow")
+                return true;
+            else
+                return false;
+
+        }
+
+        //magenta is a combination of red and blue
+        if(color2 == "Magenta"){
+            if(color1 == "Blue" || color1 == "Red" || color1 == "Magenta"){
+                return true;
+            }
+            else
+                return false;
+        }
+
+        //White is a combination of all colors
+        return true;
     }
 }
