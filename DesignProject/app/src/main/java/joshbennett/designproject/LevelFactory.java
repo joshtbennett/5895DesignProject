@@ -25,15 +25,13 @@ public class LevelFactory {
         walls.add(wall);
         Emitter emitter = new Emitter("Red", 2);
         entities.add(emitter);
-        Emitter emitter2 = new Emitter("Blue", 3);
+        Emitter emitter2 = new Emitter("Blue", 4);
         entities.add(emitter2);
-        Emitter emitter3 = new Emitter("Green", 4);
+        Emitter emitter3 = new Emitter("Green", 3);
         entities.add(emitter3);
-        Collector collector  = new Collector("Red", 92);
-        entities.add(collector);
         Collector collector1  = new Collector("Blue", 93);
         entities.add(collector1);
-        Collector collector2  = new Collector("Green", 94);
+        Collector collector2  = new Collector("Green", 59);
         entities.add(collector2);
 
     }

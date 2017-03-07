@@ -107,7 +107,11 @@ public class EntityHandler {
 
         if (entity != null) {
             if (entity.getColor() == beam.getColor()) {
-                entity.setReceived();
+                entity.setReceived(true);
+                return;
+            }
+            if(entity.getColor() != beam.getColor()){
+                entity.setReceived(false);
                 return;
             }
         } else if (mirror != null) {

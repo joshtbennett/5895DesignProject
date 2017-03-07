@@ -33,7 +33,7 @@ public class Beam implements ColorableEntity{
     }
 
     @Override
-    public void setReceived() {
+    public void setReceived(boolean received) {
 
     }
 

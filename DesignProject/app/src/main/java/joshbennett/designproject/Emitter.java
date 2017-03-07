@@ -35,7 +35,7 @@ public class Emitter implements LevelEntity, ColorableEntity
     }
 
     @Override
-    public void setReceived() {
+    public void setReceived(boolean received) {
 
     }
 
