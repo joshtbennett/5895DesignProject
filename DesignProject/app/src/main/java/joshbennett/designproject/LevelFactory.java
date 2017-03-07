@@ -56,7 +56,13 @@ public class LevelFactory {
         {
 
         }
+        Emitter emitter1 = new Emitter("yellow", 5);
+        entities.add(emitter1);
+        Collector collector1 = new Collector("yellow", 95);
+        entities.add(collector1);
 
+
+        /*
         try {
             while (cursor.moveToNext()) {
 
@@ -89,7 +95,7 @@ public class LevelFactory {
 
         }
         cursor.close();
-
+*/
         // DATABASE WRITING CODE, KEEP FOR LATER
         //if (db.rawQuery("SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?", new String[] {"table", entry.TABLE_NAME}) == 0)
 
@@ -120,6 +126,7 @@ public class LevelFactory {
 
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
+        sideLength = 10;
         Level level = new Level(entities, walls, sideLength);
         return level;
     }

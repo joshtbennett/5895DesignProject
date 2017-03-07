@@ -115,15 +115,16 @@ public class EntityHandler {
                 return;
             }
         } else if (mirror != null) {
-            if (isComponent(beam.getColor(), mirror.getColor())){
-                newDirection = reflect(beam.getDirection(), mirror.getAngle());
+            for (String color : deconstructBeam(beam)) {
+                if (isComponent(color, mirror.getColor())) {
+                    newDirection = reflect(beam.getDirection(), mirror.getAngle());
+                } else {
+                    newDirection = beam.getDirection();
+                }
+                newBeam = new Beam(newDirection, color, newposition);
+                level.getBeams().add(newBeam);
+                moveBeam(level, newBeam, newposition);
             }
-            else
-               newDirection = beam.getDirection();
-
-            newBeam = new Beam(newDirection, beam.getColor(), newposition);
-            level.getBeams().add(newBeam);
-            moveBeam(level, newBeam, newposition);
 
         } else {
             //empty cell ahead
@@ -160,37 +161,37 @@ public class EntityHandler {
     }
 
     public boolean isComponent(String color1, String color2){
-        //Red Green and Blue are not combinations of colors and there for have no components other than themselves
-        if(color2 == "Red"){
-            if(color1 == "Red")
+        //red green and blue are not combinations of colors and there for have no components other than themselves
+        if(color2 == "red"){
+            if(color1 == "red")
                 return true;
             else
                 return false;
         }
-        if(color2 == "Green"){
-            if(color1 == "Green")
+        if(color2 == "green"){
+            if(color1 == "green")
                 return true;
             else
                 return false;
         }
-        if(color2 == "Blue"){
-            if(color1 == "Blue")
+        if(color2 == "blue"){
+            if(color1 == "blue")
                 return true;
             else
                 return false;
         }
 
         //cyan is a combination of blue and green
-        if(color2 == "Cyan"){
-            if(color1 == "Blue" || color1 == "Green" || color1 == "Cyan")
+        if(color2 == "cyan"){
+            if(color1 == "blue" || color1 == "green" || color1 == "cyan")
                 return true;
             else
                 return false;
         }
 
         //yellow is a combination of red and green
-        if(color2 == "Yellow"){
-            if(color1 == "Red" || color1 == "Green" || color1 == "Yellow")
+        if(color2 == "yellow"){
+            if(color1 == "red" || color1 == "green" || color1 == "yellow")
                 return true;
             else
                 return false;
@@ -198,16 +199,37 @@ public class EntityHandler {
         }
 
         //magenta is a combination of red and blue
-        if(color2 == "Magenta"){
-            if(color1 == "Blue" || color1 == "Red" || color1 == "Magenta"){
+        if(color2 == "magenta"){
+            if(color1 == "blue" || color1 == "red" || color1 == "magenta"){
                 return true;
             }
             else
                 return false;
         }
 
-        //White is a combination of all colors
+        //white is a combination of all colors
         return true;
+    }
+
+    private String[] deconstructBeam(Beam beam) {
+        switch (beam.getColor()) {
+            case "red":
+                return new String[] {"red"};
+            case "blue":
+                return new String[] {"blue"};
+            case "green":
+                return new String[] {"green"};
+            case "magenta":
+                return new String[] {"red", "blue"};
+            case "yellow":
+                return new String[] {"red", "green"};
+            case "cyan":
+                return new String[] {"blue", "green"};
+            case "white":
+                return new String[] {"red", "green", "blue"};
+            default:
+                return null;
+        }
     }
 
     String combineColors(String color1, String color2){

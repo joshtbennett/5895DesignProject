@@ -4,15 +4,23 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -363,9 +371,9 @@ public class LevelActivity extends AppCompatActivity {
                 }
             }
         }
-        boolean checkWin = checkWin();
+        boolean checkWin = level.checkWin();
         if(checkWin == true){
-            Toast.makeText(getApplicationContext(), "Winner!",Toast.LENGTH_LONG).show();
+            displayFinish();
         }
         else
             Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
@@ -684,20 +692,41 @@ public class LevelActivity extends AppCompatActivity {
         return cell;
     }
 
-    public boolean checkWin(){
-        boolean win = true;
-        int numberOfCollectors = 0, numberOfReceivedCollectors = 0;
-        for(int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).getIdentifier() == 'c') {
-                numberOfCollectors++;
-                if (entities.get(i).getReceived() == true)
-                    numberOfReceivedCollectors++;
-            }
-        }
-        if(numberOfCollectors/2 == numberOfReceivedCollectors)
-            return true;
-        else
-            return false;
+    public void displayFinish(){
+
+        RelativeLayout endscreen = new RelativeLayout(this);
+        LinearLayout buttonslayout = new LinearLayout(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        //params.addRule(LinearLayout.CENTER_IN_PARENT);
+        endscreen.setBackgroundColor(Color.BLUE);
+        endscreen.setLayoutParams(params);
+
+        TextView endmessage = new TextView(this);
+        endmessage.setText("Winner");
+        endmessage.setTextSize(25);
+        RelativeLayout.LayoutParams messageparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        messageparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+
+        Button levelselect = new Button(this);
+        levelselect.setText("Select");
+        Button replay = new Button(this);
+        replay.setText("Replay");
+        Button nextlevel = new Button(this);
+        nextlevel.setText("Next");
+        buttonslayout.addView(levelselect);
+        buttonslayout.addView(replay);
+        buttonslayout.addView(nextlevel);
+
+        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        endscreen.addView(endmessage, messageparams);
+
+
+        endscreen.addView(buttonslayout, buttonParams);
+
+        PopupWindow endwindow = new PopupWindow(endscreen, 900, 300);
+        endwindow.showAtLocation(buttonslayout, Gravity.CENTER, 0, 0);
     }
 
 }

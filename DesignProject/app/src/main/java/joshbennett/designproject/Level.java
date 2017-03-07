@@ -22,8 +22,6 @@ public class Level
         beams = new ArrayList<>();
     }
 
-    boolean checkWin(){return false;}
-
     int calculateScore(){return 1;}
 
     void start(){}
@@ -42,4 +40,20 @@ public class Level
     public void setWalls(ArrayList<Wall> walls){ this.walls = walls; }
     public void setMirrors(ArrayList<Mirror> mirrors){ this.mirrors = mirrors; }
     public void setBeams(ArrayList<Beam> beams){ this.beams = beams; }
+    public boolean checkWin(){
+        boolean win = true;
+        int numberOfCollectors = 0, numberOfReceivedCollectors = 0;
+        for(int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).getIdentifier() == 'c') {
+                numberOfCollectors++;
+                if (entities.get(i).getReceived() == true)
+                    numberOfReceivedCollectors++;
+            }
+        }
+        if(numberOfCollectors/2 == numberOfReceivedCollectors)
+            return true;
+        else
+            return false;
+    }
+
 }
