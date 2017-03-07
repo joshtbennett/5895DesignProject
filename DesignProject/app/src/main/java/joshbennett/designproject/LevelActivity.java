@@ -1,5 +1,6 @@
 package joshbennett.designproject;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,6 +28,12 @@ public class LevelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        int levelNum = intent.getIntExtra("levelNum", 1);
+        boolean isTutorial = intent.getBooleanExtra("isTutorial", false);
+        LevelFactory factory = new LevelFactory(levelNum, isTutorial, getApplicationContext());
+
         //remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_level);
