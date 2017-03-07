@@ -46,7 +46,8 @@ public class LevelSelectActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(level.getContext(), LevelActivity.class);
-                    intent.putExtra("Level Number", j+1);
+                    intent.putExtra("levelNum", j+1);
+                    intent.putExtra("isTutorial", false);
                     startActivity(intent);
                 }
             });

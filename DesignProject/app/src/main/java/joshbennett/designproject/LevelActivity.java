@@ -1,5 +1,6 @@
 package joshbennett.designproject;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +17,6 @@ import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LevelActivity extends AppCompatActivity {
@@ -27,7 +27,7 @@ public class LevelActivity extends AppCompatActivity {
     private ArrayList<ImageView> cells;
     private ImageManipulator manipulator;
     private EntityHandler entityHandler;
-    private LevelFactory levelFactory = new LevelFactory();
+    private LevelFactory levelFactory;
     private ArrayList<ColorableEntity> entities;
     private ArrayList<Wall> walls;
     private ArrayList<Mirror> mirrors = new ArrayList<>();
@@ -43,6 +43,12 @@ public class LevelActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        int levelNum = intent.getIntExtra("levelNum", 1);
+        boolean isTutorial = intent.getBooleanExtra("isTutorial", false);
+        levelFactory = new LevelFactory(levelNum, isTutorial, getApplicationContext());
+
         //remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_level);
@@ -51,11 +57,11 @@ public class LevelActivity extends AppCompatActivity {
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
         flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
         start = (Button)findViewById(R.id.startButton);
-        redCheckBox = (CheckBox)  findViewById(R.id.Red);
-        greenCheckBox = (CheckBox)  findViewById(R.id.Green);
-        blueCheckBox = (CheckBox)  findViewById(R.id.Blue);
+        redCheckBox = (CheckBox)  findViewById(R.id.red);
+        greenCheckBox = (CheckBox)  findViewById(R.id.green);
+        blueCheckBox = (CheckBox)  findViewById(R.id.blue);
 
-        levelFactory.setEntities();
+        //levelFactory.setEntities();
         level = levelFactory.generateLevel();
         length = level.getSideLength();
         entities = level.getEntities();
@@ -355,6 +361,8 @@ public class LevelActivity extends AppCompatActivity {
         char type;
         int position;
         GridLayout grid = (GridLayout) findViewById(R.id.grid);
+        grid.setRowCount(length);
+        grid.setColumnCount(length);
 
         //start with an empty board
         for(int i = 0; i < length; i++){
@@ -427,12 +435,12 @@ public class LevelActivity extends AppCompatActivity {
 
         //create a grid to display the buttons
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < length * length; i++) {
             //add all the buttons to the grid
             grid.addView(cells.get(i));
 
             //if current cell is in placeable area
-            if(i > 10 && i < 89 && i%10!=9 && i%10!=0){
+            if(i > length && i < length*length - (length+1)  && (i % length != length - 1) && i % length != 0){
                 setOnClick(cells.get(i), i);
             }
         }
@@ -455,21 +463,21 @@ public class LevelActivity extends AppCompatActivity {
                 if (redCheckBox.isChecked())
                     if (greenCheckBox.isChecked())
                         if (blueCheckBox.isChecked())
-                            color = "White";
+                            color = "white";
                         else
-                            color = "Yellow";
+                            color = "yellow";
                     else if (blueCheckBox.isChecked())
-                        color = "Magenta";
+                        color = "magenta";
                     else
-                        color = "Red";
+                        color = "red";
 
                 else if (greenCheckBox.isChecked())
                     if (blueCheckBox.isChecked())
-                        color = "Cyan";
+                        color = "cyan";
                     else
-                        color = "Green";
+                        color = "green";
                 else
-                    color = "Blue";
+                    color = "blue";
 
                 //check contents of player selected cell
                 if(walls.size()>0)
