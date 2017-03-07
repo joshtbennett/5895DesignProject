@@ -17,9 +17,11 @@ public class LevelDatabaseHelper extends SQLiteOpenHelper {
     private String SQL_CREATE_ENTRIES;
     private String SQL_DELETE_ENTRIES;
 
+    LevelDatabaseEntry entry;
+
     public LevelDatabaseHelper(Context context, int levelNum) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        LevelDatabaseEntry entry = new LevelDatabaseEntry(levelNum);
+        entry = new LevelDatabaseEntry(levelNum);
         SQL_CREATE_ENTRIES =
                 "CREATE TABLE " + entry.TABLE_NAME + " (" +
                         entry.COLUMN_ENTITY_ANGLE + " INTEGER," +
@@ -31,7 +33,7 @@ public class LevelDatabaseHelper extends SQLiteOpenHelper {
                 "DROP TABLE IF EXISTS " + entry.TABLE_NAME;
     }
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is

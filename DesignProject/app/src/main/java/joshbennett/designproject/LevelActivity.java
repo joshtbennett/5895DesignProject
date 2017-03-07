@@ -28,7 +28,7 @@ public class LevelActivity extends AppCompatActivity {
     private ArrayList<ImageView> cells;
     private ImageManipulator manipulator;
     private EntityHandler entityHandler;
-    private LevelFactory levelFactory = new LevelFactory();
+    private LevelFactory levelFactory;
     private ArrayList<ColorableEntity> entities;
     private ArrayList<Wall> walls;
     private ArrayList<Mirror> mirrors = new ArrayList<>();
@@ -48,7 +48,7 @@ public class LevelActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int levelNum = intent.getIntExtra("levelNum", 1);
         boolean isTutorial = intent.getBooleanExtra("isTutorial", false);
-        LevelFactory factory = new LevelFactory(levelNum, isTutorial, getApplicationContext());
+        levelFactory = new LevelFactory(levelNum, isTutorial, getApplicationContext());
 
         //remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -62,7 +62,7 @@ public class LevelActivity extends AppCompatActivity {
         greenCheckBox = (CheckBox)  findViewById(R.id.Green);
         blueCheckBox = (CheckBox)  findViewById(R.id.Blue);
 
-        levelFactory.setEntities();
+        //levelFactory.setEntities();
         level = levelFactory.generateLevel();
         length = level.getSideLength();
         entities = level.getEntities();
