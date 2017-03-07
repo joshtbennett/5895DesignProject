@@ -33,8 +33,8 @@ public class Collector implements LevelEntity, ColorableEntity{
     }
 
     @Override
-    public void setReceived() {
-        collected = true;
+    public void setReceived(boolean received) {
+        collected = received;
     }
     public boolean getReceived(){
         return collected;

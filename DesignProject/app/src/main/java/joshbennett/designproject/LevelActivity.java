@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
@@ -201,23 +202,40 @@ public class LevelActivity extends AppCompatActivity {
         char direction;
 
         for(int i = 0; i < level.getBeams().size(); i++){
-            int beamposition = level.getBeams().get(i).getPosition();
+
             color = level.getBeams().get(i).getColor();
+            String originalColor = color;
+            String crosscolor = "none";
+
+            for(int k = 0; k < level.getBeams().size(); k++){
+                for(int l = 0; l < level.getMirrors().size(); l++) {
+                    if (level.getBeams().get(i).getPosition() == level.getBeams().get(k).getPosition()) {
+                        color = entityHandler.combineColors(level.getBeams().get(i).getColor(), level.getBeams().get(k).getColor());
+                        level.getBeams().get(i).setColor(color);
+                        level.getBeams().get(k).setColor(color);
+                    }
+                }
+            }
+            int beamposition = level.getBeams().get(i).getPosition();
             Bitmap current = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
             //leaving direction (after its hit the mirror
             direction = level.getBeams().get(i).getDirection();
 
-            Bitmap straightbeam = getBitmapFromAssets(color + "/straightbeam.png", 40);
+            Bitmap straightbeam = getBitmapFromAssets(originalColor + "/straightbeam.png", 40);
             manipulator.newimage(straightbeam, getApplicationContext());
             //going left or right
             if(direction == 'l' || direction == 'r'){
+                Bitmap background = ((BitmapDrawable)cells.get(beamposition).getDrawable()).getBitmap();
                 straightbeam = manipulator.rotateImage(90);
+                straightbeam = manipulator.overlayImages(background, straightbeam);
                 cell = cells.get(beamposition);
                 cell.setImageBitmap(straightbeam);
                 cells.set(beamposition, cell);
             }
             //going up and down
             if(direction == 'u' || direction == 'd') {
+                Bitmap background = ((BitmapDrawable)cells.get(beamposition).getDrawable()).getBitmap();
+                straightbeam = manipulator.overlayImages(background, straightbeam);
                 cell = cells.get(beamposition);
                 cell.setImageBitmap(straightbeam);
                 cells.set(beamposition, cell);
@@ -228,7 +246,7 @@ public class LevelActivity extends AppCompatActivity {
                 int angle = level.getMirrors().get(j).getAngle();
                 if(beamposition == mirrorposition)
                 {
-                    if(level.getMirrors().get(j).getColor() == level.getBeams().get(i).getColor()) {
+                    if(entityHandler.isComponent(level.getBeams().get(i).getColor(), level.getMirrors().get(j).getColor())) {
                         if (angle == 45 && (direction == 'd' || direction == 'l')) {
                             Bitmap beam2;
                             Bitmap beam1;
@@ -345,6 +363,12 @@ public class LevelActivity extends AppCompatActivity {
                 }
             }
         }
+        boolean checkWin = checkWin();
+        if(checkWin == true){
+            Toast.makeText(getApplicationContext(), "Winner!",Toast.LENGTH_LONG).show();
+        }
+        else
+            Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
     }
 
     public void drawLevel(){
@@ -434,7 +458,6 @@ public class LevelActivity extends AppCompatActivity {
         }
 
         //create a grid to display the buttons
-
         for (int i = 0; i < length * length; i++) {
             //add all the buttons to the grid
             grid.addView(cells.get(i));
@@ -659,6 +682,22 @@ public class LevelActivity extends AppCompatActivity {
         image = manipulator.rotateImage(angle);
         cell.setImageBitmap(image);
         return cell;
+    }
+
+    public boolean checkWin(){
+        boolean win = true;
+        int numberOfCollectors = 0, numberOfReceivedCollectors = 0;
+        for(int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).getIdentifier() == 'c') {
+                numberOfCollectors++;
+                if (entities.get(i).getReceived() == true)
+                    numberOfReceivedCollectors++;
+            }
+        }
+        if(numberOfCollectors/2 == numberOfReceivedCollectors)
+            return true;
+        else
+            return false;
     }
 
 }

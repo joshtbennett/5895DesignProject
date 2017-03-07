@@ -33,7 +33,7 @@ public class Beam implements ColorableEntity{
     }
 
     @Override
-    public void setReceived() {
+    public void setReceived(boolean received) {
 
     }
 
@@ -44,5 +44,6 @@ public class Beam implements ColorableEntity{
 
     public char getDirection(){ return direction; }
 
+    public void setColor(String color) {this.color = color;}
     //LevelEntity checkNextSquare(){ }
 }

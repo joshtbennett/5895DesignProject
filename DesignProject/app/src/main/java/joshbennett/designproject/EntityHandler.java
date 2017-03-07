@@ -107,11 +107,15 @@ public class EntityHandler {
 
         if (entity != null) {
             if (entity.getColor() == beam.getColor()) {
-                entity.setReceived();
+                entity.setReceived(true);
+                return;
+            }
+            if(entity.getColor() != beam.getColor()){
+                entity.setReceived(false);
                 return;
             }
         } else if (mirror != null) {
-            if (mirror.getColor() == beam.getColor()) {
+            if (isComponent(beam.getColor(), mirror.getColor())){
                 newDirection = reflect(beam.getDirection(), mirror.getAngle());
             }
             else
@@ -153,5 +157,98 @@ public class EntityHandler {
             }
         }
         return newDirection;
+    }
+
+    public boolean isComponent(String color1, String color2){
+        //Red Green and Blue are not combinations of colors and there for have no components other than themselves
+        if(color2 == "Red"){
+            if(color1 == "Red")
+                return true;
+            else
+                return false;
+        }
+        if(color2 == "Green"){
+            if(color1 == "Green")
+                return true;
+            else
+                return false;
+        }
+        if(color2 == "Blue"){
+            if(color1 == "Blue")
+                return true;
+            else
+                return false;
+        }
+
+        //cyan is a combination of blue and green
+        if(color2 == "Cyan"){
+            if(color1 == "Blue" || color1 == "Green" || color1 == "Cyan")
+                return true;
+            else
+                return false;
+        }
+
+        //yellow is a combination of red and green
+        if(color2 == "Yellow"){
+            if(color1 == "Red" || color1 == "Green" || color1 == "Yellow")
+                return true;
+            else
+                return false;
+
+        }
+
+        //magenta is a combination of red and blue
+        if(color2 == "Magenta"){
+            if(color1 == "Blue" || color1 == "Red" || color1 == "Magenta"){
+                return true;
+            }
+            else
+                return false;
+        }
+
+        //White is a combination of all colors
+        return true;
+    }
+
+    String combineColors(String color1, String color2){
+        if(color1 == color2)
+            return color1;
+        if(color1 == "Red"){
+            if(color2 == "Green"){
+                return "Yellow";
+            }
+            else if(color2 == "Blue"){
+                return "Magenta";
+            }
+            else if(color2 == "Cyan"){
+                return "White";
+            }
+            else{
+                return color2;
+            }
+        }
+        else if(color1 == "Green") {
+            if (color2 == "Red") {
+                return "Yellow";
+            } else if (color2 == "Blue") {
+                return "Cyan";
+            } else if (color2 == "Magenta") {
+                return "White";
+            } else {
+                return color2;
+            }
+        }
+        else if(color1 == "Blue") {
+            if (color2 == "Green") {
+                return "Cyan";
+            } else if (color2 == "Red") {
+                return "Magenta";
+            } else if (color2 == "Yellow") {
+                return "White";
+            } else {
+                return color2;
+            }
+        }
+        return "White";
     }
 }

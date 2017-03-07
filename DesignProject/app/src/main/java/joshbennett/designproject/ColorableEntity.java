@@ -8,6 +8,6 @@ public interface ColorableEntity extends LevelEntity {
     public char getIdentifier();
     public String getColor();
     public int getPosition();
-    public void setReceived();
+    public void setReceived(boolean received);
     public boolean getReceived();
 }
