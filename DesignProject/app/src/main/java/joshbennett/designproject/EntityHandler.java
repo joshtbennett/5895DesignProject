@@ -213,42 +213,42 @@ public class EntityHandler {
     String combineColors(String color1, String color2){
         if(color1 == color2)
             return color1;
-        if(color1 == "Red"){
-            if(color2 == "Green"){
-                return "Yellow";
+        if(color1 == "red"){
+            if(color2 == "green"){
+                return "yellow";
             }
-            else if(color2 == "Blue"){
-                return "Magenta";
+            else if(color2 == "blue"){
+                return "magenta";
             }
-            else if(color2 == "Cyan"){
-                return "White";
+            else if(color2 == "cyan"){
+                return "white";
             }
             else{
                 return color2;
             }
         }
-        else if(color1 == "Green") {
-            if (color2 == "Red") {
-                return "Yellow";
-            } else if (color2 == "Blue") {
-                return "Cyan";
-            } else if (color2 == "Magenta") {
-                return "White";
+        else if(color1 == "green") {
+            if (color2 == "red") {
+                return "yellow";
+            } else if (color2 == "blue") {
+                return "cyan";
+            } else if (color2 == "magenta") {
+                return "white";
             } else {
                 return color2;
             }
         }
-        else if(color1 == "Blue") {
-            if (color2 == "Green") {
-                return "Cyan";
-            } else if (color2 == "Red") {
-                return "Magenta";
-            } else if (color2 == "Yellow") {
-                return "White";
+        else if(color1 == "blue") {
+            if (color2 == "green") {
+                return "cyan";
+            } else if (color2 == "red") {
+                return "magenta";
+            } else if (color2 == "yellow") {
+                return "white";
             } else {
                 return color2;
             }
         }
-        return "White";
+        return "white";
     }
 }
