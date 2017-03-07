@@ -54,7 +54,7 @@ public class LevelFactory {
         }
         catch (Exception e)
         {
-            int x = 0;
+
         }
 
         try {
@@ -67,15 +67,15 @@ public class LevelFactory {
                 switch (cursor.getString(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_TYPE))) {
 
                     case "emitter":
-                        Emitter emitter = new Emitter(color.toLowerCase(), sideLength * x + y);
+                        Emitter emitter = new Emitter(color.toLowerCase(), sideLength * y + x);
                         entities.add(emitter);
                         break;
                     case "collector":
-                        Collector collector = new Collector(color.toLowerCase(), sideLength * x + y);
+                        Collector collector = new Collector(color.toLowerCase(), sideLength * y + x);
                         entities.add(collector);
                         break;
                     case "wall":
-                        Wall wall = new Wall(sideLength * x + y);
+                        Wall wall = new Wall(sideLength * y + x);
                         walls.add(wall);
                         break;
                     case "size":
@@ -90,7 +90,7 @@ public class LevelFactory {
         }
         cursor.close();
 
-
+        // DATABASE WRITING CODE, KEEP FOR LATER
         //if (db.rawQuery("SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?", new String[] {"table", entry.TABLE_NAME}) == 0)
 
         /* mDbHelper.createTableIfNotExist(db, entry.TABLE_NAME);
@@ -116,32 +116,6 @@ public class LevelFactory {
                         entry.COLUMN_LEVEL_SIZE + " INTEGER)";
 
         db.execSQL(SQL_CREATE_ENTRIES); */
-    }
-
-    private void setEntities(){
-
-
-        //test code to add elements to the level
-        //will be taken from database
-        sideLength = 10;
-        Wall wall = new Wall(26);
-        walls.add(wall);
-        Emitter emitter = new Emitter("red", 2);
-        entities.add(emitter);
-        Emitter emitter2 = new Emitter("blue", 3);
-        entities.add(emitter2);
-        Emitter emitter3 = new Emitter("green", 4);
-        entities.add(emitter3);
-        Emitter emitter4 = new Emitter("yellow", 5);
-        entities.add(emitter4);
-        Collector collector  = new Collector("red", 92);
-        entities.add(collector);
-        Collector collector1  = new Collector("blue", 93);
-        entities.add(collector1);
-        Collector collector4  = new Collector("green", 94);
-        entities.add(collector4);
-        Collector collector3  = new Collector("yellow", 95);
-        entities.add(collector3);
     }
 
     //instantiates a Level and passes in the entity array

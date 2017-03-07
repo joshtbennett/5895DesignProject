@@ -361,6 +361,8 @@ public class LevelActivity extends AppCompatActivity {
         char type;
         int position;
         GridLayout grid = (GridLayout) findViewById(R.id.grid);
+        grid.setRowCount(length);
+        grid.setColumnCount(length);
 
         //start with an empty board
         for(int i = 0; i < length; i++){
@@ -433,12 +435,12 @@ public class LevelActivity extends AppCompatActivity {
 
         //create a grid to display the buttons
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < length * length; i++) {
             //add all the buttons to the grid
             grid.addView(cells.get(i));
 
             //if current cell is in placeable area
-            if(i > 10 && i < 89 && i%10!=9 && i%10!=0){
+            if(i > length && i < length*length - (length+1)  && (i % length != length - 1) && i % length != 0){
                 setOnClick(cells.get(i), i);
             }
         }
