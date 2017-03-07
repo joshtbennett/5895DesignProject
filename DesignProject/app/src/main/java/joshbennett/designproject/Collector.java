@@ -6,18 +6,38 @@ package joshbennett.designproject;
 
 public class Collector implements LevelEntity, ColorableEntity{
 
-    private boolean red, green, blue;
-    private int xlocation, ylocation;
     private boolean collected;
+    private char identifier;
+    private String color;
+    private int position;
 
-    Collector(int xlocation, int ylocation, boolean red, boolean blue, boolean green)
+    Collector(String color, int position)
     {
-        this.xlocation = xlocation;
-        this.ylocation = ylocation;
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.position = position;
+        identifier = 'c';
+        this.color = color;
         collected = false;
+    }
+
+    @Override
+    public char getIdentifier() {
+        return identifier;
+    }
+
+    @Override
+    public String getColor() { return color; }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setReceived() {
+        collected = true;
+    }
+    public boolean getReceived(){
+        return collected;
     }
 }
 

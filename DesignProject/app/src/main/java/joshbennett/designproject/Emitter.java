@@ -6,17 +6,42 @@ package joshbennett.designproject;
 
 public class Emitter implements LevelEntity, ColorableEntity
 {
-    private boolean red, green, blue;
-    private int xlocation, ylocation;
+    private char identifier;
+    private String color;
+    private int position;
 
-    Emitter(int xlocation, int ylocation, boolean red, boolean blue, boolean green)
+    Emitter(String color, int position)
     {
-        this.xlocation = xlocation;
-        this.ylocation = ylocation;
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.position = position;
+        identifier = 'e';
+        this.color = color;
     }
 
     void emit(){}
+
+    @Override
+    public char getIdentifier() {
+        return identifier;
+    }
+
+    @Override
+    public String getColor() {
+        return color;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setReceived() {
+
+    }
+
+    @Override
+    public boolean getReceived() {
+        return false;
+    }
+
 }

@@ -6,18 +6,43 @@ package joshbennett.designproject;
 
 public class Beam implements ColorableEntity{
 
-    private boolean red, green, blue;
-    private String direction;
-    private int xlocation, ylocation;
+    private char direction;
+    private char identifier;
+    private String color;
+    private int position;
 
-    Beam(int xlocation, int ylocation, boolean red, boolean blue, boolean green, String direction){
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+    Beam(char direction, String color, int position){
+        this.position = position;
+        identifier = 'b';
         this.direction = direction;
-        this.xlocation = xlocation;
-        this.ylocation = ylocation;
+        this.color = color;
     }
+
+    public char getIdentifier(){
+        return identifier;
+    }
+
+    @Override
+    public String getColor() {
+        return color;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setReceived() {
+
+    }
+
+    @Override
+    public boolean getReceived() {
+        return false;
+    }
+
+    public char getDirection(){ return direction; }
 
     //LevelEntity checkNextSquare(){ }
 }

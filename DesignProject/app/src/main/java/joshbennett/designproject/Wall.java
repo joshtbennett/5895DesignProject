@@ -6,11 +6,22 @@ package joshbennett.designproject;
 
 public class Wall implements LevelEntity
 {
-    private int xlocation, ylocation;
+    private char identifier;
+    private int position;
 
-    Wall(int xlocation, int ylocation)
+    public Wall(int position)
     {
-        this.xlocation = xlocation;
-        this.ylocation = ylocation;
+        this.position = position;
+        identifier = 'w';
+    }
+
+
+    @Override
+    public char getIdentifier() {
+        return identifier;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }
