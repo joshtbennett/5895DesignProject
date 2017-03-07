@@ -40,4 +40,5 @@
         android:id="@+id/tutorialButton"
         android:onClick="TutorialButton"
         android:background="@color/colorTransparent" />
+
 </RelativeLayout>
