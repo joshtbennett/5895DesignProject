@@ -1,12 +1,10 @@
 package joshbennett.designproject;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Josh Bennett on 2/16/2017.
@@ -128,21 +126,21 @@ public class LevelFactory {
         sideLength = 10;
         Wall wall = new Wall(26);
         walls.add(wall);
-        Emitter emitter = new Emitter("Red", 2);
+        Emitter emitter = new Emitter("red", 2);
         entities.add(emitter);
-        Emitter emitter2 = new Emitter("Blue", 3);
+        Emitter emitter2 = new Emitter("blue", 3);
         entities.add(emitter2);
-        Emitter emitter3 = new Emitter("Green", 4);
+        Emitter emitter3 = new Emitter("green", 4);
         entities.add(emitter3);
-        Emitter emitter4 = new Emitter("Yellow" , 5);
+        Emitter emitter4 = new Emitter("yellow", 5);
         entities.add(emitter4);
-        Collector collector  = new Collector("Red", 92);
+        Collector collector  = new Collector("red", 92);
         entities.add(collector);
-        Collector collector1  = new Collector("Blue", 93);
+        Collector collector1  = new Collector("blue", 93);
         entities.add(collector1);
-        Collector collector4  = new Collector("Green", 94);
+        Collector collector4  = new Collector("green", 94);
         entities.add(collector4);
-        Collector collector3  = new Collector("Yellow", 95);
+        Collector collector3  = new Collector("yellow", 95);
         entities.add(collector3);
     }
 

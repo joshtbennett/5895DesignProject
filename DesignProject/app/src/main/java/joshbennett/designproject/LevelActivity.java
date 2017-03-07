@@ -17,7 +17,6 @@ import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LevelActivity extends AppCompatActivity {
@@ -58,9 +57,9 @@ public class LevelActivity extends AppCompatActivity {
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
         flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
         start = (Button)findViewById(R.id.startButton);
-        redCheckBox = (CheckBox)  findViewById(R.id.Red);
-        greenCheckBox = (CheckBox)  findViewById(R.id.Green);
-        blueCheckBox = (CheckBox)  findViewById(R.id.Blue);
+        redCheckBox = (CheckBox)  findViewById(R.id.red);
+        greenCheckBox = (CheckBox)  findViewById(R.id.green);
+        blueCheckBox = (CheckBox)  findViewById(R.id.blue);
 
         //levelFactory.setEntities();
         level = levelFactory.generateLevel();
@@ -462,21 +461,21 @@ public class LevelActivity extends AppCompatActivity {
                 if (redCheckBox.isChecked())
                     if (greenCheckBox.isChecked())
                         if (blueCheckBox.isChecked())
-                            color = "White";
+                            color = "white";
                         else
-                            color = "Yellow";
+                            color = "yellow";
                     else if (blueCheckBox.isChecked())
-                        color = "Magenta";
+                        color = "magenta";
                     else
-                        color = "Red";
+                        color = "red";
 
                 else if (greenCheckBox.isChecked())
                     if (blueCheckBox.isChecked())
-                        color = "Cyan";
+                        color = "cyan";
                     else
-                        color = "Green";
+                        color = "green";
                 else
-                    color = "Blue";
+                    color = "blue";
 
                 //check contents of player selected cell
                 if(walls.size()>0)
