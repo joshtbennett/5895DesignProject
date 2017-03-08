@@ -50,6 +50,11 @@ public class LevelFactory {
                     null,                                     // don't filter by row groups
                     sortOrder                                 // The sort order
             ); */
+           cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "=size", null);
+            if (cursor.moveToFirst()) {
+                sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
+            }
+
             cursor = db.rawQuery("select * from " + entry.TABLE_NAME,null);
         }
         catch (Exception e)
