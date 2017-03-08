@@ -85,6 +85,8 @@ public class EntityHandler {
             }
         }
 
+
+
         Beam newBeam;
         Mirror mirror = null;
         boolean wall = false;
@@ -314,5 +316,13 @@ public class EntityHandler {
             }
         }
         return "white";
+    }
+
+    public Beam checkCellForBeam(ArrayList<Beam> beams, int position){
+        for(int i = 0; i < beams.size(); i++){
+            if(beams.get(i).getPosition() == position)
+                return beams.get(i);
+        }
+        return null;
     }
 }
