@@ -1,5 +1,9 @@
 package joshbennett.designproject;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +11,8 @@ import java.util.ArrayList;
  */
 
 public class EntityHandler {
+
+    public EntityHandler(int x){}
 
     public void addEntity(Level level, ColorableEntity entity, int position) {
         ArrayList<ColorableEntity> entities = level.getEntities();
@@ -56,22 +62,71 @@ public class EntityHandler {
     public void moveBeam(Level level, Beam beam, int pos) {
         int length = level.getSideLength();
         int newposition;
-        char newDirection = beam.getDirection();
+        int currentposition = beam.getPosition();
+        char currentDirection = beam.getDirection();
+        char newDirection = currentDirection;
+        LevelActivity activity = LevelActivity.getInstance();
+        String currentColor = beam.getColor();
+        ArrayList<ImageView> cells = activity.getCells();
+        ImageView cell;
 
-        if (beam.getDirection() == 'u') {
+        if (currentDirection == 'u') {
             newposition = pos - length;
-        } else if (beam.getDirection() == 'd') {
+        } else if (currentDirection == 'd') {
             newposition = pos + length;
-        } else if (beam.getDirection() == 'l') {
+        } else if (currentDirection == 'l') {
             newposition = pos - 1;
         } else {
             newposition = pos + 1;
         }
 
+        for(int i = 0; i < level.getMirrors().size(); i++) {
+            if (level.getMirrors().get(i).getPosition() == currentposition) {
+                //outgoing
+                currentColor = beam.getColor();
+                Bitmap BeamTopRight = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopright.png", 40);
+                Bitmap BeamTopLeft = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopleft.png", 40);
+                Bitmap currentimage = ((BitmapDrawable) cells.get(level.getMirrors().get(i).getPosition()).getDrawable()).getBitmap();
+                int mirrorposition = level.getMirrors().get(i).getPosition();
+
+                //leaving beam
+                if (level.getMirrors().get(i).getAngle() == 45) {
+                    if (currentDirection == 'u') {
+                        //topright90
+                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
+                    } else if (currentDirection == 'd') {
+                        //topright270
+
+                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
+                    } else if (currentDirection == 'l') {
+                        //topleft
+                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
+                    } else {
+                        //topleft180
+                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
+                    }
+                } else if (level.getMirrors().get(i).getAngle() == 135) {
+                    if (currentDirection == 'u') {
+                        //topleft90
+                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
+                    } else if (currentDirection == 'd') {
+                        //topleft270
+                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
+                    } else if (currentDirection == 'l') {
+                        //topright
+                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
+                    } else {
+                        //topright180
+                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
+                    }
+                }
+            }
+        }
+
         for(int k = 0; k < level.getBeams().size(); k++){
             for(int j = 0; j< level.getBeams().size(); j++){
                 if (level.getBeams().get(k).getPosition() == level.getBeams().get(j).getPosition()) {
-                    if(level.getBeams().get(k).getDirection() == level.getBeams().get(j).getDirection()) {
+                    if(level.getBeams().get(k).getDirection() == level.getBeams().get(j).getDirection() || level.getBeams().get(k).getDirection() == level.getBeams().get(j).getOppositeDirection()) {
                         String color = combineColors(level.getBeams().get(k).getColor(), level.getBeams().get(j).getColor());
                         level.getBeams().get(k).setColor(color);
                         level.getBeams().get(j).setColor(color);
@@ -131,10 +186,10 @@ public class EntityHandler {
 
             for (String color : deconstructBeam(beam)) {
                 if (isComponent(color, mirror.getColor())) {
-                    newDirection = reflect(beam.getDirection(), mirror.getAngle());
+                    newDirection = reflect(currentDirection, mirror.getAngle());
                     reflectedBeams.add(new Beam(newDirection, color, newposition));
                 } else {
-                    newDirection = beam.getDirection();
+                    newDirection = currentDirection;
                     passedBeams.add(new Beam(newDirection, color, newposition));
                 }
             }
@@ -156,6 +211,9 @@ public class EntityHandler {
                 level.getBeams().add(passedBeam);
                 moveBeam(level, passedBeam, passedBeam.getPosition());
             }
+
+
+
         } else {
             //empty cell ahead
             newBeam = new Beam(newDirection, beam.getColor(), newposition);
@@ -303,7 +361,5 @@ public class EntityHandler {
         }
         return "white";
     }
-
-
 
 }

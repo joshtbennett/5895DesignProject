@@ -18,6 +18,19 @@ public class Beam implements ColorableEntity{
         this.color = color;
     }
 
+    public char getOppositeDirection(){
+        if(direction == 'u'){
+            return 'd';
+        }
+        if(direction == 'd'){
+            return 'u';
+        }
+        if(direction == 'l'){
+            return 'r';
+        }
+        return 'l';
+    }
+
     public char getIdentifier(){
         return identifier;
     }
