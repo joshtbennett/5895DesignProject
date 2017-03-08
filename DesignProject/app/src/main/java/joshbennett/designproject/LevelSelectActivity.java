@@ -70,6 +70,7 @@ public class LevelSelectActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(level.getContext(), LevelActivity.class);
+                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                     intent.putExtra("levelNum", j+1);
                     intent.putExtra("isTutorial", false);
                     startActivity(intent);

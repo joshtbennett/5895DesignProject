@@ -73,6 +73,18 @@ public class EntityHandler {
             newposition = pos + 1;
         }
 
+        for(int k = 0; k < level.getBeams().size(); k++){
+            for(int j = 0; j< level.getBeams().size(); j++){
+                if (level.getBeams().get(k).getPosition() == level.getBeams().get(j).getPosition()) {
+                    if(level.getBeams().get(k).getDirection() == level.getBeams().get(j).getDirection()) {
+                        String color = combineColors(level.getBeams().get(k).getColor(), level.getBeams().get(j).getColor());
+                        level.getBeams().get(k).setColor(color);
+                        level.getBeams().get(j).setColor(color);
+                    }
+                }
+            }
+        }
+
         Beam newBeam;
         Mirror mirror = null;
         boolean wall = false;
@@ -151,6 +163,7 @@ public class EntityHandler {
                 level.getBeams().add(passedBeam);
                 moveBeam(level, passedBeam, passedBeam.getPosition());
             }
+
 
             /* level.getBeams().add(newBeam);
             moveBeam(level, newBeam, newposition); */

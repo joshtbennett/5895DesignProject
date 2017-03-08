@@ -32,6 +32,8 @@ public class LevelActivity extends AppCompatActivity {
 
 
     private Level level;
+    private int levelNum;
+    private boolean isTutorial;
     private String color;
     private ArrayList<ImageView> cells;
     private ImageManipulator manipulator;
@@ -55,8 +57,8 @@ public class LevelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        int levelNum = intent.getIntExtra("levelNum", 1);
-        boolean isTutorial = intent.getBooleanExtra("isTutorial", false);
+        levelNum = intent.getIntExtra("levelNum", 1);
+        isTutorial = intent.getBooleanExtra("isTutorial", false);
         levelFactory = new LevelFactory(levelNum, isTutorial, getApplicationContext());
 
         //remove notification bar
@@ -230,21 +232,11 @@ public class LevelActivity extends AppCompatActivity {
 
         char direction;
 
-        for(int i = 0; i < level.getBeams().size(); i++){
+        for(int i = 0; i < level.getBeams().size(); i++) {
 
             color = level.getBeams().get(i).getColor();
             String originalColor = color;
-            String crosscolor = "none";
 
-            for(int k = 0; k < level.getBeams().size(); k++){
-                for(int l = 0; l < level.getMirrors().size(); l++) {
-                    if (level.getBeams().get(i).getPosition() == level.getBeams().get(k).getPosition()) {
-                        color = entityHandler.combineColors(level.getBeams().get(i).getColor(), level.getBeams().get(k).getColor());
-                        level.getBeams().get(i).setColor(color);
-                        level.getBeams().get(k).setColor(color);
-                    }
-                }
-            }
             int beamposition = level.getBeams().get(i).getPosition();
             Bitmap current = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
             //leaving direction (after its hit the mirror
@@ -253,8 +245,8 @@ public class LevelActivity extends AppCompatActivity {
             Bitmap straightbeam = getBitmapFromAssets(originalColor + "/straightbeam.png", 40);
             manipulator.newimage(straightbeam, getApplicationContext());
             //going left or right
-            if(direction == 'l' || direction == 'r'){
-                Bitmap background = ((BitmapDrawable)cells.get(beamposition).getDrawable()).getBitmap();
+            if (direction == 'l' || direction == 'r') {
+                Bitmap background = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
                 straightbeam = manipulator.rotateImage(90);
                 straightbeam = manipulator.overlayImages(background, straightbeam);
                 cell = cells.get(beamposition);
@@ -262,20 +254,19 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set(beamposition, cell);
             }
             //going up and down
-            if(direction == 'u' || direction == 'd') {
-                Bitmap background = ((BitmapDrawable)cells.get(beamposition).getDrawable()).getBitmap();
+            if (direction == 'u' || direction == 'd') {
+                Bitmap background = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
                 straightbeam = manipulator.overlayImages(background, straightbeam);
                 cell = cells.get(beamposition);
                 cell.setImageBitmap(straightbeam);
                 cells.set(beamposition, cell);
             }
 
-            for(int j = 0; j < level.getMirrors().size(); j++) {
+            for (int j = 0; j < level.getMirrors().size(); j++) {
                 int mirrorposition = level.getMirrors().get(j).getPosition();
                 int angle = level.getMirrors().get(j).getAngle();
-                if(beamposition == mirrorposition)
-                {
-                    if(entityHandler.isComponent(level.getBeams().get(i).getColor(), level.getMirrors().get(j).getColor())) {
+                if (beamposition == mirrorposition) {
+                    if (entityHandler.isComponent(level.getBeams().get(i).getColor(), level.getMirrors().get(j).getColor())) {
                         if (angle == 45 && (direction == 'd' || direction == 'l')) {
                             Bitmap beam2;
                             Bitmap beam1;
@@ -330,9 +321,8 @@ public class LevelActivity extends AppCompatActivity {
                             cell.setImageBitmap(current);
                             cells.set(beamposition, cell);
                         }
-                    }
-                    else{
-                        if((direction == 'u' || direction == 'd') && angle == 135){
+                    } else {
+                        if ((direction == 'u' || direction == 'd') && angle == 135) {
                             Bitmap beam2;
                             Bitmap beam1;
                             beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
@@ -346,8 +336,7 @@ public class LevelActivity extends AppCompatActivity {
                             cell = cells.get(beamposition);
                             cell.setImageBitmap(current);
                             cells.set(beamposition, cell);
-                        }
-                        else if((direction == 'l' || direction == 'r') && angle == 135){
+                        } else if ((direction == 'l' || direction == 'r') && angle == 135) {
                             Bitmap beam2;
                             Bitmap beam1;
                             beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
@@ -359,8 +348,7 @@ public class LevelActivity extends AppCompatActivity {
                             cell = cells.get(beamposition);
                             cell.setImageBitmap(current);
                             cells.set(beamposition, cell);
-                        }
-                        else if((direction == 'u' || direction == 'd') && angle == 45){
+                        } else if ((direction == 'u' || direction == 'd') && angle == 45) {
                             Bitmap beam2;
                             Bitmap beam1;
                             beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
@@ -374,8 +362,7 @@ public class LevelActivity extends AppCompatActivity {
                             cell = cells.get(beamposition);
                             cell.setImageBitmap(current);
                             cells.set(beamposition, cell);
-                        }
-                        else if((direction == 'l' || direction == 'r') && angle == 45){
+                        } else if ((direction == 'l' || direction == 'r') && angle == 45) {
                             Bitmap beam2;
                             Bitmap beam1;
                             beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
@@ -499,6 +486,10 @@ public class LevelActivity extends AppCompatActivity {
 
         for (Mirror i : level.getMirrors()) {
             Bitmap newimage = getBitmapFromAssets(i.getColor() + "/45mirror.png", 40);
+            manipulator.newimage(newimage, this);
+            if(i.getAngle()==135) {
+                newimage = manipulator.rotateImage(90);
+            }
             ImageView cell = cells.get(i.getPosition());
             cell.setImageBitmap(newimage);
             cells.set(i.getPosition(), cell);
@@ -768,6 +759,17 @@ public class LevelActivity extends AppCompatActivity {
 
         Button nextlevel = new Button(this);
         nextlevel.setText("Next");
+        nextlevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), LevelActivity.class);
+                i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                i.putExtra("levelNum", levelNum);
+                i.putExtra("isTutorial", isTutorial);
+                startActivity(i);
+            }
+        });
+
         buttonslayout.addView(levelselect);
         buttonslayout.addView(replay);
         buttonslayout.addView(nextlevel);
