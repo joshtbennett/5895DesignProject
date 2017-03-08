@@ -61,18 +61,18 @@ public class LevelFactory {
         {
 
         }
-       // Emitter emitter1 = new Emitter("cyan", 24);
-        //entities.add(emitter1);
-        Emitter emitter2 = new Emitter("cyan", 40);
+        Emitter emitter1 = new Emitter("cyan", 24);
+        entities.add(emitter1);
+        Emitter emitter2 = new Emitter("blue", 40);
         entities.add(emitter2);
-       /* Emitter emitter3 = new Emitter("red", 3);
+        Emitter emitter3 = new Emitter("red", 3);
         entities.add(emitter3);
         Collector collector1 = new Collector("magenta", 59);
         entities.add(collector1);
         Collector collector2 = new Collector("green", 23);
         entities.add(collector2);
-        Collector collector3 = new Collector("blue", 39);*/
-        //entities.add(collector3);
+        Collector collector3 = new Collector("blue", 39);
+        entities.add(collector3);
         Wall wall = new Wall(28);
         walls.add(wall);
 

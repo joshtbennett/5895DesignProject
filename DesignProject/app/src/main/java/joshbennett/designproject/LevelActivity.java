@@ -1,6 +1,5 @@
 package joshbennett.designproject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -9,23 +8,19 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -293,7 +288,7 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 }
             }
-            
+
             /*
             for (int j = 0; j < level.getMirrors().size(); j++) {
                 int mirrorposition = level.getMirrors().get(j).getPosition();
@@ -414,8 +409,7 @@ public class LevelActivity extends AppCompatActivity {
             }
         }
     }
-
-
+    
     public void drawLevel(){
         entityHandler = new EntityHandler();
         cells = new ArrayList<>((length) * (length));
@@ -747,7 +741,6 @@ public class LevelActivity extends AppCompatActivity {
         RelativeLayout endscreen = new RelativeLayout(this);
         LinearLayout buttonslayout = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //params.addRule(LinearLayout.CENTER_IN_PARENT);
         endscreen.setBackgroundColor(Color.argb(255, 209, 226, 255));
         endscreen.setLayoutParams(params);
 
@@ -826,17 +819,6 @@ public class LevelActivity extends AppCompatActivity {
             }
 
         }, 1000);
-
-
-    }
-
-    public int findBeamIndex(ArrayList<Beam> beams, int position){
-        int index = 0;
-        for(int i = 0; i < beams.size();i++){
-            if(beams.get(i).getPosition() == position)
-                index = i;
-        }
-        return index;
     }
 
     public void displayBeamMirror(Bitmap beamimage, int previouscell, ArrayList<ImageView> cells, int mirrorcell, int angle){

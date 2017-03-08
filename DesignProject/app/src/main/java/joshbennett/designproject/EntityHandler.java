@@ -1,10 +1,5 @@
 package joshbennett.designproject;
 
-import android.content.EntityIterator;
-import android.graphics.Bitmap;
-import android.provider.ContactsContract;
-import android.widget.ImageView;
-
 import java.util.ArrayList;
 
 /**
@@ -85,8 +80,6 @@ public class EntityHandler {
             }
         }
 
-
-
         Beam newBeam;
         Mirror mirror = null;
         boolean wall = false;
@@ -144,8 +137,6 @@ public class EntityHandler {
                     newDirection = beam.getDirection();
                     passedBeams.add(new Beam(newDirection, color, newposition));
                 }
-
-
             }
 
             if (!reflectedBeams.isEmpty()) {
@@ -165,11 +156,6 @@ public class EntityHandler {
                 level.getBeams().add(passedBeam);
                 moveBeam(level, passedBeam, passedBeam.getPosition());
             }
-
-
-            /* level.getBeams().add(newBeam);
-            moveBeam(level, newBeam, newposition); */
-
         } else {
             //empty cell ahead
             newBeam = new Beam(newDirection, beam.getColor(), newposition);
@@ -318,11 +304,6 @@ public class EntityHandler {
         return "white";
     }
 
-    public Beam checkCellForBeam(ArrayList<Beam> beams, int position){
-        for(int i = 0; i < beams.size(); i++){
-            if(beams.get(i).getPosition() == position)
-                return beams.get(i);
-        }
-        return null;
-    }
+
+
 }
