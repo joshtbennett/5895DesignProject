@@ -172,11 +172,11 @@ public class EntityHandler {
 
 
         if (entity != null) {
-            if (entity.getColor() == beam.getColor()) {
+            if (entity.getColor().equals(beam.getColor())) {
                 entity.setReceived(true);
                 return;
             }
-            if(entity.getColor() != beam.getColor()){
+            else {
                 entity.setReceived(false);
                 return;
             }
@@ -250,36 +250,36 @@ public class EntityHandler {
 
     public boolean isComponent(String color1, String color2){
         //red green and blue are not combinations of colors and there for have no components other than themselves
-        if(color2 == "red"){
-            if(color1 == "red")
+        if(color2.equals("red")){
+            if(color1.equals("red"))
                 return true;
             else
                 return false;
         }
-        if(color2 == "green"){
-            if(color1 == "green")
+        if(color2.equals("green")){
+            if(color1.equals("green"))
                 return true;
             else
                 return false;
         }
-        if(color2 == "blue"){
-            if(color1 == "blue")
+        if(color2.equals("blue")){
+            if(color1.equals("blue"))
                 return true;
             else
                 return false;
         }
 
         //cyan is a combination of blue and green
-        if(color2 == "cyan"){
-            if(color1 == "blue" || color1 == "green" || color1 == "cyan")
+        if(color2.equals("cyan")){
+            if(color1.equals("blue") || color1.equals("green") || color1.equals("cyan"))
                 return true;
             else
                 return false;
         }
 
         //yellow is a combination of red and green
-        if(color2 == "yellow"){
-            if(color1 == "red" || color1 == "green" || color1 == "yellow")
+        if(color2.equals("yellow")){
+            if(color1.equals("red") || color1.equals("green") || color1.equals("yellow"))
                 return true;
             else
                 return false;
@@ -287,8 +287,8 @@ public class EntityHandler {
         }
 
         //magenta is a combination of red and blue
-        if(color2 == "magenta"){
-            if(color1 == "blue" || color1 == "red" || color1 == "magenta"){
+        if(color2.equals("magenta")){
+            if(color1.equals("blue") || color1.equals("red") || color1.equals("magenta")){
                 return true;
             }
             else
@@ -321,39 +321,39 @@ public class EntityHandler {
     }
 
     String combineColors(String color1, String color2){
-        if(color1 == color2)
+        if(color1.equals(color2))
             return color1;
-        if(color1 == "red"){
-            if(color2 == "green"){
+        if(color1.equals("red")){
+            if(color2.equals("green")){
                 return "yellow";
             }
-            else if(color2 == "blue"){
+            else if(color2.equals("blue")){
                 return "magenta";
             }
-            else if(color2 == "cyan"){
+            else if(color2.equals("cyan")){
                 return "white";
             }
             else{
                 return color2;
             }
         }
-        else if(color1 == "green") {
-            if (color2 == "red") {
+        else if(color1.equals("green")) {
+            if (color2.equals("red")) {
                 return "yellow";
-            } else if (color2 == "blue") {
+            } else if (color2.equals("blue")) {
                 return "cyan";
-            } else if (color2 == "magenta") {
+            } else if (color2.equals("magenta")) {
                 return "white";
             } else {
                 return color2;
             }
         }
-        else if(color1 == "blue") {
-            if (color2 == "green") {
+        else if(color1.equals("blue")) {
+            if (color2.equals("green")) {
                 return "cyan";
-            } else if (color2 == "red") {
+            } else if (color2.equals("red")) {
                 return "magenta";
-            } else if (color2 == "yellow") {
+            } else if (color2.equals("yellow")) {
                 return "white";
             } else {
                 return color2;
