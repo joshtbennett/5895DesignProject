@@ -84,7 +84,7 @@ public class LevelFactory {
                 int x = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
                 int y = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_Y));
 
-                switch (cursor.getString(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_TYPE))) {
+                switch (cursor.getString(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_TYPE)).toLowerCase()) {
 
                     case "emitter":
                         Emitter emitter = new Emitter(color.toLowerCase(), sideLength * y + x);
