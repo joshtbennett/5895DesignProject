@@ -115,7 +115,7 @@ public class EntityHandler {
                 return;
             }
         }
-        if (newposition < length - 1 || newposition > (length * length) - length - 1 || newposition % length == 0 || newposition % length == 9) {
+        if (newposition < length - 1 || newposition > (length * length) - length - 1 || newposition % length == 0 || newposition % length == length-1) {
             //the next  cell is out of bounds
             return;
         }

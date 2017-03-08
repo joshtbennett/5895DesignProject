@@ -742,6 +742,10 @@ public class LevelActivity extends AppCompatActivity {
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                for(int i = 0; i < entities.size(); i++){
+                    entities.get(i).setReceived(false);
+                }
+                level.getBeams().clear();
                 level.getMirrors().clear();
                 startButton.setEnabled(true);
                 endwindow.dismiss();
@@ -753,7 +757,6 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 });
                 drawLevel();
-                level.getBeams().clear();
             }
         });
 
