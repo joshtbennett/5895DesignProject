@@ -1,5 +1,6 @@
 package joshbennett.designproject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -767,7 +769,7 @@ public class LevelActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), LevelActivity.class);
                 i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-                i.putExtra("levelNum", levelNum);
+                i.putExtra("levelNum", levelNum + 1);
                 i.putExtra("isTutorial", isTutorial);
                 startActivity(i);
             }
@@ -785,7 +787,19 @@ public class LevelActivity extends AppCompatActivity {
         endscreen.addView(buttonslayout, buttonParams);
 
         endwindow = new PopupWindow(endscreen, 900, 300);
-        endwindow.showAtLocation(buttonslayout, Gravity.CENTER, 0, 0);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // close your dialog
+                endwindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
+            }
+
+        }, 1000);
+
+
     }
 
 }
