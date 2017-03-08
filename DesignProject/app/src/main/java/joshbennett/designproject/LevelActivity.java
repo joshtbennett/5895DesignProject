@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class LevelActivity extends AppCompatActivity {
 
-
+    private static LevelActivity instance = null;
     private Level level;
     private int levelNum;
     private boolean isTutorial;
@@ -54,9 +54,15 @@ public class LevelActivity extends AppCompatActivity {
     private PopupWindow endwindow;
     private int length;
 
+    public static LevelActivity getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
 
         Intent intent = getIntent();
         levelNum = intent.getIntExtra("levelNum", 1);
