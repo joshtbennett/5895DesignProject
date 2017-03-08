@@ -50,18 +50,16 @@ public class LevelFactory {
                     null,                                     // don't filter by row groups
                     sortOrder                                 // The sort order
             ); */
-           cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "=size", null);
+           cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='size'", null);
             if (cursor.moveToFirst()) {
                 sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
             }
 
             cursor = db.rawQuery("select * from " + entry.TABLE_NAME,null);
         }
-        catch (Exception e)
-        {
-
+        catch (Exception e) {
         }
-        Emitter emitter1 = new Emitter("cyan", 24);
+        /* Emitter emitter1 = new Emitter("cyan", 24);
         entities.add(emitter1);
         Emitter emitter2 = new Emitter("blue", 40);
         entities.add(emitter2);
@@ -74,11 +72,11 @@ public class LevelFactory {
         Collector collector3 = new Collector("blue", 39);
         entities.add(collector3);
         Wall wall = new Wall(28);
-        walls.add(wall);
+        walls.add(wall); */
 
 
 
-        /*
+
         try {
             while (cursor.moveToNext()) {
 
@@ -108,10 +106,9 @@ public class LevelFactory {
             }
         }
         catch (Exception e) {
-
         }
         cursor.close();
-*/
+
         // DATABASE WRITING CODE, KEEP FOR LATER
         //if (db.rawQuery("SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?", new String[] {"table", entry.TABLE_NAME}) == 0)
 
@@ -142,7 +139,6 @@ public class LevelFactory {
 
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
-        sideLength = 8;
         Level level = new Level(entities, walls, sideLength);
         return level;
     }
