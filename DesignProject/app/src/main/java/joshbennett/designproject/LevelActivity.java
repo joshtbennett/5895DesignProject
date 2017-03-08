@@ -47,6 +47,7 @@ public class LevelActivity extends AppCompatActivity {
     private ToggleButton placeButton;
     private ToggleButton flipButton;
     private Button startButton;
+    private PopupWindow endwindow;
     private int length;
 
     @Override
@@ -721,12 +722,12 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     public void displayFinish(){
-
+        startButton.setEnabled(false);
         RelativeLayout endscreen = new RelativeLayout(this);
         LinearLayout buttonslayout = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         //params.addRule(LinearLayout.CENTER_IN_PARENT);
-        endscreen.setBackgroundColor(Color.BLUE);
+        endscreen.setBackgroundColor(Color.argb(255, 209, 226, 255));
         endscreen.setLayoutParams(params);
 
         TextView endmessage = new TextView(this);
@@ -737,9 +738,34 @@ public class LevelActivity extends AppCompatActivity {
 
 
         Button levelselect = new Button(this);
-        levelselect.setText("Select");
+        levelselect.setText("Return");
+        levelselect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LevelActivity.super.onBackPressed();
+            }
+        });
+
         Button replay = new Button(this);
         replay.setText("Replay");
+        replay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                level.getMirrors().clear();
+                startButton.setEnabled(true);
+                endwindow.dismiss();
+                level.isRunning = false;
+                startButton.setText("Start");
+                startButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        start(v);
+                    }
+                });
+                drawLevel();
+                level.getBeams().clear();
+            }
+        });
+
         Button nextlevel = new Button(this);
         nextlevel.setText("Next");
         buttonslayout.addView(levelselect);
@@ -753,7 +779,7 @@ public class LevelActivity extends AppCompatActivity {
 
         endscreen.addView(buttonslayout, buttonParams);
 
-        PopupWindow endwindow = new PopupWindow(endscreen, 900, 300);
+        endwindow = new PopupWindow(endscreen, 900, 300);
         endwindow.showAtLocation(buttonslayout, Gravity.CENTER, 0, 0);
     }
 

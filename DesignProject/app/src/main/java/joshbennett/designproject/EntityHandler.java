@@ -119,16 +119,41 @@ public class EntityHandler {
                 return;
             }
         } else if (mirror != null) {
+            ArrayList<Beam> reflectedBeams = new ArrayList<>();
+            ArrayList<Beam> passedBeams = new ArrayList<>();
+
             for (String color : deconstructBeam(beam)) {
                 if (isComponent(color, mirror.getColor())) {
                     newDirection = reflect(beam.getDirection(), mirror.getAngle());
+                    reflectedBeams.add(new Beam(newDirection, color, newposition));
                 } else {
                     newDirection = beam.getDirection();
+                    passedBeams.add(new Beam(newDirection, color, newposition));
                 }
-                newBeam = new Beam(newDirection, color, newposition);
-                level.getBeams().add(newBeam);
-                moveBeam(level, newBeam, newposition);
+
+
             }
+
+            if (!reflectedBeams.isEmpty()) {
+                Beam reflectedBeam = reflectedBeams.get(0);
+                for (int i = 0; i < reflectedBeams.size() - 1; i++) {
+                    reflectedBeam.setColor(combineColors(reflectedBeam.getColor(), reflectedBeams.get(i+1).getColor()));
+                }
+                level.getBeams().add(reflectedBeam);
+                moveBeam(level, reflectedBeam, reflectedBeam.getPosition());
+            }
+
+            if (!passedBeams.isEmpty()) {
+                Beam passedBeam = passedBeams.get(0);
+                for (int i = 0; i < passedBeams.size() - 1; i++) {
+                    passedBeam.setColor(combineColors(passedBeam.getColor(), passedBeams.get(i+1).getColor()));
+                }
+                level.getBeams().add(passedBeam);
+                moveBeam(level, passedBeam, passedBeam.getPosition());
+            }
+
+            /* level.getBeams().add(newBeam);
+            moveBeam(level, newBeam, newposition); */
 
         } else {
             //empty cell ahead
