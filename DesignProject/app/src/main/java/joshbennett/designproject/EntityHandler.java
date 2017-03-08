@@ -15,6 +15,10 @@ public class EntityHandler {
 
     public void addEntity(Level level, ColorableEntity entity, int position) {
         ArrayList<ColorableEntity> entities = level.getEntities();
+        for (ColorableEntity i : entities) {
+            if (i.getPosition() == position)
+                return;
+        }
         entities.add(entity);
         level.setEntities(entities);
     }

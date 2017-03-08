@@ -13,6 +13,7 @@ public class Level
     private ArrayList<Mirror> mirrors;
     private ArrayList<Beam> beams;
     private int sideLength;
+    public boolean isRunning = false;
 
     public Level(ArrayList<ColorableEntity> entities, ArrayList<Wall> walls,  int sideLength){
         this.sideLength = sideLength;

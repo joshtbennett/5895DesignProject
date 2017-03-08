@@ -46,7 +46,7 @@ public class LevelActivity extends AppCompatActivity {
     private ToggleButton deleteButton;
     private ToggleButton placeButton;
     private ToggleButton flipButton;
-    private Button start;
+    private Button startButton;
     private int length;
 
     @Override
@@ -65,7 +65,7 @@ public class LevelActivity extends AppCompatActivity {
         deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
         flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
-        start = (Button)findViewById(R.id.startButton);
+        startButton = (Button)findViewById(R.id.startButton);
         redCheckBox = (CheckBox)  findViewById(R.id.red);
         greenCheckBox = (CheckBox)  findViewById(R.id.green);
         blueCheckBox = (CheckBox)  findViewById(R.id.blue);
@@ -116,14 +116,34 @@ public class LevelActivity extends AppCompatActivity {
             placeButton.setChecked(false);
     }
 
+    public void stop(View v) {
+        level.isRunning = false;
+        startButton.setText("Start");
+        startButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                start(v);
+            }
+        });
+        drawLevel();
+        level.getBeams().clear();
+
+    }
+
     public void start(View v){
 
         ImageView cell;
 
-        for(int i = 0; i < length*length; i++){
+        /* for(int i = 0; i < length*length; i++){
             cell = cells.get(i);
-            cell.setOnClickListener(null);
-        }
+       //     cell.setOnClickListener(null);
+        } */
+        level.isRunning = true;
+        startButton.setText("Stop");
+        startButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                stop(v);
+            }
+        });
 
         Bitmap image;
         Beam beam;
@@ -371,12 +391,11 @@ public class LevelActivity extends AppCompatActivity {
                 }
             }
         }
-        boolean checkWin = level.checkWin();
-        if(checkWin == true){
+        if(level.checkWin()){
             displayFinish();
         }
-        else
-            Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
+       // else
+           // Toast.makeText(getApplicationContext(), "Loser!", Toast.LENGTH_LONG).show();
     }
 
     public void drawLevel(){
@@ -393,6 +412,7 @@ public class LevelActivity extends AppCompatActivity {
         char type;
         int position;
         GridLayout grid = (GridLayout) findViewById(R.id.grid);
+        grid.removeAllViews();
         grid.setRowCount(length);
         grid.setColumnCount(length);
 
@@ -475,13 +495,21 @@ public class LevelActivity extends AppCompatActivity {
                 setOnClick(cells.get(i), i);
             }
         }
+
+        for (Mirror i : level.getMirrors()) {
+            Bitmap newimage = getBitmapFromAssets(i.getColor() + "/45mirror.png", 40);
+            ImageView cell = cells.get(i.getPosition());
+            cell.setImageBitmap(newimage);
+            cells.set(i.getPosition(), cell);
+        }
     }
 
     private void setOnClick(final ImageView clickableimage, final int position) {
         clickableimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (level.isRunning)
+                    return;
                 walls = level.getWalls();
                 entities = level.getEntities();
                 mirrors = level.getMirrors();
@@ -599,7 +627,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position+length), cell);
 
                 Collector collector = new Collector(color, position+length);
-                entityHandler.addEntity(level, collector, position);
+                entityHandler.addEntity(level, collector, position+length);
             }
             //left
             else if(position % length == 0){
@@ -609,7 +637,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position+1), cell);
 
                 Collector collector = new Collector(color, position+1);
-                entityHandler.addEntity(level, collector, position);
+                entityHandler.addEntity(level, collector, position+1);
             }
             //right
             else if(position %  length == length-1){
@@ -619,7 +647,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position-1), cell);
 
                 Collector collector = new Collector(color, position-1);
-                entityHandler.addEntity(level, collector, position);
+                entityHandler.addEntity(level, collector, position-1);
             }
             //bottom
             else if(position > (length * (length-1))){
@@ -629,7 +657,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position-length), cell);
 
                 Collector collector = new Collector(color, position-length);
-                entityHandler.addEntity(level, collector, position);
+                entityHandler.addEntity(level, collector, position-length);
             }
         }
         return cells;
@@ -648,7 +676,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position+length), cell);
 
                 Emitter emitter = new Emitter(color, position+length);
-                entityHandler.addEntity(level, emitter, position);
+                entityHandler.addEntity(level, emitter, position+length);
             }
             //left
             else if(position % length == 0){
@@ -658,7 +686,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position+1), cell);
 
                 Emitter emitter = new Emitter(color, position+1);
-                entityHandler.addEntity(level, emitter, position);
+                entityHandler.addEntity(level, emitter, position+1);
             }
             //right
             else if(position %  length == length-1){
@@ -668,7 +696,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position-1), cell);
 
                 Emitter emitter = new Emitter(color, position-1);
-                entityHandler.addEntity(level, emitter, position);
+                entityHandler.addEntity(level, emitter, position-1);
             }
             //bottom
             else if(position > (length * (length-1))){
@@ -678,7 +706,7 @@ public class LevelActivity extends AppCompatActivity {
                 cells.set((position-length), cell);
 
                 Emitter emitter = new Emitter(color, position-length);
-                entityHandler.addEntity(level, emitter, position);
+                entityHandler.addEntity(level, emitter, position-length);
             }
         }
         return cells;
