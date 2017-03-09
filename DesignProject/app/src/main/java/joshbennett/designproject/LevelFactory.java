@@ -42,16 +42,7 @@ public class LevelFactory {
 
             String sortOrder =
                     entry.COLUMN_ENTITY_TYPE + " DESC";
-
-           /* cursor = db.query(
-                    entry.TABLE_NAME,                     // The table to query
-                    projection,                               // The columns to return
-                    selection,                                // The columns for the WHERE clause
-                    selectionArgs,                            // The values for the WHERE clause
-                    null,                                     // don't group the rows
-                    null,                                     // don't filter by row groups
-                    sortOrder                                 // The sort order
-            ); */
+            
            cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='size'", null);
             if (cursor.moveToFirst()) {
                 sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
