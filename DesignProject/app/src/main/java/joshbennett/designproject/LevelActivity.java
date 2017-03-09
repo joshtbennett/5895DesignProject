@@ -132,8 +132,13 @@ public class LevelActivity extends AppCompatActivity {
                 start(v);
             }
         });
-        drawLevel();
+        for (ColorableEntity i : level.getEntities()) {
+            if (i.getIdentifier() == 'c') {
+                i.setReceived(false);
+            }
+        }
         level.getBeams().clear();
+        drawLevel();
 
     }
 
@@ -739,6 +744,11 @@ public class LevelActivity extends AppCompatActivity {
                 }
                 level.getBeams().clear();
                 level.getMirrors().clear();
+                for (ColorableEntity i : level.getEntities()) {
+                    if (i.getIdentifier() == 'c') {
+                        i.setReceived(false);
+                    }
+                }
                 startButton.setEnabled(true);
                 endwindow.dismiss();
                 level.isRunning = false;
