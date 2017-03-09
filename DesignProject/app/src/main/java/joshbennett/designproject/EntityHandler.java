@@ -211,9 +211,6 @@ public class EntityHandler {
                 level.getBeams().add(passedBeam);
                 moveBeam(level, passedBeam, passedBeam.getPosition());
             }
-
-
-
         } else {
             //empty cell ahead
             newBeam = new Beam(newDirection, beam.getColor(), newposition);
@@ -361,5 +358,4 @@ public class EntityHandler {
         }
         return "white";
     }
-
 }

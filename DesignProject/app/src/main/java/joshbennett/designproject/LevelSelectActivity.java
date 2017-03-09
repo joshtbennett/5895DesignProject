@@ -29,36 +29,6 @@ public class LevelSelectActivity extends AppCompatActivity {
         //remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_level_select);
-
-        /*ArrayList<ImageButton> buttons = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            final int j = i;
-
-            //create a new button
-            final ImageButton level = new ImageButton(this);
-
-            //scale the image for the button
-            Bitmap testimage = getBitmapFromAssets("testimage.png", 100);
-
-            //put the scaled image on the button
-            level.setImageBitmap(testimage);
-
-            //action for when a button is pressed
-            level.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(level.getContext(), LevelActivity.class);
-                    intent.putExtra("levelNum", j+1);
-                    intent.putExtra("isTutorial", false);
-                    startActivity(intent);
-                }
-            });
-
-            //add the new button to the buttons array
-            buttons.add(level);
-        }*/
-
         ArrayList<Button> buttons = new ArrayList<>();
 
         for(int i = 0; i < 30; i++){

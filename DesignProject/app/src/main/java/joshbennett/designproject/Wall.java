@@ -9,12 +9,10 @@ public class Wall implements LevelEntity
     private char identifier;
     private int position;
 
-    public Wall(int position)
-    {
+    public Wall(int position) {
         this.position = position;
         identifier = 'w';
     }
-
 
     @Override
     public char getIdentifier() {

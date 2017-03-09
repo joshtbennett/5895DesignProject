@@ -33,9 +33,7 @@ public class Mirror implements LevelEntity, ColorableEntity
     }
 
     @Override
-    public void setReceived(boolean received) {
-
-    }
+    public void setReceived(boolean received) {    }
 
     @Override
     public boolean getReceived() {

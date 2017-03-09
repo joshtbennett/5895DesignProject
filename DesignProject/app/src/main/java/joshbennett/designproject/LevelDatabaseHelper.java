@@ -90,8 +90,6 @@ public class LevelDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-
-
     private void copyDataBase() throws IOException
     {
         InputStream mInput = mContext.getAssets().open(DATABASE_NAME);
@@ -107,7 +105,6 @@ public class LevelDatabaseHelper extends SQLiteOpenHelper {
         mOutput.close();
         mInput.close();
     }
-
 
     public void createTableIfNotExist(SQLiteDatabase db, String tableName) {
         if (!isTableExists(db, tableName)) {

@@ -263,125 +263,6 @@ public class LevelActivity extends AppCompatActivity {
                     cells.set(beamposition, cell);
                 }
             }
-
-
-
-
-            /*
-            for (int j = 0; j < level.getMirrors().size(); j++) {
-                int mirrorposition = level.getMirrors().get(j).getPosition();
-                int angle = level.getMirrors().get(j).getAngle();
-                if (beamposition == mirrorposition) {
-                    if (entityHandler.isComponent(level.getBeams().get(i).getColor(), level.getMirrors().get(j).getColor())) {
-                        if (angle == 45 && (direction == 'd' || direction == 'l')) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(270);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-
-                        } else if (angle == 45 && (direction == 'u' || direction == 'r')) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            manipulator.newimage(beam1, getApplicationContext());
-                            beam1 = manipulator.rotateImage(180);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(90);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        } else if (angle == 135 && (direction == 'r' || direction == 'd')) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            manipulator.newimage(beam1, getApplicationContext());
-                            beam1 = manipulator.rotateImage(180);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(270);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        } else if (angle == 135 && (direction == 'l' || direction == 'u')) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(90);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        }
-                    } else {
-                        if ((direction == 'u' || direction == 'd') && angle == 135) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            manipulator.newimage(beam1, getApplicationContext());
-                            beam1 = manipulator.rotateImage(90);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(270);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        } else if ((direction == 'l' || direction == 'r') && angle == 135) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(180);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        } else if ((direction == 'u' || direction == 'd') && angle == 45) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            manipulator.newimage(beam1, getApplicationContext());
-                            beam1 = manipulator.rotateImage(90);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopright.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(270);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        } else if ((direction == 'l' || direction == 'r') && angle == 45) {
-                            Bitmap beam2;
-                            Bitmap beam1;
-                            beam1 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            beam2 = getBitmapFromAssets(color + "/mirrorbeamtopleft.png", 40);
-                            manipulator.newimage(beam2, getApplicationContext());
-                            beam2 = manipulator.rotateImage(180);
-                            beam2 = manipulator.overlayImages(beam2, beam1);
-                            current = manipulator.overlayImages(current, beam2);
-                            cell = cells.get(beamposition);
-                            cell.setImageBitmap(current);
-                            cells.set(beamposition, cell);
-                        }
-                    }*/
             if (level.checkWin()) {
                 displayFinish();
             }
@@ -608,7 +489,7 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     public ArrayList<ImageView> displayIfCollector(char type, int position, String color, ArrayList<ImageView> cells){
-        ImageView cell = new ImageView(getApplicationContext());
+        ImageView cell;
         Bitmap offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
         Bitmap onboardcollectoroff = getBitmapFromAssets(color+"/onboardcollectoroff.png",  40);
         if(type == 'c'){
@@ -657,7 +538,7 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     public ArrayList<ImageView> displayIfEmitter(char type, int position, String color, ArrayList<ImageView> cells){
-        ImageView cell = new ImageView(getApplicationContext());
+        ImageView cell;
         Bitmap offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
         Bitmap onboardemitteroff = getBitmapFromAssets(color+"/onboardemitteroff.png", 40);
         if(type == 'e'){
@@ -785,9 +666,8 @@ public class LevelActivity extends AppCompatActivity {
 
         RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
         endscreen.addView(endmessage, messageparams);
-
-
         endscreen.addView(buttonslayout, buttonParams);
 
         endwindow = new PopupWindow(endscreen, 900, 300);

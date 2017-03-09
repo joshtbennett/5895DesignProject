@@ -29,7 +29,6 @@ public class LevelFactory {
             db = mDbHelper.getReadableDatabase();
             entry = new LevelDatabaseEntry(levelNum);
 
-
             String[] projection = {
                     entry.COLUMN_ENTITY_TYPE,
                     entry.COLUMN_ENTITY_X,
@@ -69,23 +68,6 @@ public class LevelFactory {
         }
         catch (Exception e) {
         }
-        /* Emitter emitter1 = new Emitter("cyan", 24);
-        entities.add(emitter1);
-        Emitter emitter2 = new Emitter("blue", 40);
-        entities.add(emitter2);
-        Emitter emitter3 = new Emitter("red", 3);
-        entities.add(emitter3);
-        Collector collector1 = new Collector("magenta", 59);
-        entities.add(collector1);
-        Collector collector2 = new Collector("green", 23);
-        entities.add(collector2);
-        Collector collector3 = new Collector("blue", 39);
-        entities.add(collector3);
-        Wall wall = new Wall(28);
-        walls.add(wall); */
-
-
-
 
         try {
             while (cursor.moveToNext()) {
