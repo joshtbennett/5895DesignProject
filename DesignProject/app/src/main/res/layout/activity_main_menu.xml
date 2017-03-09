@@ -26,7 +26,6 @@
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="81dp"
-        android:onClick="LevelSelectButton"
         android:text="Level Select" />
 
     <Button
@@ -36,7 +35,6 @@
         android:layout_below="@+id/levelSelect"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
-        android:onClick="TutorialButton"
         android:text="Tutorial" />
 
     <ImageView
