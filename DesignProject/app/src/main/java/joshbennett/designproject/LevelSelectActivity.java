@@ -2,6 +2,7 @@ package joshbennett.designproject;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class LevelSelectActivity extends AppCompatActivity {
         for(int i = 0; i < 30; i++){
             final int j = i;
             final Button level = new Button(this);
+            level.setEnabled(false);
 
             level.setText(Integer.toString(i+1));
 
@@ -77,6 +79,14 @@ public class LevelSelectActivity extends AppCompatActivity {
                 }
             });
             buttons.add(level);
+        }
+
+        LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(this, 1);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        int table = 1;
+        while (mDbHelper.isTableExists(db, "level" + table)) {
+            buttons.get(table-1).setEnabled(true);
+            table++;
         }
 
         //create a grid to display the buttons

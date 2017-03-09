@@ -14,6 +14,8 @@ public class Level
     private ArrayList<Beam> beams;
     private int sideLength;
     public boolean isRunning = false;
+    public int levelNum;
+    public boolean nextLevelExists;
 
     public Level(ArrayList<ColorableEntity> entities, ArrayList<Wall> walls,  int sideLength){
         this.sideLength = sideLength;

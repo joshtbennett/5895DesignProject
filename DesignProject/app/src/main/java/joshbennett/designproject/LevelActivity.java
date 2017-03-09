@@ -774,6 +774,7 @@ public class LevelActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        nextlevel.setEnabled(level.nextLevelExists);
 
         buttonslayout.addView(levelselect);
         buttonslayout.addView(replay);

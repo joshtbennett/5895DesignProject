@@ -15,9 +15,12 @@ public class LevelFactory {
     ArrayList<ColorableEntity> entities = new ArrayList<>();
     ArrayList<Wall> walls = new ArrayList<>();
     int sideLength;
+    int levelNum;
+    boolean tableHasNextLevel;
 
     public LevelFactory(int levelNum, boolean isTutorial, Context context) {
 
+        this.levelNum = levelNum;
         LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(context, levelNum);
         SQLiteDatabase db = null;
         LevelDatabaseEntry entry = null;
@@ -56,6 +59,13 @@ public class LevelFactory {
             }
 
             cursor = db.rawQuery("select * from " + entry.TABLE_NAME,null);
+
+            if (mDbHelper.isTableExists(db, "level" + (levelNum+1))) {
+                tableHasNextLevel = true;
+            }
+            else {
+                tableHasNextLevel = false;
+            }
         }
         catch (Exception e) {
         }
@@ -140,6 +150,8 @@ public class LevelFactory {
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
         Level level = new Level(entities, walls, sideLength);
+        level.levelNum = levelNum;
+        level.nextLevelExists = tableHasNextLevel;
         return level;
     }
 
