@@ -84,6 +84,9 @@ public class LevelActivity extends AppCompatActivity {
         entities = level.getEntities();
         walls = level.getWalls();
 
+        TextView levelnumber = (TextView) findViewById(R.id.levelnumber);
+        levelnumber.setText(Integer.toString(level.levelNum));
+
         drawLevel();
     }
 

@@ -7,6 +7,31 @@
     android:layout_height="match_parent"
     tools:context="joshbennett.designproject.LevelActivity">
 
+        <TextView
+            android:id="@+id/levelTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LEVEL"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+            tools:text="LEVEL"
+            android:layout_alignLeft="@+id/red"
+            android:layout_alignStart="@+id/red"
+            android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
+            android:layout_alignBottom="@+id/startButton"
+            android:layout_alignTop="@+id/levelnumber" />
+
+        <TextView
+            android:id="@+id/levelnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+            android:layout_alignBaseline="@+id/startButton"
+            android:layout_alignBottom="@+id/startButton"
+            android:layout_toRightOf="@+id/levelTitle"
+            android:layout_toEndOf="@+id/levelTitle" />
+
         <GridLayout
             android:id="@+id/grid"
             android:layout_width="wrap_content"
