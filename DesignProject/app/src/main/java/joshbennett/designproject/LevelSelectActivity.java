@@ -19,9 +19,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LevelSelectActivity extends AppCompatActivity {
-
-    private ImageManipulator manipulator;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,22 +64,6 @@ public class LevelSelectActivity extends AppCompatActivity {
             //add all the buttons to the grid
             grid.addView(buttons.get(i));
         }
-    }
-
-    public Bitmap getBitmapFromAssets(String filename, int dptopx){
-        AssetManager assetManager = getAssets();
-
-        try {
-            InputStream istr = assetManager.open(filename);
-            Bitmap image = BitmapFactory.decodeStream(istr);
-            manipulator = new ImageManipulator(image, getApplicationContext());
-            int newdimensions = manipulator.dpToPx(dptopx);
-            image = manipulator.scale(newdimensions);
-            return image;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
 
