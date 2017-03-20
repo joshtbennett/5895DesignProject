@@ -25,9 +25,16 @@ public class Level
         beams = new ArrayList<>();
     }
 
-    int calculateScore(){return 1;}
+    int calculateScore(){
+        int idealScore = 1;
+        int playerScore = mirrors.size();
 
-    void start(){}
+        if(playerScore <= idealScore)
+            return 3;
+        if(idealScore < playerScore && playerScore < 1.5*idealScore)
+            return 2;
+        return 1;
+    }
 
     public int getSideLength(){ return sideLength; }
     public ArrayList<ColorableEntity> getEntities(){return entities; }

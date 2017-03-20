@@ -604,6 +604,7 @@ public class LevelActivity extends AppCompatActivity {
         startButton.setEnabled(false);
         RelativeLayout endscreen = new RelativeLayout(this);
         LinearLayout buttonslayout = new LinearLayout(this);
+        LinearLayout starlayout = new LinearLayout(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         endscreen.setBackgroundColor(Color.argb(255, 209, 226, 255));
         endscreen.setLayoutParams(params);
@@ -613,6 +614,7 @@ public class LevelActivity extends AppCompatActivity {
         endmessage.setTextSize(25);
         RelativeLayout.LayoutParams messageparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         messageparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        messageparams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
 
         Button levelselect = new Button(this);
@@ -673,10 +675,41 @@ public class LevelActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
+        Bitmap emptyStar = getBitmapFromAssets("EmptyStar.png",40);
+        Bitmap filledStar = getBitmapFromAssets("FilledStar.png",40);
+
+        ImageView star1 = new ImageView(this);
+        ImageView star2 = new ImageView(this);
+        ImageView star3 = new ImageView(this);
+
+        star1.setImageBitmap(filledStar);
+
+        if(level.calculateScore() == 3){
+            star2.setImageBitmap(filledStar);
+            star3.setImageBitmap(filledStar);
+        }
+        else if(level.calculateScore() == 2){
+            star2.setImageBitmap(filledStar);
+            star3.setImageBitmap(emptyStar);
+        }
+        else{
+            star2.setImageBitmap(emptyStar);
+            star3.setImageBitmap(emptyStar);
+        }
+
+        starlayout.addView(star1);
+        starlayout.addView(star2);
+        starlayout.addView(star3);
+
+        RelativeLayout.LayoutParams starParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        starParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        starlayout.setPadding(0,50,0,100);
+
         endscreen.addView(endmessage, messageparams);
+        endscreen.addView(starlayout, starParams);
         endscreen.addView(buttonslayout, buttonParams);
 
-        endwindow = new PopupWindow(endscreen, 900, 300);
+        endwindow = new PopupWindow(endscreen, 900, 430);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
