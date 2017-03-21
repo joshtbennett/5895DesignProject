@@ -91,6 +91,9 @@ public class LevelActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (level.isRunning) {
+                    return false;
+                }
                 double xp, yp;
                 //center of the circle
                 double xc = v.getHeight()/2;
@@ -141,7 +144,7 @@ public class LevelActivity extends AppCompatActivity {
         });
 
         drawLevel();
-        color = "red";
+        color = "white";
         Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
         indicator.setImageBitmap(indicatorRing);
     }
@@ -690,6 +693,9 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 });
                 drawLevel();
+                color = "white";
+                Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
+                indicator.setImageBitmap(indicatorRing);
             }
         });
 
