@@ -167,8 +167,7 @@ public class LevelActivity extends AppCompatActivity {
             placeButton.setChecked(false);
         if(flipButton.isChecked())
             flipButton.setChecked(false);
-        if(deleteButton.isChecked())
-            deleteButton.setChecked(true);
+        deleteButton.setChecked(true);
     }
 
     public void PlaceButton(View v){
@@ -176,8 +175,7 @@ public class LevelActivity extends AppCompatActivity {
             deleteButton.setChecked(false);
         if(flipButton.isChecked())
             flipButton.setChecked(false);
-        if(placeButton.isChecked())
-            placeButton.setChecked(true);
+        placeButton.setChecked(true);
     }
 
     public void FlipButton(View v){
@@ -185,8 +183,7 @@ public class LevelActivity extends AppCompatActivity {
             deleteButton.setChecked(false);
         if(placeButton.isChecked())
             placeButton.setChecked(false);
-        if(flipButton.isChecked())
-            flipButton.setChecked(true);
+        flipButton.setChecked(true);
     }
 
     public void stop(View v) {
