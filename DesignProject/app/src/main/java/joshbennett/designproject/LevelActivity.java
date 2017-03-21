@@ -96,7 +96,7 @@ public class LevelActivity extends AppCompatActivity {
                 double xc = v.getHeight()/2;
                 double yc = v.getWidth()/2;
 
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_UP){
                     xp = event.getX();
                     yp = event.getY();
 
@@ -106,14 +106,12 @@ public class LevelActivity extends AppCompatActivity {
                     if(Math.sqrt(((xc-xp)*(xc-xp)) + ((yp-yc)*(yp-yc))) < v.getHeight()/4)
                         color = "white";
                     else if(xp > xc){
-                        //Q1
                         if(yp < yc){
                             if(angle > 0.523599)
                                 color = "red";
                             else
                                 color = "yellow";
                         }
-                        //Q4
                         else{
                             if(angle > 0.523599)
                                 color = "green";
@@ -122,14 +120,12 @@ public class LevelActivity extends AppCompatActivity {
                         }
                     }
                     else if(xp < xc){
-                        //Q2
                         if(yp < yc){
                             if(angle > 0.523599)
                                 color = "magenta";
                             else
                                 color = "blue";
                         }
-                        //Q3
                         else{
                             if(angle > 0.523599)
                                 color = "cyan";
@@ -202,8 +198,8 @@ public class LevelActivity extends AppCompatActivity {
             }
         });
         for (ColorableEntity i : level.getEntities()) {
-            if (i.getIdentifier() == 'c') {
-                i.setReceived(false);
+            if (i instanceof Collector) {
+                ((Collector)i).setReceived(false);
             }
         }
         level.getBeams().clear();
@@ -228,7 +224,7 @@ public class LevelActivity extends AppCompatActivity {
         int position;
 
         for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).getIdentifier() == 'e') {
+            if (entities.get(i) instanceof Emitter) {
                 position = entities.get(i).getPosition();
                 color = entities.get(i).getColor();
                 int size = length * length;
@@ -270,25 +266,26 @@ public class LevelActivity extends AppCompatActivity {
         }
 
         for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).getReceived() == true) {
-                Bitmap onboardcollectoron = getBitmapFromAssets(entities.get(i).getColor() + "/onboardcollectoron.png", 40);
-                manipulator.newimage(onboardcollectoron, this);
-                int location = entities.get(i).getPosition();
-                if (location < 2 * length - 1) {
-                    onboardcollectoron = manipulator.rotateImage(90);
-                } else if (location > (length * length - 2 * length)) {
-                    onboardcollectoron = manipulator.rotateImage(270);
+            if(entities.get(i) instanceof Collector) {
+                if (((Collector)entities.get(i)).getReceived() == true) {
+                    Bitmap onboardcollectoron = getBitmapFromAssets(entities.get(i).getColor() + "/onboardcollectoron.png", 40);
+                    manipulator.newimage(onboardcollectoron, this);
+                    int location = entities.get(i).getPosition();
+                    if (location < 2 * length - 1) {
+                        onboardcollectoron = manipulator.rotateImage(90);
+                    } else if (location > (length * length - 2 * length)) {
+                        onboardcollectoron = manipulator.rotateImage(270);
 
-                } else if (location % length == 1) {
-                    onboardcollectoron = manipulator.rotateImage(0);
+                    } else if (location % length == 1) {
+                        onboardcollectoron = manipulator.rotateImage(0);
 
-                } else if (location % length == length - 2) {
-                    onboardcollectoron = manipulator.rotateImage(180);
+                    } else if (location % length == length - 2) {
+                        onboardcollectoron = manipulator.rotateImage(180);
+                    }
+                    cell = cells.get(entities.get(i).getPosition());
+                    cell.setImageBitmap(onboardcollectoron);
+                    cells.set(location, cell);
                 }
-                cell = cells.get(entities.get(i).getPosition());
-                cell.setImageBitmap(onboardcollectoron);
-                cells.set(location, cell);
-
             }
         }
 
@@ -406,7 +403,11 @@ public class LevelActivity extends AppCompatActivity {
         //get emitters and collectors
         for(int i = 0; i < entities.size(); i++){
             //get attributes
-            type = entities.get(i).getIdentifier();
+            type = 'x';
+            if(entities.get(i) instanceof Collector)
+                type ='c';
+            else if(entities.get(i) instanceof Emitter)
+                type ='e';
             position = entities.get(i).getPosition();
             color = entities.get(i).getColor();
 
@@ -671,13 +672,15 @@ public class LevelActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 for(int i = 0; i < entities.size(); i++){
-                    entities.get(i).setReceived(false);
+                    if(entities.get(i) instanceof Collector) {
+                        ((Collector)entities.get(i)).setReceived(false);
+                    }
                 }
                 level.getBeams().clear();
                 level.getMirrors().clear();
                 for (ColorableEntity i : level.getEntities()) {
-                    if (i.getIdentifier() == 'c') {
-                        i.setReceived(false);
+                    if (i instanceof Collector) {
+                        ((Collector)i).setReceived(false);
                     }
                 }
                 startButton.setEnabled(true);

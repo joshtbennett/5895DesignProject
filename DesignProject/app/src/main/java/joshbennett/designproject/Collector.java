@@ -7,21 +7,14 @@ package joshbennett.designproject;
 public class Collector implements LevelEntity, ColorableEntity{
 
     private boolean collected;
-    private char identifier;
     private String color;
     private int position;
 
     Collector(String color, int position)
     {
         this.position = position;
-        identifier = 'c';
         this.color = color;
         collected = false;
-    }
-
-    @Override
-    public char getIdentifier() {
-        return identifier;
     }
 
     @Override
@@ -32,7 +25,6 @@ public class Collector implements LevelEntity, ColorableEntity{
         return position;
     }
 
-    @Override
     public void setReceived(boolean received) {
         collected = received;
     }

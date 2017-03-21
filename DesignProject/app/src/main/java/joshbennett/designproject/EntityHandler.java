@@ -157,10 +157,10 @@ public class EntityHandler {
             return;
 
         for (int i = 0; i < level.getEntities().size(); i++) {
-            if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i).getIdentifier() == 'c') {
+            if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i) instanceof Collector) {
                 //collector in the next cell
                 entity = level.getEntities().get(i);
-            } else if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i).getIdentifier() == 'e') {
+            } else if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i) instanceof Emitter) {
                 //emitter in the next cell
                 return;
             }
@@ -172,13 +172,14 @@ public class EntityHandler {
 
 
         if (entity != null) {
-            if (entity.getColor().equals(beam.getColor())) {
-                entity.setReceived(true);
-                return;
-            }
-            else {
-                entity.setReceived(false);
-                return;
+            if(entity instanceof Collector) {
+                if (entity.getColor().equals(beam.getColor())) {
+                    ((Collector)entity).setReceived(true);
+                    return;
+                } else {
+                    ((Collector)entity).setReceived(false);
+                    return;
+                }
             }
         } else if (mirror != null) {
             ArrayList<Beam> reflectedBeams = new ArrayList<>();

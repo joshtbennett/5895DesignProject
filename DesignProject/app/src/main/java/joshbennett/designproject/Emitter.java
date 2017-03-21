@@ -6,23 +6,16 @@ package joshbennett.designproject;
 
 public class Emitter implements LevelEntity, ColorableEntity
 {
-    private char identifier;
     private String color;
     private int position;
 
     Emitter(String color, int position)
     {
         this.position = position;
-        identifier = 'e';
         this.color = color;
     }
 
     void emit(){}
-
-    @Override
-    public char getIdentifier() {
-        return identifier;
-    }
 
     @Override
     public String getColor() {
@@ -33,15 +26,4 @@ public class Emitter implements LevelEntity, ColorableEntity
     public int getPosition() {
         return position;
     }
-
-    @Override
-    public void setReceived(boolean received) {
-
-    }
-
-    @Override
-    public boolean getReceived() {
-        return false;
-    }
-
 }

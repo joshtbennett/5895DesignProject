@@ -54,9 +54,9 @@ public class Level
         boolean win = true;
         int numberOfCollectors = 0, numberOfReceivedCollectors = 0;
         for(int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).getIdentifier() == 'c') {
+            if (entities.get(i) instanceof Collector) {
                 numberOfCollectors++;
-                if (entities.get(i).getReceived() == true)
+                if (((Collector)entities.get(i)).getReceived() == true)
                     numberOfReceivedCollectors++;
             }
         }
