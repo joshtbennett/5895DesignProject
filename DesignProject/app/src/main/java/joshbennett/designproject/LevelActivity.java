@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import static android.graphics.Color.BLUE;
+
 public class LevelActivity extends AppCompatActivity {
 
     private static LevelActivity instance = null;
@@ -39,9 +42,8 @@ public class LevelActivity extends AppCompatActivity {
     private ArrayList<ColorableEntity> entities;
     private ArrayList<Wall> walls;
     private ArrayList<Mirror> mirrors = new ArrayList<>();
-    private CheckBox redCheckBox;
-    private CheckBox greenCheckBox;
-    private CheckBox blueCheckBox;
+    private ImageView colorWheel;
+    private ImageView indicator;
     private ToggleButton deleteButton;
     private ToggleButton placeButton;
     private ToggleButton flipButton;
@@ -74,11 +76,8 @@ public class LevelActivity extends AppCompatActivity {
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
         flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
         startButton = (Button)findViewById(R.id.startButton);
-        redCheckBox = (CheckBox)  findViewById(R.id.red);
-        greenCheckBox = (CheckBox)  findViewById(R.id.green);
-        blueCheckBox = (CheckBox)  findViewById(R.id.blue);
+        indicator = (ImageView)findViewById(R.id.indicator);
 
-        //levelFactory.setEntities();
         level = levelFactory.generateLevel();
         length = level.getSideLength();
         entities = level.getEntities();
@@ -87,7 +86,68 @@ public class LevelActivity extends AppCompatActivity {
         TextView levelnumber = (TextView) findViewById(R.id.levelnumber);
         levelnumber.setText(Integer.toString(level.levelNum));
 
+        colorWheel = (ImageView) findViewById(R.id.colorWheel);
+        colorWheel.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                double xp, yp;
+                //center of the circle
+                double xc = v.getHeight()/2;
+                double yc = v.getWidth()/2;
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    xp = event.getX();
+                    yp = event.getY();
+
+                    //30 Degrees = 0.523599 Radians, which is the angle that the wheel dividers are on
+                    double angle = Math.atan2(Math.abs(yc-yp),Math.abs(xc-xp));
+
+                    if(Math.sqrt(((xc-xp)*(xc-xp)) + ((yp-yc)*(yp-yc))) < v.getHeight()/4)
+                        color = "white";
+                    else if(xp > xc){
+                        //Q1
+                        if(yp < yc){
+                            if(angle > 0.523599)
+                                color = "red";
+                            else
+                                color = "yellow";
+                        }
+                        //Q4
+                        else{
+                            if(angle > 0.523599)
+                                color = "green";
+                            else
+                                color = "yellow";
+                        }
+                    }
+                    else if(xp < xc){
+                        //Q2
+                        if(yp < yc){
+                            if(angle > 0.523599)
+                                color = "magenta";
+                            else
+                                color = "blue";
+                        }
+                        //Q3
+                        else{
+                            if(angle > 0.523599)
+                                color = "cyan";
+                            else
+                                color = "blue";
+                        }
+                    }
+                }
+                Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
+                indicator.setImageBitmap(indicatorRing);
+                return true;
+            }
+        });
+
         drawLevel();
+        color = "red";
+        Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
+        indicator.setImageBitmap(indicatorRing);
     }
 
     public Bitmap getBitmapFromAssets(String filename, int dptopx){
@@ -396,27 +456,6 @@ public class LevelActivity extends AppCompatActivity {
                 boolean wallCheck = false;
                 boolean entityCheck = false;
                 boolean mirrorCheck = false;
-                String color;
-
-                //get player selected color
-                if (redCheckBox.isChecked())
-                    if (greenCheckBox.isChecked())
-                        if (blueCheckBox.isChecked())
-                            color = "white";
-                        else
-                            color = "yellow";
-                    else if (blueCheckBox.isChecked())
-                        color = "magenta";
-                    else
-                        color = "red";
-
-                else if (greenCheckBox.isChecked())
-                    if (blueCheckBox.isChecked())
-                        color = "cyan";
-                    else
-                        color = "green";
-                else
-                    color = "blue";
 
                 //check contents of player selected cell
                 if(walls.size()>0)
