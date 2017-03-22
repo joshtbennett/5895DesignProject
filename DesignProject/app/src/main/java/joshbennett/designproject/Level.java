@@ -8,18 +8,16 @@ import java.util.ArrayList;
 
 public class Level
 {
-    ArrayList<ColorableEntity> entities;
-    private ArrayList<Wall> walls;
+    ArrayList<LevelEntity> entities;
     private ArrayList<Beam> beams;
     private int sideLength;
     public boolean isRunning = false;
     public int levelNum;
     public boolean nextLevelExists;
 
-    public Level(ArrayList<ColorableEntity> entities, ArrayList<Wall> walls,  int sideLength){
+    public Level(ArrayList<LevelEntity> entities,  int sideLength){
         this.sideLength = sideLength;
         this.entities = entities;
-        this.walls = walls;
         beams = new ArrayList<>();
     }
 
@@ -39,14 +37,10 @@ public class Level
     }
 
     public int getSideLength(){ return sideLength; }
-    public ArrayList<ColorableEntity> getEntities(){return entities; }
-    public ArrayList<Wall> getWalls(){
-        return walls;
-    }
+    public ArrayList<LevelEntity> getEntities(){return entities; }
     public ArrayList<Beam> getBeams(){ return beams; }
 
-    public void setEntities(ArrayList<ColorableEntity> entities){ this.entities = entities; }
-    public void setWalls(ArrayList<Wall> walls){ this.walls = walls; }
+    public void setEntities(ArrayList<LevelEntity> entities){ this.entities = entities; }
     public void setBeams(ArrayList<Beam> beams){ this.beams = beams; }
     public boolean checkWin(){
         boolean win = true;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class TutorialLevel extends Level {
-    public TutorialLevel(ArrayList<ColorableEntity> entities, ArrayList<Wall> walls, int sideLength) {
-        super(entities, walls, sideLength);
+    public TutorialLevel(ArrayList<LevelEntity> entities, ArrayList<Wall> walls, int sideLength) {
+        super(entities, sideLength);
     }
 }

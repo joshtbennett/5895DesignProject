@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class LevelFactory {
 
-    ArrayList<ColorableEntity> entities = new ArrayList<>();
+    ArrayList<LevelEntity> entities = new ArrayList<>();
     ArrayList<Wall> walls = new ArrayList<>();
     int sideLength;
     int levelNum;
@@ -79,7 +79,7 @@ public class LevelFactory {
                         break;
                     case "wall":
                         Wall wall = new Wall(sideLength * y + x);
-                        walls.add(wall);
+                        entities.add(wall);
                         break;
                     case "size":
                         sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
@@ -122,7 +122,7 @@ public class LevelFactory {
 
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
-        Level level = new Level(entities, walls, sideLength);
+        Level level = new Level(entities, sideLength);
         level.levelNum = levelNum;
         level.nextLevelExists = tableHasNextLevel;
         return level;

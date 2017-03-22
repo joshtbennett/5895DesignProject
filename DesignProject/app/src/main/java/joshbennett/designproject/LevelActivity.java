@@ -39,8 +39,7 @@ public class LevelActivity extends AppCompatActivity {
     private ImageManipulator manipulator;
     private EntityHandler entityHandler = new EntityHandler(levelNum);
     private LevelFactory levelFactory;
-    private ArrayList<ColorableEntity> entities;
-    private ArrayList<Wall> walls;
+    private ArrayList<LevelEntity> entities;
     private ImageView colorWheel;
     private ImageView indicator;
     private ToggleButton deleteButton;
@@ -80,7 +79,6 @@ public class LevelActivity extends AppCompatActivity {
         level = levelFactory.generateLevel();
         length = level.getSideLength();
         entities = level.getEntities();
-        walls = level.getWalls();
 
         TextView levelnumber = (TextView) findViewById(R.id.levelnumber);
         levelnumber.setText(Integer.toString(level.levelNum));
@@ -196,7 +194,7 @@ public class LevelActivity extends AppCompatActivity {
                 start(v);
             }
         });
-        for (ColorableEntity i : level.getEntities()) {
+        for (LevelEntity i : level.getEntities()) {
             if (i instanceof Collector) {
                 ((Collector)i).setReceived(false);
             }
@@ -225,7 +223,7 @@ public class LevelActivity extends AppCompatActivity {
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof Emitter) {
                 position = entities.get(i).getPosition();
-                color = entities.get(i).getColor();
+                color = ((ColorableEntity)entities.get(i)).getColor();
                 int size = length * length;
                 image = getBitmapFromAssets(color + "/onboardemitteron.png", 40);
                 manipulator.newimage(image, getApplicationContext());
@@ -267,7 +265,7 @@ public class LevelActivity extends AppCompatActivity {
         for (int i = 0; i < entities.size(); i++) {
             if(entities.get(i) instanceof Collector) {
                 if (((Collector)entities.get(i)).getReceived() == true) {
-                    Bitmap onboardcollectoron = getBitmapFromAssets(entities.get(i).getColor() + "/onboardcollectoron.png", 40);
+                    Bitmap onboardcollectoron = getBitmapFromAssets(((ColorableEntity)entities.get(i)).getColor() + "/onboardcollectoron.png", 40);
                     manipulator.newimage(onboardcollectoron, this);
                     int location = entities.get(i).getPosition();
                     if (location < 2 * length - 1) {
@@ -404,23 +402,24 @@ public class LevelActivity extends AppCompatActivity {
         //get emitters and collectors
         for(int i = 0; i < entities.size(); i++){
             //get attributes
+
             type = 'x';
-            if(entities.get(i) instanceof Collector)
-                type ='c';
-            else if(entities.get(i) instanceof Emitter)
-                type ='e';
-            position = entities.get(i).getPosition();
-            color = entities.get(i).getColor();
-
-            cells = displayIfCollector(type, position, color, cells);
-            cells = displayIfEmitter(type, position, color, cells);
-        }
-
-        for(int i = 0; i < walls.size(); i++){
-            ImageView cell = new ImageView(getApplicationContext());
-            position = walls.get(i).getPosition();
-            cell.setImageBitmap(wallcell);
-            cells.set(position, cell);
+            if(entities.get(i) instanceof Wall){
+                ImageView cell = new ImageView(getApplicationContext());
+                position = entities.get(i).getPosition();
+                cell.setImageBitmap(wallcell);
+                cells.set(position, cell);
+            }
+            else {
+                if (entities.get(i) instanceof Collector)
+                    type = 'c';
+                else if (entities.get(i) instanceof Emitter)
+                    type = 'e';
+                position = entities.get(i).getPosition();
+                color = ((ColorableEntity) entities.get(i)).getColor();
+                cells = displayIfCollector(type, position, color, cells);
+                cells = displayIfEmitter(type, position, color, cells);
+            }
         }
 
         //create a grid to display the buttons
@@ -434,9 +433,9 @@ public class LevelActivity extends AppCompatActivity {
             }
         }
 
-        for (ColorableEntity i : level.getEntities()) {
+        for (LevelEntity i : level.getEntities()) {
             if(i instanceof Mirror) {
-                Bitmap newimage = getBitmapFromAssets(i.getColor() + "/45mirror.png", 40);
+                Bitmap newimage = getBitmapFromAssets(((Mirror)i).getColor() + "/45mirror.png", 40);
                 manipulator.newimage(newimage, this);
                 if (((Mirror)i).getAngle() == 135) {
                     newimage = manipulator.rotateImage(90);
@@ -454,22 +453,19 @@ public class LevelActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (level.isRunning)
                     return;
-                walls = level.getWalls();
                 entities = level.getEntities();
                 boolean wallCheck = false;
                 boolean entityCheck = false;
                 boolean mirrorCheck = false;
 
                 //check contents of player selected cell
-                if(walls.size()>0)
-                    for(int i = 0; i < walls.size(); i++)
-                        if (position == walls.get(i).getPosition())
-                            wallCheck = true;
                 if(entities.size()>0)
                     for(int i = 0; i < entities.size(); i++)
                         if(position == entities.get(i).getPosition()) {
                             if(entities.get(i) instanceof Mirror)
                                 mirrorCheck = true;
+                            else if(entities.get(i) instanceof Wall)
+                                wallCheck = true;
                             else
                                 entityCheck = true;
                         }
@@ -507,11 +503,11 @@ public class LevelActivity extends AppCompatActivity {
                             if(entities.get(i).getPosition() == position && entities.get(i) instanceof Mirror){
                                 if(((Mirror)entities.get(i)).getAngle() == 45){
                                     Mirror temp = ((Mirror)entities.get(i));
-                                    entityHandler.flipMirror(level, temp, position);
+                                    entityHandler.flipMirror(level, position);
                                 }
                                 else if(((Mirror)entities.get(i)).getAngle() == 135){
                                     Mirror temp = ((Mirror)entities.get(i));
-                                    entityHandler.flipMirror(level, temp, position);
+                                    entityHandler.flipMirror(level, position);
                                 }
                             }
                         }
@@ -682,7 +678,7 @@ public class LevelActivity extends AppCompatActivity {
                     if(level.getEntities().get(i) instanceof Mirror)
                         level.getEntities().remove(i);
                 }
-                for (ColorableEntity i : level.getEntities()) {
+                for (LevelEntity i : level.getEntities()) {
                     if (i instanceof Collector) {
                         ((Collector)i).setReceived(false);
                     }

@@ -14,9 +14,9 @@ public class EntityHandler {
 
     public EntityHandler(int x){}
 
-    public void addEntity(Level level, ColorableEntity entity, int position) {
-        ArrayList<ColorableEntity> entities = level.getEntities();
-        for (ColorableEntity i : entities) {
+    public void addEntity(Level level, LevelEntity entity, int position) {
+        ArrayList<LevelEntity> entities = level.getEntities();
+        for (LevelEntity i : entities) {
             if (i.getPosition() == position)
                 return;
         }
@@ -24,29 +24,23 @@ public class EntityHandler {
         level.setEntities(entities);
     }
 
-    public void addWall(Level level, Wall entity, int position) {
-        ArrayList<Wall> walls = level.getWalls();
-        walls.add(entity);
-        level.setWalls(walls);
-    }
-
     public void addMirror(Level level, Mirror entity) {
-        ArrayList<ColorableEntity> entities = level.getEntities();
+        ArrayList<LevelEntity> entities = level.getEntities();
         entities.add(entity);
         level.setEntities(entities);
     }
 
     public void removeMirror(Level level, int position) {
-        ArrayList<ColorableEntity> entities = level.getEntities();
+        ArrayList<LevelEntity> entities = level.getEntities();
         for (int i = 0; i < entities.size(); i++)
             if (entities.get(i).getPosition() == position)
                 entities.remove(i);
         level.setEntities(entities);
     }
 
-    public void flipMirror(Level level, Mirror mirror, int position) {
+    public void flipMirror(Level level, int position) {
 
-        ArrayList<ColorableEntity> entities = level.getEntities();
+        ArrayList<LevelEntity> entities = level.getEntities();
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i).getPosition() == position) {
                 if(entities.get(i) instanceof Mirror) {
@@ -142,8 +136,7 @@ public class EntityHandler {
 
         Beam newBeam;
         Mirror mirror = null;
-        boolean wall = false;
-        ColorableEntity entity = null;
+        LevelEntity entity = null;
 
         for (int i = 0; i < level.getEntities().size(); i++) {
             if (level.getEntities().get(i).getPosition() == newposition) {
@@ -153,15 +146,14 @@ public class EntityHandler {
                 }
             }
         }
-        for (int i = 0; i < level.getWalls().size(); i++) {
-            if (level.getWalls().get(i).getPosition() == newposition) {
-                //theres a wall in the next cell
-                wall = true;
+        for (int i = 0; i < level.getEntities().size(); i++) {
+            if (level.getEntities().get(i).getPosition() == newposition) {
+                if(level.getEntities().get(i) instanceof Wall) {
+                    //theres a wall in the next cell
+                    return;
+                }
             }
         }
-
-        if (wall)
-            return;
 
         for (int i = 0; i < level.getEntities().size(); i++) {
             if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i) instanceof Collector) {
@@ -177,10 +169,9 @@ public class EntityHandler {
             return;
         }
 
-
         if (entity != null) {
             if(entity instanceof Collector) {
-                if (entity.getColor().equals(beam.getColor())) {
+                if (((ColorableEntity)entity).getColor().equals(beam.getColor())) {
                     ((Collector)entity).setReceived(true);
                     return;
                 } else {
@@ -188,7 +179,8 @@ public class EntityHandler {
                     return;
                 }
             }
-        } else if (mirror != null) {
+        }
+        else if (mirror != null) {
             ArrayList<Beam> reflectedBeams = new ArrayList<>();
             ArrayList<Beam> passedBeams = new ArrayList<>();
 
