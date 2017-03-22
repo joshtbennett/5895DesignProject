@@ -41,9 +41,7 @@ public class Level
     public ArrayList<Beam> getBeams(){ return beams; }
 
     public void setEntities(ArrayList<LevelEntity> entities){ this.entities = entities; }
-    public void setBeams(ArrayList<Beam> beams){ this.beams = beams; }
     public boolean checkWin(){
-        boolean win = true;
         int numberOfCollectors = 0, numberOfReceivedCollectors = 0;
         for(int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof Collector) {

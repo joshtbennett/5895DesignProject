@@ -15,8 +15,6 @@ public class Emitter implements LevelEntity, ColorableEntity
         this.color = color;
     }
 
-    void emit(){}
-
     @Override
     public String getColor() {
         return color;

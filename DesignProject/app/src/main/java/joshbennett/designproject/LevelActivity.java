@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,11 +21,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import static android.graphics.Color.BLUE;
 
 public class LevelActivity extends AppCompatActivity {
 
@@ -37,7 +35,7 @@ public class LevelActivity extends AppCompatActivity {
     private String color;
     private ArrayList<ImageView> cells;
     private ImageManipulator manipulator;
-    private EntityHandler entityHandler = new EntityHandler(levelNum);
+    private EntityHandler entityHandler = new EntityHandler();
     private LevelFactory levelFactory;
     private ArrayList<LevelEntity> entities;
     private ImageView colorWheel;
@@ -59,6 +57,7 @@ public class LevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        manipulator = new ImageManipulator();
         instance = this;
 
         Intent intent = getIntent();
@@ -144,6 +143,9 @@ public class LevelActivity extends AppCompatActivity {
         color = "white";
         Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
         indicator.setImageBitmap(indicatorRing);
+
+        //if(level instanceof TutorialLevel)
+            displayTextBox();
     }
 
     public Bitmap getBitmapFromAssets(String filename, int dptopx){
@@ -152,7 +154,7 @@ public class LevelActivity extends AppCompatActivity {
         try {
             InputStream istr = assetManager.open(filename);
             Bitmap image = BitmapFactory.decodeStream(istr);
-            manipulator = new ImageManipulator(image, getApplicationContext());
+            manipulator.newimage(image, getApplicationContext());
             int newdimensions = manipulator.dpToPx(dptopx);
             image = manipulator.scale(newdimensions);
             return image;
@@ -770,11 +772,41 @@ public class LevelActivity extends AppCompatActivity {
 
     public void displayBeamMirror(Bitmap beamimage, Bitmap currentimage, ArrayList<ImageView> cells, int currentposition, int angle){
         ImageView cell;
-        ImageManipulator manipulator = new ImageManipulator(beamimage, getApplicationContext());
+        manipulator.newimage(beamimage, getApplicationContext());
         beamimage = manipulator.rotateImage(angle);
         currentimage = manipulator.overlayImages(currentimage, beamimage);
         cell = cells.get(currentposition);
         cell.setImageBitmap(currentimage);
         cells.set(currentposition, cell);
+    }
+
+    public void displayTextBox(){
+        RelativeLayout tutorialbox = new RelativeLayout(this);
+        LinearLayout.LayoutParams tparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tutorialbox.setBackgroundColor(Color.argb(255, 209, 226, 255));
+        tutorialbox.setLayoutParams(tparams);
+
+        TextView message = new TextView(this);
+        message.setText("Mirrors reflect beams of light that match their color. Use them to direct the beam from the Emitter to the Collector. \n Use the color wheel to select your color and tap the cell you'd like to place the mirror in");
+        message.setTextSize(18);
+        RelativeLayout.LayoutParams tmessageparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        tmessageparams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+        tutorialbox.addView(message, tmessageparams);
+
+        int width = manipulator.dpToPx(400);
+
+        endwindow = new PopupWindow(tutorialbox, width, 800);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // close your dialog
+                endwindow.showAtLocation(findViewById(android.R.id.content), Gravity.TOP, 0,300);
+            }
+
+        }, 1000);
     }
 }

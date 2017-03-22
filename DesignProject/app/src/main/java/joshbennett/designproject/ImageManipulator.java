@@ -2,10 +2,8 @@ package joshbennett.designproject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 
 /**
@@ -15,11 +13,6 @@ import android.util.DisplayMetrics;
 public class ImageManipulator {
     private Bitmap src;
     private Context context;
-
-    ImageManipulator(Bitmap src, Context context){
-        this.src = src;
-        this.context = context;
-    }
 
     public void newimage(Bitmap src, Context context){
         this.src = src;
@@ -56,13 +49,5 @@ public class ImageManipulator {
         canvas.drawBitmap(image1, new Matrix(), null);
         canvas.drawBitmap(image2, 0, 0, null);
         return bmOverlay;
-    }
-    public Bitmap flipHorizontally() {
-        Bitmap bInput = src;
-        Bitmap bOutput;
-        Matrix matrix = new Matrix();
-        matrix.preScale(-1.0f, 1.0f);
-        bOutput = Bitmap.createBitmap(bInput, 0, 0, bInput.getWidth(), bInput.getHeight(), matrix, true);
-        return  bOutput;
     }
 }

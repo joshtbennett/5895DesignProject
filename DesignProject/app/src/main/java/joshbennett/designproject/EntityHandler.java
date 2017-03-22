@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 public class EntityHandler {
 
-    public EntityHandler(int x){}
-
     public void addEntity(Level level, LevelEntity entity, int position) {
         ArrayList<LevelEntity> entities = level.getEntities();
         for (LevelEntity i : entities) {
@@ -39,7 +37,6 @@ public class EntityHandler {
     }
 
     public void flipMirror(Level level, int position) {
-
         ArrayList<LevelEntity> entities = level.getEntities();
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i).getPosition() == position) {
@@ -63,9 +60,8 @@ public class EntityHandler {
         char currentDirection = beam.getDirection();
         char newDirection = currentDirection;
         LevelActivity activity = LevelActivity.getInstance();
-        String currentColor = beam.getColor();
+        String currentColor;
         ArrayList<ImageView> cells = activity.getCells();
-        ImageView cell;
 
         if (currentDirection == 'u') {
             newposition = pos - length;
@@ -94,7 +90,6 @@ public class EntityHandler {
                             activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
                         } else if (currentDirection == 'd') {
                             //topright270
-
                             activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
                         } else if (currentDirection == 'l') {
                             //topleft
@@ -135,83 +130,68 @@ public class EntityHandler {
         }
 
         Beam newBeam;
-        Mirror mirror = null;
         LevelEntity entity = null;
 
         for (int i = 0; i < level.getEntities().size(); i++) {
             if (level.getEntities().get(i).getPosition() == newposition) {
-                if(level.getEntities().get(i) instanceof Mirror) {
-                    //theres a mirror in the next cell
-                    mirror = ((Mirror)level.getEntities().get(i));
-                }
-            }
-        }
-        for (int i = 0; i < level.getEntities().size(); i++) {
-            if (level.getEntities().get(i).getPosition() == newposition) {
-                if(level.getEntities().get(i) instanceof Wall) {
-                    //theres a wall in the next cell
+                if((level.getEntities().get(i) instanceof Wall) || (level.getEntities().get(i) instanceof Emitter)) {
                     return;
                 }
+                else
+                    entity = level.getEntities().get(i);
             }
         }
 
-        for (int i = 0; i < level.getEntities().size(); i++) {
-            if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i) instanceof Collector) {
-                //collector in the next cell
-                entity = level.getEntities().get(i);
-            } else if (level.getEntities().get(i).getPosition() == newposition && level.getEntities().get(i) instanceof Emitter) {
-                //emitter in the next cell
-                return;
-            }
-        }
         if (newposition < length - 1 || newposition > (length * length) - length - 1 || newposition % length == 0 || newposition % length == length-1) {
             //the next  cell is out of bounds
             return;
         }
 
         if (entity != null) {
-            if(entity instanceof Collector) {
-                if (((ColorableEntity)entity).getColor().equals(beam.getColor())) {
-                    ((Collector)entity).setReceived(true);
+            if (entity instanceof Collector) {
+                if (((ColorableEntity) entity).getColor().equals(beam.getColor())) {
+                    ((Collector) entity).setReceived(true);
                     return;
                 } else {
-                    ((Collector)entity).setReceived(false);
+                    ((Collector) entity).setReceived(false);
                     return;
+                }
+            }
+            else {
+                ArrayList<Beam> reflectedBeams = new ArrayList<>();
+                ArrayList<Beam> passedBeams = new ArrayList<>();
+
+                for (String color : deconstructBeam(beam)) {
+                    if (isComponent(color, ((Mirror)entity).getColor())) {
+                        newDirection = reflect(currentDirection, ((Mirror)entity).getAngle());
+                        reflectedBeams.add(new Beam(newDirection, color, newposition));
+                    }
+                    else {
+                        newDirection = currentDirection;
+                        passedBeams.add(new Beam(newDirection, color, newposition));
+                    }
+                }
+
+                if (!reflectedBeams.isEmpty()) {
+                    Beam reflectedBeam = reflectedBeams.get(0);
+                    for (int i = 0; i < reflectedBeams.size() - 1; i++) {
+                        reflectedBeam.setColor(combineColors(reflectedBeam.getColor(), reflectedBeams.get(i + 1).getColor()));
+                    }
+                    level.getBeams().add(reflectedBeam);
+                    moveBeam(level, reflectedBeam, reflectedBeam.getPosition());
+                }
+
+                if (!passedBeams.isEmpty()) {
+                    Beam passedBeam = passedBeams.get(0);
+                    for (int i = 0; i < passedBeams.size() - 1; i++) {
+                        passedBeam.setColor(combineColors(passedBeam.getColor(), passedBeams.get(i + 1).getColor()));
+                    }
+                    level.getBeams().add(passedBeam);
+                    moveBeam(level, passedBeam, passedBeam.getPosition());
                 }
             }
         }
-        else if (mirror != null) {
-            ArrayList<Beam> reflectedBeams = new ArrayList<>();
-            ArrayList<Beam> passedBeams = new ArrayList<>();
-
-            for (String color : deconstructBeam(beam)) {
-                if (isComponent(color, mirror.getColor())) {
-                    newDirection = reflect(currentDirection, mirror.getAngle());
-                    reflectedBeams.add(new Beam(newDirection, color, newposition));
-                } else {
-                    newDirection = currentDirection;
-                    passedBeams.add(new Beam(newDirection, color, newposition));
-                }
-            }
-
-            if (!reflectedBeams.isEmpty()) {
-                Beam reflectedBeam = reflectedBeams.get(0);
-                for (int i = 0; i < reflectedBeams.size() - 1; i++) {
-                    reflectedBeam.setColor(combineColors(reflectedBeam.getColor(), reflectedBeams.get(i+1).getColor()));
-                }
-                level.getBeams().add(reflectedBeam);
-                moveBeam(level, reflectedBeam, reflectedBeam.getPosition());
-            }
-
-            if (!passedBeams.isEmpty()) {
-                Beam passedBeam = passedBeams.get(0);
-                for (int i = 0; i < passedBeams.size() - 1; i++) {
-                    passedBeam.setColor(combineColors(passedBeam.getColor(), passedBeams.get(i+1).getColor()));
-                }
-                level.getBeams().add(passedBeam);
-                moveBeam(level, passedBeam, passedBeam.getPosition());
-            }
-        } else {
+        else {
             //empty cell ahead
             newBeam = new Beam(newDirection, beam.getColor(), newposition);
             level.getBeams().add(newBeam);

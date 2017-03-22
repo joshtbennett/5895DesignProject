@@ -16,19 +16,6 @@ public class Beam implements ColorableEntity{
         this.color = color;
     }
 
-    public char getOppositeDirection(){
-        if(direction == 'u'){
-            return 'd';
-        }
-        if(direction == 'd'){
-            return 'u';
-        }
-        if(direction == 'l'){
-            return 'r';
-        }
-        return 'l';
-    }
-
     @Override
     public String getColor() {
         return color;
@@ -38,12 +25,7 @@ public class Beam implements ColorableEntity{
     public int getPosition() {
         return position;
     }
-    public boolean getReceived() {
-        return false;
-    }
-
     public char getDirection(){ return direction; }
 
     public void setColor(String color) {this.color = color;}
-    //LevelEntity checkNextSquare(){ }
 }
