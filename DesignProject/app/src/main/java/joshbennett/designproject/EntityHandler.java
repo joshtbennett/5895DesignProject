@@ -30,32 +30,35 @@ public class EntityHandler {
         level.setWalls(walls);
     }
 
-    public void addMirror(Level level, Mirror entity, int position) {
-        ArrayList<Mirror> mirrors = level.getMirrors();
-        mirrors.add(entity);
-        level.setMirrors(mirrors);
+    public void addMirror(Level level, Mirror entity) {
+        ArrayList<ColorableEntity> entities = level.getEntities();
+        entities.add(entity);
+        level.setEntities(entities);
     }
 
     public void removeMirror(Level level, int position) {
-        ArrayList<Mirror> mirrors = level.getMirrors();
-        for (int i = 0; i < mirrors.size(); i++)
-            if (mirrors.get(i).getPosition() == position)
-                mirrors.remove(i);
-        level.setMirrors(mirrors);
+        ArrayList<ColorableEntity> entities = level.getEntities();
+        for (int i = 0; i < entities.size(); i++)
+            if (entities.get(i).getPosition() == position)
+                entities.remove(i);
+        level.setEntities(entities);
     }
 
     public void flipMirror(Level level, Mirror mirror, int position) {
 
-        ArrayList<Mirror> mirrors = level.getMirrors();
-        for (int i = 0; i < mirrors.size(); i++) {
-            if (mirrors.get(i).getPosition() == position) {
-                if (mirrors.get(i).getAngle() == 45) {
-                    mirrors.get(i).setAngle(135);
-                } else if (mirrors.get(i).getAngle() == 135) {
-                    mirrors.get(i).setAngle(45);
+        ArrayList<ColorableEntity> entities = level.getEntities();
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).getPosition() == position) {
+                if(entities.get(i) instanceof Mirror) {
+                    if (((Mirror)entities.get(i)).getAngle() == 45) {
+                        ((Mirror)entities.get(i)).setAngle(135);
+                    }
+                    else if (((Mirror)entities.get(i)).getAngle() == 135) {
+                        ((Mirror)entities.get(i)).setAngle(45);
+                    }
                 }
             }
-            level.setMirrors(mirrors);
+            level.setEntities(entities);
         }
     }
 
@@ -80,44 +83,46 @@ public class EntityHandler {
             newposition = pos + 1;
         }
 
-        for(int i = 0; i < level.getMirrors().size(); i++) {
-            if (level.getMirrors().get(i).getPosition() == currentposition) {
-                //outgoing
-                currentColor = beam.getColor();
-                Bitmap BeamTopRight = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopright.png", 40);
-                Bitmap BeamTopLeft = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopleft.png", 40);
-                Bitmap currentimage = ((BitmapDrawable) cells.get(level.getMirrors().get(i).getPosition()).getDrawable()).getBitmap();
-                int mirrorposition = level.getMirrors().get(i).getPosition();
+        for(int i = 0; i < level.getEntities().size(); i++) {
+            if (level.getEntities().get(i).getPosition() == currentposition) {
+                if(level.getEntities().get(i) instanceof Mirror) {
+                    //outgoing
+                    currentColor = beam.getColor();
+                    Bitmap BeamTopRight = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopright.png", 40);
+                    Bitmap BeamTopLeft = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopleft.png", 40);
+                    Bitmap currentimage = ((BitmapDrawable) cells.get(level.getEntities().get(i).getPosition()).getDrawable()).getBitmap();
+                    int mirrorposition = level.getEntities().get(i).getPosition();
 
-                //leaving beam
-                if (level.getMirrors().get(i).getAngle() == 45) {
-                    if (currentDirection == 'u') {
-                        //topright90
-                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
-                    } else if (currentDirection == 'd') {
-                        //topright270
+                    //leaving beam
+                    if (((Mirror)level.getEntities().get(i)).getAngle() == 45) {
+                        if (currentDirection == 'u') {
+                            //topright90
+                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
+                        } else if (currentDirection == 'd') {
+                            //topright270
 
-                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
-                    } else if (currentDirection == 'l') {
-                        //topleft
-                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
-                    } else {
-                        //topleft180
-                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
-                    }
-                } else if (level.getMirrors().get(i).getAngle() == 135) {
-                    if (currentDirection == 'u') {
-                        //topleft90
-                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
-                    } else if (currentDirection == 'd') {
-                        //topleft270
-                        activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
-                    } else if (currentDirection == 'l') {
-                        //topright
-                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
-                    } else {
-                        //topright180
-                        activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
+                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
+                        } else if (currentDirection == 'l') {
+                            //topleft
+                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
+                        } else {
+                            //topleft180
+                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
+                        }
+                    } else if (((Mirror)level.getEntities().get(i)).getAngle() == 135) {
+                        if (currentDirection == 'u') {
+                            //topleft90
+                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
+                        } else if (currentDirection == 'd') {
+                            //topleft270
+                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
+                        } else if (currentDirection == 'l') {
+                            //topright
+                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
+                        } else {
+                            //topright180
+                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
+                        }
                     }
                 }
             }
@@ -140,10 +145,12 @@ public class EntityHandler {
         boolean wall = false;
         ColorableEntity entity = null;
 
-        for (int i = 0; i < level.getMirrors().size(); i++) {
-            if (level.getMirrors().get(i).getPosition() == newposition) {
-                //theres a mirror in the next cell
-                mirror = level.getMirrors().get(i);
+        for (int i = 0; i < level.getEntities().size(); i++) {
+            if (level.getEntities().get(i).getPosition() == newposition) {
+                if(level.getEntities().get(i) instanceof Mirror) {
+                    //theres a mirror in the next cell
+                    mirror = ((Mirror)level.getEntities().get(i));
+                }
             }
         }
         for (int i = 0; i < level.getWalls().size(); i++) {

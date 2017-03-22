@@ -41,7 +41,6 @@ public class LevelActivity extends AppCompatActivity {
     private LevelFactory levelFactory;
     private ArrayList<ColorableEntity> entities;
     private ArrayList<Wall> walls;
-    private ArrayList<Mirror> mirrors = new ArrayList<>();
     private ImageView colorWheel;
     private ImageView indicator;
     private ToggleButton deleteButton;
@@ -302,9 +301,11 @@ public class LevelActivity extends AppCompatActivity {
             manipulator.newimage(straightbeam, getApplicationContext());
             boolean hasMirror = false;
 
-            for (int j = 0; j < level.getMirrors().size(); j++) {
-                if (level.getMirrors().get(j).getPosition() == level.getBeams().get(i).getPosition()) {
-                    hasMirror = true;
+            for (int j = 0; j < level.getEntities().size(); j++) {
+                if(level.getEntities().get(j) instanceof Mirror) {
+                    if (level.getEntities().get(j).getPosition() == level.getBeams().get(i).getPosition()) {
+                        hasMirror = true;
+                    }
                 }
             }
             if (hasMirror == false) {
@@ -433,15 +434,17 @@ public class LevelActivity extends AppCompatActivity {
             }
         }
 
-        for (Mirror i : level.getMirrors()) {
-            Bitmap newimage = getBitmapFromAssets(i.getColor() + "/45mirror.png", 40);
-            manipulator.newimage(newimage, this);
-            if(i.getAngle()==135) {
-                newimage = manipulator.rotateImage(90);
+        for (ColorableEntity i : level.getEntities()) {
+            if(i instanceof Mirror) {
+                Bitmap newimage = getBitmapFromAssets(i.getColor() + "/45mirror.png", 40);
+                manipulator.newimage(newimage, this);
+                if (((Mirror)i).getAngle() == 135) {
+                    newimage = manipulator.rotateImage(90);
+                }
+                ImageView cell = cells.get(i.getPosition());
+                cell.setImageBitmap(newimage);
+                cells.set(i.getPosition(), cell);
             }
-            ImageView cell = cells.get(i.getPosition());
-            cell.setImageBitmap(newimage);
-            cells.set(i.getPosition(), cell);
         }
     }
 
@@ -453,7 +456,6 @@ public class LevelActivity extends AppCompatActivity {
                     return;
                 walls = level.getWalls();
                 entities = level.getEntities();
-                mirrors = level.getMirrors();
                 boolean wallCheck = false;
                 boolean entityCheck = false;
                 boolean mirrorCheck = false;
@@ -465,18 +467,17 @@ public class LevelActivity extends AppCompatActivity {
                             wallCheck = true;
                 if(entities.size()>0)
                     for(int i = 0; i < entities.size(); i++)
-                        if(position == entities.get(i).getPosition())
-                            entityCheck = true;
-                if(mirrors.size()>0)
-                    for(int i = 0; i < mirrors.size(); i++)
-                        if(position == mirrors.get(i).getPosition())
-                            mirrorCheck = true;
+                        if(position == entities.get(i).getPosition()) {
+                            if(entities.get(i) instanceof Mirror)
+                                mirrorCheck = true;
+                            else
+                                entityCheck = true;
+                        }
 
                 //touched cell containing mirror
                 if(mirrorCheck){
                     if(placeButton.isChecked()){
                         //replace current mirror
-
                         Bitmap newimage = getBitmapFromAssets(color + "/45mirror.png", 40);
                         ImageView cell = cells.get(position);
                         cell.setImageBitmap(newimage);
@@ -486,7 +487,7 @@ public class LevelActivity extends AppCompatActivity {
                         //remove current mirror
                         entityHandler.removeMirror(level, position);
                         //add new mirror
-                        entityHandler.addMirror(level, mirror, position);
+                        entityHandler.addMirror(level, mirror);
                     }
                     else if(deleteButton.isChecked()){
                         //delete current mirror
@@ -501,15 +502,15 @@ public class LevelActivity extends AppCompatActivity {
                         current = manipulator.rotateImage(90);
                         clickableimage.setImageBitmap(current);
 
-                        for(int i = 0; i < mirrors.size(); i++)
+                        for(int i = 0; i < entities.size(); i++)
                         {
-                            if(mirrors.get(i).getPosition() == position){
-                                if(mirrors.get(i).getAngle() == 45){
-                                    Mirror temp = mirrors.get(i);
+                            if(entities.get(i).getPosition() == position && entities.get(i) instanceof Mirror){
+                                if(((Mirror)entities.get(i)).getAngle() == 45){
+                                    Mirror temp = ((Mirror)entities.get(i));
                                     entityHandler.flipMirror(level, temp, position);
                                 }
-                                else if(mirrors.get(i).getAngle() == 135){
-                                    Mirror temp = mirrors.get(i);
+                                else if(((Mirror)entities.get(i)).getAngle() == 135){
+                                    Mirror temp = ((Mirror)entities.get(i));
                                     entityHandler.flipMirror(level, temp, position);
                                 }
                             }
@@ -527,7 +528,7 @@ public class LevelActivity extends AppCompatActivity {
                         cells.set(position, cell);
 
                         Mirror mirror = new Mirror(color, position);
-                        entityHandler.addMirror(level, mirror, position);
+                        entityHandler.addMirror(level, mirror);
                     }
                 }
             }
@@ -677,7 +678,10 @@ public class LevelActivity extends AppCompatActivity {
                     }
                 }
                 level.getBeams().clear();
-                level.getMirrors().clear();
+                for(int i = 0; i < level.getEntities().size(); i++){
+                    if(level.getEntities().get(i) instanceof Mirror)
+                        level.getEntities().remove(i);
+                }
                 for (ColorableEntity i : level.getEntities()) {
                     if (i instanceof Collector) {
                         ((Collector)i).setReceived(false);
