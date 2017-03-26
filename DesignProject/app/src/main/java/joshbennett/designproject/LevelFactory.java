@@ -14,7 +14,7 @@ public class LevelFactory {
 
     ArrayList<LevelEntity> entities = new ArrayList<>();
     ArrayList<Wall> walls = new ArrayList<>();
-    ArrayList<TextBox> textBoxes = new ArrayList<>();
+    TextBox textBox;
     int sideLength;
     int levelNum;
     int par;
@@ -88,7 +88,7 @@ public class LevelFactory {
                         entities.add(wall);
                         break;
                     case "message":
-                        textBoxes.add(new TextBox(cursor.getString((cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_MESSAGE)))));
+                        textBox = new TextBox(cursor.getString((cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_MESSAGE))));
                         break;
                     /*case "data":
                         sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
@@ -136,7 +136,7 @@ public class LevelFactory {
     public Level generateLevel(){
         Level level;
         if (isTutorial) {
-            level = new TutorialLevel(entities, sideLength, par, textBoxes);
+            level = new TutorialLevel(entities, sideLength, par, textBox);
         }
         else {
             level = new Level(entities, sideLength, par);

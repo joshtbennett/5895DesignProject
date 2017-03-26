@@ -144,7 +144,7 @@ public class LevelActivity extends AppCompatActivity {
         Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
         indicator.setImageBitmap(indicatorRing);
 
-        //if(level instanceof TutorialLevel)
+        if(level instanceof TutorialLevel)
             displayTextBox();
     }
 
@@ -787,7 +787,10 @@ public class LevelActivity extends AppCompatActivity {
         tutorialbox.setLayoutParams(tparams);
 
         TextView message = new TextView(this);
-        message.setText("Mirrors reflect beams of light that match their color. Use them to direct the beam from the Emitter to the Collector. \n Use the color wheel to select your color and tap the cell you'd like to place the mirror in");
+        String textMessage;
+        TextBox textBox = ((TutorialLevel)level).getTextbox();
+        textMessage = textBox.getMessage();
+        message.setText(textMessage);
         message.setTextSize(18);
         RelativeLayout.LayoutParams tmessageparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         tmessageparams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -807,6 +810,6 @@ public class LevelActivity extends AppCompatActivity {
                 endwindow.showAtLocation(findViewById(android.R.id.content), Gravity.TOP, 0,250);
             }
 
-        }, 1000);
+        }, 0);
     }
 }

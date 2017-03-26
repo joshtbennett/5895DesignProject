@@ -8,10 +8,12 @@ import java.util.ArrayList;
 
 public class TutorialLevel extends Level {
 
-    private ArrayList<TextBox> textBoxes;
+    private TextBox textBox;
 
-    public TutorialLevel(ArrayList<LevelEntity> entities, int sideLength, int par, ArrayList<TextBox> textBoxes) {
+    public TutorialLevel(ArrayList<LevelEntity> entities, int sideLength, int par, TextBox textBox) {
         super(entities, sideLength, par);
-        this.textBoxes = textBoxes;
+        this.textBox = textBox;
     }
+
+    public TextBox getTextbox(){   return textBox;  }
 }
