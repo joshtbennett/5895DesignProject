@@ -796,7 +796,7 @@ public class LevelActivity extends AppCompatActivity {
 
         int width = manipulator.dpToPx(400);
 
-        endwindow = new PopupWindow(tutorialbox, width, 800);
+        endwindow = new PopupWindow(tutorialbox, width, 600);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -804,7 +804,7 @@ public class LevelActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // close your dialog
-                endwindow.showAtLocation(findViewById(android.R.id.content), Gravity.TOP, 0,300);
+                endwindow.showAtLocation(findViewById(android.R.id.content), Gravity.TOP, 0,250);
             }
 
         }, 1000);
