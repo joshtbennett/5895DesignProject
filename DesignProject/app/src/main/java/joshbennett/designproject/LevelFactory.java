@@ -14,14 +14,17 @@ public class LevelFactory {
 
     ArrayList<LevelEntity> entities = new ArrayList<>();
     ArrayList<Wall> walls = new ArrayList<>();
+    ArrayList<TextBox> textBoxes = new ArrayList<>();
     int sideLength;
     int levelNum;
     int par;
     boolean tableHasNextLevel;
+    boolean isTutorial;
 
     public LevelFactory(int levelNum, boolean isTutorial, Context context) {
 
         this.levelNum = levelNum;
+        this.isTutorial = isTutorial;
         LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(context, levelNum, isTutorial);
         SQLiteDatabase db = null;
         LevelDatabaseEntry entry = null;
@@ -84,6 +87,9 @@ public class LevelFactory {
                         Wall wall = new Wall(sideLength * y + x);
                         entities.add(wall);
                         break;
+                    case "message":
+                        textBoxes.add(new TextBox(cursor.getString((cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_MESSAGE)))));
+                        break;
                     /*case "data":
                         sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
                         par = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_PAR));
@@ -128,7 +134,13 @@ public class LevelFactory {
 
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
-        Level level = new Level(entities, sideLength, par);
+        Level level;
+        if (isTutorial) {
+            level = new TutorialLevel(entities, sideLength, par, textBoxes);
+        }
+        else {
+            level = new Level(entities, sideLength, par);
+        }
         level.levelNum = levelNum;
         level.nextLevelExists = tableHasNextLevel;
         return level;

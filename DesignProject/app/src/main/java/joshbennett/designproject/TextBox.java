@@ -11,6 +11,10 @@ public class TextBox {
 
     private String message;
 
+    public TextBox(String message) {
+        this.message = message;
+    }
+
     public void setMessage(String message){
         this.message = message;
     }

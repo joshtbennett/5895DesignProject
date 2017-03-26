@@ -12,6 +12,7 @@ public final class LevelDatabaseEntry {
     public String COLUMN_ENTITY_Y = "y";
     public String COLUMN_ENTITY_COLOR = "color";
     public String COLUMN_ENTITY_PAR = "par";
+    public String COLUMN_ENTITY_MESSAGE = "message";
 
     public LevelDatabaseEntry(int levelnum, boolean isTutorial) {
         TABLE_NAME = (isTutorial ? "tutlevel" : "level") + levelnum;
