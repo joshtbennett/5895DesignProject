@@ -42,7 +42,7 @@ public class LevelSelectActivity extends AppCompatActivity {
             buttons.add(level);
         }
 
-        LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(this, 1);
+        LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(this, 1, false);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         int table = 1;
         while (mDbHelper.isTableExists(db, "level" + table)) {

@@ -28,17 +28,17 @@ public class LevelDatabaseHelper extends SQLiteOpenHelper {
 
     LevelDatabaseEntry entry;
 
-    public LevelDatabaseHelper(Context context, int levelNum) {
+    public LevelDatabaseHelper(Context context, int levelNum, boolean isTutorial) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
-        entry = new LevelDatabaseEntry(levelNum);
+        entry = new LevelDatabaseEntry(levelNum, isTutorial);
         SQL_CREATE_ENTRIES =
                 "CREATE TABLE " + entry.TABLE_NAME + " (" +
-                        entry.COLUMN_ENTITY_ANGLE + " INTEGER," +
                         entry.COLUMN_ENTITY_COLOR + " TEXT," +
                         entry.COLUMN_ENTITY_TYPE + " TEXT," +
                         entry.COLUMN_ENTITY_X + " INTEGER," +
-                        entry.COLUMN_ENTITY_Y + " INTEGER)";
+                        entry.COLUMN_ENTITY_Y + " INTEGER," +
+                        entry.COLUMN_ENTITY_PAR + " INTEGER)";
         SQL_DELETE_ENTRIES =
                 "DROP TABLE IF EXISTS " + entry.TABLE_NAME;
 

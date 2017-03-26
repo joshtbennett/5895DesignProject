@@ -11,18 +11,20 @@ public class Level
     ArrayList<LevelEntity> entities;
     private ArrayList<Beam> beams;
     private int sideLength;
+    public int par;
     public boolean isRunning = false;
     public int levelNum;
     public boolean nextLevelExists;
 
-    public Level(ArrayList<LevelEntity> entities,  int sideLength){
+    public Level(ArrayList<LevelEntity> entities,  int sideLength, int par){
         this.sideLength = sideLength;
         this.entities = entities;
+        this.par = par;
         beams = new ArrayList<>();
     }
 
     int calculateScore(){
-        int idealScore = 1;
+        int idealScore = par;
         int playerScore = 0;
 
         for(int i = 0; i < entities.size(); i++)

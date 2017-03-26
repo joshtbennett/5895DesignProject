@@ -16,25 +16,26 @@ public class LevelFactory {
     ArrayList<Wall> walls = new ArrayList<>();
     int sideLength;
     int levelNum;
+    int par;
     boolean tableHasNextLevel;
 
     public LevelFactory(int levelNum, boolean isTutorial, Context context) {
 
         this.levelNum = levelNum;
-        LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(context, levelNum);
+        LevelDatabaseHelper mDbHelper = new LevelDatabaseHelper(context, levelNum, isTutorial);
         SQLiteDatabase db = null;
         LevelDatabaseEntry entry = null;
         Cursor cursor = null;
         try {
             db = mDbHelper.getReadableDatabase();
-            entry = new LevelDatabaseEntry(levelNum);
+            entry = new LevelDatabaseEntry(levelNum, isTutorial);
 
             String[] projection = {
                     entry.COLUMN_ENTITY_TYPE,
                     entry.COLUMN_ENTITY_X,
                     entry.COLUMN_ENTITY_Y,
                     entry.COLUMN_ENTITY_COLOR,
-                    entry.COLUMN_ENTITY_ANGLE
+                    entry.COLUMN_ENTITY_PAR
             };
 
             String selection = entry.COLUMN_ENTITY_TYPE + " = ?";
@@ -43,9 +44,10 @@ public class LevelFactory {
             String sortOrder =
                     entry.COLUMN_ENTITY_TYPE + " DESC";
             
-           cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='size'", null);
+           cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='data'", null);
             if (cursor.moveToFirst()) {
                 sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
+                par = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_PAR));
             }
 
             cursor = db.rawQuery("select * from " + entry.TABLE_NAME,null);
@@ -58,6 +60,7 @@ public class LevelFactory {
             }
         }
         catch (Exception e) {
+            e.getCause();
         }
 
         try {
@@ -81,14 +84,17 @@ public class LevelFactory {
                         Wall wall = new Wall(sideLength * y + x);
                         entities.add(wall);
                         break;
-                    case "size":
+                    /*case "data":
                         sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
-                        break;
+                        par = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_PAR));
+                        break; */
+                    default:
                 }
 
             }
         }
         catch (Exception e) {
+            e.getCause();
         }
         cursor.close();
 
@@ -122,7 +128,7 @@ public class LevelFactory {
 
     //instantiates a Level and passes in the entity array
     public Level generateLevel(){
-        Level level = new Level(entities, sideLength);
+        Level level = new Level(entities, sideLength, par);
         level.levelNum = levelNum;
         level.nextLevelExists = tableHasNextLevel;
         return level;
