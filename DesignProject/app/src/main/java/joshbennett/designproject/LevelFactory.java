@@ -52,7 +52,7 @@ public class LevelFactory {
 
             cursor = db.rawQuery("select * from " + entry.TABLE_NAME,null);
 
-            if (mDbHelper.isTableExists(db, "level" + (levelNum+1))) {
+            if (mDbHelper.isTableExists(db, (isTutorial ? "tutlevel" : "level") + (levelNum+1))) {
                 tableHasNextLevel = true;
             }
             else {

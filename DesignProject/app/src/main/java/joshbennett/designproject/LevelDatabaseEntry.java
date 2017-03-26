@@ -14,7 +14,7 @@ public final class LevelDatabaseEntry {
     public String COLUMN_ENTITY_PAR = "par";
 
     public LevelDatabaseEntry(int levelnum, boolean isTutorial) {
-        TABLE_NAME = "level" + levelnum;
+        TABLE_NAME = (isTutorial ? "tutlevel" : "level") + levelnum;
     }
 
 }
