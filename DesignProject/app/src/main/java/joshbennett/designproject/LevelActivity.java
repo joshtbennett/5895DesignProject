@@ -747,15 +747,15 @@ public class LevelActivity extends AppCompatActivity {
         ImageView cell;
         Bitmap background, straightbeam;
 
-
-
         for(int i = 0; i < level.getBeams().size(); i++){
             beamposition = level.getBeams().get(i).getPosition();
+            char beamdirection = level.getBeams().get(i).getDirection();
             color = level.getBeams().get(i).getColor();
             ArrayList<Beam> beamlist = level.checkCellForBeam(beamposition);
 
             for (int k = 0; k < beamlist.size(); k++) {
-                color = entityHandler.combineColors(color, beamlist.get(k).getColor());
+                if(beamlist.get(k).getDirection() == beamdirection || beamlist.get(k).getOppositeDirection() == beamdirection)
+                    color = entityHandler.combineColors(color, beamlist.get(k).getColor());
             }
 
             straightbeam = getBitmapFromAssets(color + "/straightbeam.png", 40);
@@ -977,11 +977,6 @@ public class LevelActivity extends AppCompatActivity {
             char direction = level.getBeams().get(i).getDirection();
             int currentPos = level.getBeams().get(i).getPosition();
             String color = level.getBeams().get(i).getColor();
-            ArrayList<Beam> beamlist = level.checkCellForBeam(currentPos);
-
-            for (int k = 0; k < beamlist.size(); k++) {
-                color = entityHandler.combineColors(color, beamlist.get(k).getColor());
-            }
 
             Mirror nextMirror;
             Bitmap topleft = getBitmapFromAssets(color+"/mirrorbeamtopleft.png", 40);

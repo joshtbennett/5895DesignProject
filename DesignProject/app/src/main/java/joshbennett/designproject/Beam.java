@@ -28,4 +28,14 @@ public class Beam implements ColorableEntity{
     public char getDirection(){ return direction; }
 
     public void setColor(String color) {this.color = color;}
+
+    public char getOppositeDirection(){
+        if(direction == 'u')
+            return 'd';
+        if(direction == 'd')
+            return 'u';
+        if(direction == 'r')
+            return 'l';
+        return 'r';
+    }
 }
