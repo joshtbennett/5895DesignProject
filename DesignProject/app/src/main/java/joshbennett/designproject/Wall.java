@@ -12,6 +12,9 @@ public class Wall implements LevelEntity
         this.position = position;
     }
 
+    /*
+    * Returns the position of the wall
+    * */
     @Override
     public int getPosition() {
         return position;

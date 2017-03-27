@@ -17,17 +17,30 @@ public class Collector implements LevelEntity, ColorableEntity{
         collected = false;
     }
 
+    /*
+    * Returns the color of the collector
+    * */
     @Override
     public String getColor() { return color; }
 
+    /*
+    * returns the position of the collector
+    * */
     @Override
     public int getPosition() {
         return position;
     }
 
+    /*
+    * Sets the status of the collector
+    * */
     public void setReceived(boolean received) {
         collected = received;
     }
+
+    /*
+    * Returns the status of the collector
+    * */
     public boolean getReceived(){
         return collected;
     }

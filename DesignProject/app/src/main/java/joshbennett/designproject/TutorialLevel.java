@@ -15,5 +15,8 @@ public class TutorialLevel extends Level {
         this.textBox = textBox;
     }
 
+    /*
+    * Returns the level's instructions textbox
+    * */
     public TextBox getTextbox(){   return textBox;  }
 }

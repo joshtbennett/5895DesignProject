@@ -17,16 +17,26 @@ public class Mirror implements LevelEntity, ColorableEntity
         angle = 45;
     }
 
+    /*
+    * Returns the color of the mirror
+    * */
     @Override
     public String getColor() { return color; }
 
+    /*
+    * Returns the position of the mirror
+    * */
     @Override
-    public int getPosition() {
-        return position;
-    }
+    public int getPosition() {  return position;    }
 
+    /*
+    * Returns the angle of the mirror
+    * */
     public int getAngle() { return angle; }
 
+    /*
+    * Sets the angle of the mirror
+    * */
     public void setAngle(int angle) {
         this.angle = angle;
     }

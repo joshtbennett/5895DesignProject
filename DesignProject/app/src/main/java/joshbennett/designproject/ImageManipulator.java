@@ -11,28 +11,26 @@ import android.util.DisplayMetrics;
  */
 
 public class ImageManipulator {
-    private Bitmap src;
     private Context context;
 
-    public void newimage(Bitmap src, Context context){
-        this.src = src;
-        this.context = context;
-    }
+    public ImageManipulator(Context context){   this.context = context; }
 
-    //convert a number from density independent pixels to pixels
+    /*
+    * convert a number from density independent pixels to pixels
+    * */
     public int dpToPx(int dp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) ((dp * metrics.density) + 0.5);
     }
 
-    //convert a number from pixels to density independent pixels
-    public int pxToDp(int px) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int) ((px / metrics.density) + 0.5);
-    }
+    /*
+    * Scales a given image to new given dimensions
+    * */
+    public Bitmap scale(int newDimensions, Bitmap src){ return android.graphics.Bitmap.createScaledBitmap(src, newDimensions, newDimensions, true);}
 
-    public Bitmap scale(int newDimensions){ return android.graphics.Bitmap.createScaledBitmap(src, newDimensions, newDimensions, true);}
-
+    /*
+    * Rotates a given image a given angle clockwise
+    * */
     public Bitmap rotateImage(Bitmap image, float degree)
     {
         // create new matrix
@@ -43,6 +41,9 @@ public class ImageManipulator {
         return bmp;
     }
 
+    /*
+    * Returns an image that is the image2 placed on top of image1
+    * */
     public Bitmap overlayImages(Bitmap image1, Bitmap image2){
         Bitmap bmOverlay = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), image1.getConfig());
         Canvas canvas = new Canvas(bmOverlay);

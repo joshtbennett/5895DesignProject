@@ -1,8 +1,5 @@
 package joshbennett.designproject;
 
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
 /**
  * Created by Josh Bennett on 2/16/2017.
  */
@@ -15,10 +12,9 @@ public class TextBox {
         this.message = message;
     }
 
-    public void setMessage(String message){
-        this.message = message;
-    }
-
+    /*
+    * Returns the text to be displayed in the text box
+    * */
     public String getMessage(){
         return message;
     }

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class EntityHandler {
 
+    /*
+    * Places an entity on the game board at a given location if its currently empty
+    * */
     public void addEntity(Level level, LevelEntity entity, int position) {
         ArrayList<LevelEntity> entities = level.getEntities();
         for (LevelEntity i : entities) {
@@ -18,12 +21,18 @@ public class EntityHandler {
         level.setEntities(entities);
     }
 
+    /*
+    * Places a mirror on the game board
+    * */
     public void addMirror(Level level, Mirror entity) {
         ArrayList<LevelEntity> entities = level.getEntities();
         entities.add(entity);
         level.setEntities(entities);
     }
 
+    /*
+    * Removes a mirror from a give position on the game board if one is there
+    * */
     public void removeMirror(Level level, int position) {
         ArrayList<LevelEntity> entities = level.getEntities();
         for (int i = 0; i < entities.size(); i++)
@@ -32,6 +41,9 @@ public class EntityHandler {
         level.setEntities(entities);
     }
 
+    /*
+    * Flips the mirrors orientation in the given position
+    * */
     public void flipMirror(Level level, int position) {
         ArrayList<LevelEntity> entities = level.getEntities();
         for (int i = 0; i < entities.size(); i++) {
@@ -49,6 +61,9 @@ public class EntityHandler {
         }
     }
 
+    /*
+    * Recursively creates beams following their paths from the emitters until theyve all hit a collector, wall, or the game border
+    * */
     public void moveBeam(Level level, Beam beam, int pos) {
         int length = level.getSideLength();
         int newposition;
@@ -91,7 +106,7 @@ public class EntityHandler {
         }
 
         if (newposition < length - 1 || newposition > (length * length) - length - 1 || newposition % length == 0 || newposition % length == length-1) {
-            //the next  cell is out of bounds
+            //the next cell is out of bounds
             return;
         }
 
@@ -147,6 +162,9 @@ public class EntityHandler {
         }
     }
 
+    /*
+    * Calculates the new direction a beam will go based on the current direction and the angle of the mirror
+    * */
     public char reflect(char direction, int angle){
         char newDirection;
         if (angle == 135) {
@@ -173,6 +191,9 @@ public class EntityHandler {
         return newDirection;
     }
 
+    /*
+    * Returns true if color1 is a component of color2
+    * */
     public boolean isComponent(String color1, String color2){
         //red green and blue are not combinations of colors and there for have no components other than themselves
         if(color2.equals("red")){
@@ -224,6 +245,9 @@ public class EntityHandler {
         return true;
     }
 
+    /*
+    * Breaks a beam into the multiple beams with the colors of the originals base components
+    * */
     private String[] deconstructBeam(Beam beam) {
         switch (beam.getColor()) {
             case "red":
@@ -245,6 +269,9 @@ public class EntityHandler {
         }
     }
 
+    /*
+    * Combines the 2 colors passed in
+    * */
     String combineColors(String color1, String color2){
         if(color1.equals(color2))
             return color1;

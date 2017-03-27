@@ -15,11 +15,17 @@ public class Emitter implements LevelEntity, ColorableEntity
         this.color = color;
     }
 
+    /*
+    * Returns the color of the emitter
+    * */
     @Override
     public String getColor() {
         return color;
     }
 
+    /*
+    * Returns the position of the emitter
+    * */
     @Override
     public int getPosition() {
         return position;

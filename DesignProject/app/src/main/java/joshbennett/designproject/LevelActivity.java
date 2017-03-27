@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 public class LevelActivity extends AppCompatActivity {
 
-    private static LevelActivity instance = null;
     private Level level;
     private int levelNum;
     private boolean isTutorial;
@@ -47,18 +46,11 @@ public class LevelActivity extends AppCompatActivity {
     private PopupWindow endwindow;
     private int length;
 
-    public ArrayList<ImageView> getCells(){ return cells; }
-
-    public static LevelActivity getInstance() {
-        return instance;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        manipulator = new ImageManipulator();
-        instance = this;
+        manipulator = new ImageManipulator(this.getApplicationContext());
 
         Intent intent = getIntent();
         levelNum = intent.getIntExtra("levelNum", 1);
@@ -148,15 +140,17 @@ public class LevelActivity extends AppCompatActivity {
             displayTextBox();
     }
 
+    /*
+    * Gets a bitmap image from the assets folder and scales it
+    * */
     public Bitmap getBitmapFromAssets(String filename, int dptopx){
         AssetManager assetManager = getAssets();
 
         try {
             InputStream istr = assetManager.open(filename);
             Bitmap image = BitmapFactory.decodeStream(istr);
-            manipulator.newimage(image, getApplicationContext());
             int newdimensions = manipulator.dpToPx(dptopx);
-            image = manipulator.scale(newdimensions);
+            image = manipulator.scale(newdimensions, image);
             return image;
         } catch (IOException e) {
             e.printStackTrace();
@@ -164,6 +158,9 @@ public class LevelActivity extends AppCompatActivity {
         return null;
     }
 
+    /*
+    * Untoggles the place and flip buttons as well as toggling the delete button
+    * */
     public void DeleteButton(View v){
         if(placeButton.isChecked())
             placeButton.setChecked(false);
@@ -172,6 +169,9 @@ public class LevelActivity extends AppCompatActivity {
         deleteButton.setChecked(true);
     }
 
+    /*
+    * Untoggles the delete and flip buttons as well as toggling the place button
+    * */
     public void PlaceButton(View v){
         if(deleteButton.isChecked())
             deleteButton.setChecked(false);
@@ -180,6 +180,9 @@ public class LevelActivity extends AppCompatActivity {
         placeButton.setChecked(true);
     }
 
+    /*
+    * Untoggles the place and delete buttons as well as toggling the flip button
+    * */
     public void FlipButton(View v){
         if(deleteButton.isChecked())
             deleteButton.setChecked(false);
@@ -188,6 +191,9 @@ public class LevelActivity extends AppCompatActivity {
         flipButton.setChecked(true);
     }
 
+    /*
+    * Stops the simulation, sets collectors received values back to false, and redraws the board without the beams
+    * */
     public void stop(View v) {
         level.isRunning = false;
         startButton.setText("Start");
@@ -206,6 +212,10 @@ public class LevelActivity extends AppCompatActivity {
 
     }
 
+    /*
+    * Draws the beams on the screen, and checks if the game has been won
+    * Calls the displayWin method if the player has successfully completed the level
+    * */
     public void start(View v) {
 
         ImageView cell;
@@ -228,7 +238,6 @@ public class LevelActivity extends AppCompatActivity {
                 color = ((ColorableEntity)entities.get(i)).getColor();
                 int size = length * length;
                 image = getBitmapFromAssets(color + "/onboardemitteron.png", 40);
-                manipulator.newimage(image, getApplicationContext());
 
                 if (position < length - 1) {
                     cell = cells.get(position + length);
@@ -268,7 +277,6 @@ public class LevelActivity extends AppCompatActivity {
             if(entities.get(i) instanceof Collector) {
                 if (((Collector)entities.get(i)).getReceived() == true) {
                     Bitmap onboardcollectoron = getBitmapFromAssets(((ColorableEntity)entities.get(i)).getColor() + "/onboardcollectoron.png", 40);
-                    manipulator.newimage(onboardcollectoron, this);
                     int location = entities.get(i).getPosition();
                     if (location < 2 * length - 1) {
                         onboardcollectoron = manipulator.rotateImage(onboardcollectoron, 90);
@@ -294,10 +302,13 @@ public class LevelActivity extends AppCompatActivity {
             displayFinish();
         }
     }
-    
+
+    /*
+    * Uses the Entity array to draw the board and all of its entities
+    * Draws an empty board first and then replaces cells with images of their entities
+    * */
     public void drawLevel(){
         cells = new ArrayList<>((length) * (length));
-
 
         //get images to display on the grid
         Bitmap bordercell = getBitmapFromAssets("bordercell.png", 40);
@@ -400,7 +411,6 @@ public class LevelActivity extends AppCompatActivity {
         for (LevelEntity i : level.getEntities()) {
             if(i instanceof Mirror) {
                 Bitmap newimage = getBitmapFromAssets(((Mirror)i).getColor() + "/45mirror.png", 40);
-                manipulator.newimage(newimage, this);
                 if (((Mirror)i).getAngle() == 135) {
                     newimage = manipulator.rotateImage(newimage, 90);
                 }
@@ -411,6 +421,15 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    * Makes the cells on the board clickable
+    *
+    * When a cell is clicked, this method checks the contents of the clicked cell and:
+    *     1. places a mirror of the selected color(from color wheel)
+    *     2. deletes the mirror inside the touched cell
+    *     3. flips the mirror contained in the touched cell
+    * Based on the toggle that is selected
+    * */
     private void setOnClick(final ImageView clickableimage, final int position) {
         clickableimage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,7 +477,6 @@ public class LevelActivity extends AppCompatActivity {
                     else{
                         //flip current mirror
                         Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
-                        manipulator.newimage(current, getApplicationContext());
                         current = manipulator.rotateImage(current, 90);
                         clickableimage.setImageBitmap(current);
 
@@ -495,6 +513,9 @@ public class LevelActivity extends AppCompatActivity {
         });
     }
 
+    /*
+    * If the entity inside the given cell is a collector, it will display the corresponding image on the game board
+    * */
     public ArrayList<ImageView> displayIfCollector(char type, int position, String color, ArrayList<ImageView> cells){
         ImageView cell;
         Bitmap offboardcollector = getBitmapFromAssets(color+"/offboardcollector.png", 40);
@@ -544,6 +565,9 @@ public class LevelActivity extends AppCompatActivity {
         return cells;
     }
 
+    /*
+    * If the entity inside the given cell is an emitter, it will display the corresponding image on the game board
+    * */
     public ArrayList<ImageView> displayIfEmitter(char type, int position, String color, ArrayList<ImageView> cells){
         ImageView cell;
         Bitmap offboardemitter = getBitmapFromAssets(color+"/offboardemitter.png", 40);
@@ -593,14 +617,20 @@ public class LevelActivity extends AppCompatActivity {
         return cells;
     }
 
+    /*
+    * Rotates an image and places it inside a cell to be displayed on the board
+    * */
     public ImageView addImage(Bitmap image, int angle){
         ImageView cell = new ImageView(getApplicationContext());
-        manipulator.newimage(image, getApplicationContext());
         image = manipulator.rotateImage(image, angle);
         cell.setImageBitmap(image);
         return cell;
     }
 
+    /*
+    * Displays the end game dialog containing the player score as well as
+    * buttons to advance to the next level, replay the current level, and return to the previous screen
+    * */
     public void displayFinish(){
         startButton.setEnabled(false);
         RelativeLayout endscreen = new RelativeLayout(this);
@@ -732,9 +762,13 @@ public class LevelActivity extends AppCompatActivity {
         }, 1000);
     }
 
+    /*
+    * Displays the images of the beams that are passing through or being reflected off of a mirror
+    * Uses incoming direction, outgoing direction and mirror angle to determine the image and the angle it should be rotated
+    * and then places that image on top of the cell
+    * */
     public void displayBeamMirror(Bitmap beamimage, Bitmap currentimage, ArrayList<ImageView> cells, int currentposition, int angle){
         ImageView cell;
-        manipulator.newimage(beamimage, getApplicationContext());
         beamimage = manipulator.rotateImage(beamimage, angle);
         currentimage = manipulator.overlayImages(currentimage, beamimage);
         cell = cells.get(currentposition);
@@ -742,6 +776,9 @@ public class LevelActivity extends AppCompatActivity {
         cells.set(currentposition, cell);
     }
 
+    /*
+    * Displays all beams on the board
+    * */
     public void displayBeams() {
         int beamposition;
         ImageView cell;
@@ -759,7 +796,6 @@ public class LevelActivity extends AppCompatActivity {
             }
 
             straightbeam = getBitmapFromAssets(color + "/straightbeam.png", 40);
-            manipulator.newimage(straightbeam, getApplicationContext());
 
             if(level.checkCellForEntity(beamposition) == null){
                 if(level.getBeams().get(i).getDirection() == 'l' || level.getBeams().get(i).getDirection() == 'r'){
@@ -1063,6 +1099,10 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
+
+    /*
+    * Displays a tutorial Text box on the screen above the game board
+    * */
     public void displayTextBox(){
         RelativeLayout tutorialbox = new RelativeLayout(this);
         LinearLayout.LayoutParams tparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

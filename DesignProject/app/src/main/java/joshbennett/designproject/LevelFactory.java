@@ -21,6 +21,9 @@ public class LevelFactory {
     boolean tableHasNextLevel;
     boolean isTutorial;
 
+    /*
+    * Takes info from the database to be used to create the level for the user
+    * */
     public LevelFactory(int levelNum, boolean isTutorial, Context context) {
 
         this.levelNum = levelNum;
@@ -33,7 +36,7 @@ public class LevelFactory {
             db = mDbHelper.getReadableDatabase();
             entry = new LevelDatabaseEntry(levelNum, isTutorial);
 
-            String[] projection = {
+            /*String[] projection = {
                     entry.COLUMN_ENTITY_TYPE,
                     entry.COLUMN_ENTITY_X,
                     entry.COLUMN_ENTITY_Y,
@@ -46,8 +49,8 @@ public class LevelFactory {
 
             String sortOrder =
                     entry.COLUMN_ENTITY_TYPE + " DESC";
-            
-           cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='data'", null);
+            */
+            cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='data'", null);
             if (cursor.moveToFirst()) {
                 sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
                 par = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_PAR));
@@ -132,7 +135,9 @@ public class LevelFactory {
         db.execSQL(SQL_CREATE_ENTRIES); */
     }
 
-    //instantiates a Level and passes in the entity array
+    /*
+    * instantiates a new level from the data from the database
+    * */
     public Level generateLevel(){
         Level level;
         if (isTutorial) {

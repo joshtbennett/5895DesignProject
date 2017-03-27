@@ -5,5 +5,5 @@ package joshbennett.designproject;
  */
 
 public interface LevelEntity {
-    public int getPosition();
+    int getPosition();
 }

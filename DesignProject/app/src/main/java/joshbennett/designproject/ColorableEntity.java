@@ -5,6 +5,6 @@ package joshbennett.designproject;
  */
 
 public interface ColorableEntity extends LevelEntity {
-    public String getColor();
-    public int getPosition();
+    String getColor();
+    int getPosition();
 }
