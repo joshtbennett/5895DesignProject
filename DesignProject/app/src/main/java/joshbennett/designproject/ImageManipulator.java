@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 
 /**
@@ -33,13 +34,13 @@ public class ImageManipulator {
 
     public Bitmap scale(int newDimensions){ return android.graphics.Bitmap.createScaledBitmap(src, newDimensions, newDimensions, true);}
 
-    public Bitmap rotateImage(float degree)
+    public Bitmap rotateImage(Bitmap image, float degree)
     {
         // create new matrix
         Matrix matrix = new Matrix();
         // setup rotation degree
         matrix.postRotate(degree);
-        Bitmap bmp = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
+        Bitmap bmp = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
         return bmp;
     }
 
@@ -49,5 +50,15 @@ public class ImageManipulator {
         canvas.drawBitmap(image1, new Matrix(), null);
         canvas.drawBitmap(image2, 0, 0, null);
         return bmOverlay;
+    }
+
+    public Bitmap flip(Bitmap d)
+    {
+        Matrix m = new Matrix();
+        m.preScale(-1, 1);
+        Bitmap src = d;
+        Bitmap dst = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
+        dst.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+        return dst;
     }
 }

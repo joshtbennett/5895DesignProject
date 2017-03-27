@@ -232,7 +232,7 @@ public class LevelActivity extends AppCompatActivity {
 
                 if (position < length - 1) {
                     cell = cells.get(position + length);
-                    image = manipulator.rotateImage(90);
+                    image = manipulator.rotateImage(image, 90);
                     cell.setImageBitmap(image);
                     cells.set(position, cell);
                     beam = new Beam('d', color, position + length);
@@ -240,7 +240,7 @@ public class LevelActivity extends AppCompatActivity {
 
                 } else if (position > (size - length)) {
                     cell = cells.get(position - length);
-                    image = manipulator.rotateImage(270);
+                    image = manipulator.rotateImage(image, 270);
                     cell.setImageBitmap(image);
                     cells.set(position, cell);
                     beam = new Beam('u', color, position - length);
@@ -255,7 +255,7 @@ public class LevelActivity extends AppCompatActivity {
 
                 } else if (position % length == length - 1) {
                     cell = cells.get(position - 1);
-                    image = manipulator.rotateImage(180);
+                    image = manipulator.rotateImage(image, 180);
                     cell.setImageBitmap(image);
                     cells.set(position, cell);
                     beam = new Beam('l', color, position - 1);
@@ -271,15 +271,15 @@ public class LevelActivity extends AppCompatActivity {
                     manipulator.newimage(onboardcollectoron, this);
                     int location = entities.get(i).getPosition();
                     if (location < 2 * length - 1) {
-                        onboardcollectoron = manipulator.rotateImage(90);
+                        onboardcollectoron = manipulator.rotateImage(onboardcollectoron, 90);
                     } else if (location > (length * length - 2 * length)) {
-                        onboardcollectoron = manipulator.rotateImage(270);
+                        onboardcollectoron = manipulator.rotateImage(onboardcollectoron, 270);
 
                     } else if (location % length == 1) {
-                        onboardcollectoron = manipulator.rotateImage(0);
+                        onboardcollectoron = manipulator.rotateImage(onboardcollectoron, 0);
 
                     } else if (location % length == length - 2) {
-                        onboardcollectoron = manipulator.rotateImage(180);
+                        onboardcollectoron = manipulator.rotateImage(onboardcollectoron, 180);
                     }
                     cell = cells.get(entities.get(i).getPosition());
                     cell.setImageBitmap(onboardcollectoron);
@@ -288,48 +288,10 @@ public class LevelActivity extends AppCompatActivity {
             }
         }
 
-        char direction;
-        for (int i = 0; i < level.getBeams().size(); i++) {
+        displayBeams();
 
-            color = level.getBeams().get(i).getColor();
-            String originalColor = color;
-            int beamposition = level.getBeams().get(i).getPosition();
-            Bitmap current = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
-            //leaving direction (after its hit the mirror
-            direction = level.getBeams().get(i).getDirection();
-            Bitmap straightbeam = getBitmapFromAssets(originalColor + "/straightbeam.png", 40);
-            manipulator.newimage(straightbeam, getApplicationContext());
-            boolean hasMirror = false;
-
-            for (int j = 0; j < level.getEntities().size(); j++) {
-                if(level.getEntities().get(j) instanceof Mirror) {
-                    if (level.getEntities().get(j).getPosition() == level.getBeams().get(i).getPosition()) {
-                        hasMirror = true;
-                    }
-                }
-            }
-            if (hasMirror == false) {
-                //going left or right
-                if (direction == 'l' || direction == 'r') {
-                    Bitmap background = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
-                    straightbeam = manipulator.rotateImage(90);
-                    straightbeam = manipulator.overlayImages(background, straightbeam);
-                    cell = cells.get(beamposition);
-                    cell.setImageBitmap(straightbeam);
-                    cells.set(beamposition, cell);
-                }
-                //going up and down
-                if (direction == 'u' || direction == 'd') {
-                    Bitmap background = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
-                    straightbeam = manipulator.overlayImages(background, straightbeam);
-                    cell = cells.get(beamposition);
-                    cell.setImageBitmap(straightbeam);
-                    cells.set(beamposition, cell);
-                }
-            }
-            if (level.checkWin()) {
-                displayFinish();
-            }
+        if (level.checkWin()) {
+            displayFinish();
         }
     }
     
@@ -440,7 +402,7 @@ public class LevelActivity extends AppCompatActivity {
                 Bitmap newimage = getBitmapFromAssets(((Mirror)i).getColor() + "/45mirror.png", 40);
                 manipulator.newimage(newimage, this);
                 if (((Mirror)i).getAngle() == 135) {
-                    newimage = manipulator.rotateImage(90);
+                    newimage = manipulator.rotateImage(newimage, 90);
                 }
                 ImageView cell = cells.get(i.getPosition());
                 cell.setImageBitmap(newimage);
@@ -497,7 +459,7 @@ public class LevelActivity extends AppCompatActivity {
                         //flip current mirror
                         Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
                         manipulator.newimage(current, getApplicationContext());
-                        current = manipulator.rotateImage(90);
+                        current = manipulator.rotateImage(current, 90);
                         clickableimage.setImageBitmap(current);
 
                         for(int i = 0; i < entities.size(); i++)
@@ -634,7 +596,7 @@ public class LevelActivity extends AppCompatActivity {
     public ImageView addImage(Bitmap image, int angle){
         ImageView cell = new ImageView(getApplicationContext());
         manipulator.newimage(image, getApplicationContext());
-        image = manipulator.rotateImage(angle);
+        image = manipulator.rotateImage(image, angle);
         cell.setImageBitmap(image);
         return cell;
     }
@@ -773,11 +735,128 @@ public class LevelActivity extends AppCompatActivity {
     public void displayBeamMirror(Bitmap beamimage, Bitmap currentimage, ArrayList<ImageView> cells, int currentposition, int angle){
         ImageView cell;
         manipulator.newimage(beamimage, getApplicationContext());
-        beamimage = manipulator.rotateImage(angle);
+        beamimage = manipulator.rotateImage(beamimage, angle);
         currentimage = manipulator.overlayImages(currentimage, beamimage);
         cell = cells.get(currentposition);
         cell.setImageBitmap(currentimage);
         cells.set(currentposition, cell);
+    }
+
+    public void displayBeams() {
+        int beamposition;
+        ImageView cell;
+        Bitmap background, straightbeam;
+
+        for(int i = 0; i < level.getBeams().size(); i++){
+            color = level.getBeams().get(i).getColor();
+            straightbeam = getBitmapFromAssets(color + "/straightbeam.png", 40);
+            manipulator.newimage(straightbeam, getApplicationContext());
+            beamposition = level.getBeams().get(i).getPosition();
+            if(level.checkCellForEntity(beamposition) == null){
+                if(level.getBeams().get(i).getDirection() == 'l' || level.getBeams().get(i).getDirection() == 'r'){
+                    background = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
+                    straightbeam = manipulator.rotateImage(straightbeam, 90);
+                    straightbeam = manipulator.overlayImages(background, straightbeam);
+                    cell = cells.get(beamposition);
+                    cell.setImageBitmap(straightbeam);
+                    cells.set(beamposition, cell);
+                }
+                else{
+                    background = ((BitmapDrawable) cells.get(beamposition).getDrawable()).getBitmap();
+                    straightbeam = manipulator.overlayImages(background, straightbeam);
+                    cell = cells.get(beamposition);
+                    cell.setImageBitmap(straightbeam);
+                    cells.set(beamposition, cell);
+                }
+            }
+            if(level.checkCellForEntity(beamposition) instanceof Mirror){
+                if(entityHandler.isComponent(level.getBeams().get(i).getColor(), (((Mirror) level.checkCellForEntity(beamposition)).getColor()))){
+                    //beam matches mirror
+                    Beam beam = level.getBeams().get(i);
+                    String currentColor;
+                    char currentDirection = beam.getDirection();
+                    Mirror currentMirror = ((Mirror) level.checkCellForEntity(beamposition));
+                    currentColor = beam.getColor();
+                    Bitmap BeamTopRight = getBitmapFromAssets(currentColor + "/mirrorbeamtopright.png", 40);
+                    Bitmap BeamTopLeft = getBitmapFromAssets(currentColor + "/mirrorbeamtopleft.png", 40);
+                    Bitmap currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                    int mirrorposition = currentMirror.getPosition();
+
+                    if (currentMirror.getAngle() == 45) {
+                        if (currentDirection == 'u') {
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
+                        } else if (currentDirection == 'd') {
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
+                        } else if (currentDirection == 'l') {
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
+                        } else {
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
+                        }
+                    } else{
+                        if (currentDirection == 'u') {
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
+                        } else if (currentDirection == 'd') {
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
+                        } else if (currentDirection == 'l') {
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
+                        } else {
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
+                        }
+                    }
+                }
+                else
+                {
+                    Beam beam = level.getBeams().get(i);
+                    String currentColor;
+                    char currentDirection = beam.getDirection();
+                    Mirror currentMirror = ((Mirror) level.checkCellForEntity(beamposition));
+                    currentColor = beam.getColor();
+                    Bitmap BeamTopRight = getBitmapFromAssets(currentColor + "/mirrorbeamtopright.png", 40);
+                    Bitmap BeamTopLeft = getBitmapFromAssets(currentColor + "/mirrorbeamtopleft.png", 40);
+                    Bitmap currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                    int mirrorposition = currentMirror.getPosition();
+
+                    //leaving beam
+                    if (currentMirror.getAngle() == 45) {
+                        if (currentDirection == 'u' || currentDirection == 'd') {
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
+                        } else {
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
+                        }
+                    } else if (((Mirror) level.getEntities().get(i)).getAngle() == 135) {
+                        if (currentDirection == 'u' || currentDirection == 'd') {
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
+                        } else {
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
+                            currentimage = ((BitmapDrawable) cells.get(currentMirror.getPosition()).getDrawable()).getBitmap();
+                            displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void displayTextBox(){
@@ -812,4 +891,5 @@ public class LevelActivity extends AppCompatActivity {
 
         }, 0);
     }
+
 }

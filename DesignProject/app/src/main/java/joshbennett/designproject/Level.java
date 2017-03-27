@@ -58,4 +58,36 @@ public class Level
             return false;
     }
 
+    public boolean checkCellEmpty(int position){
+        for(int i = 0; i < entities.size(); i++){
+            if(entities.get(i).getPosition() == position){
+                return false;
+            }
+        }
+        for(int i = 0; i < beams.size(); i++){
+            if(beams.get(i).getPosition() == position){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public LevelEntity checkCellForEntity(int position){
+        for(int i = 0; i < entities.size(); i++){
+            if(entities.get(i).getPosition() == position){
+                return entities.get(i);
+            }
+        }
+        return null;
+    }
+
+    public Beam checkCellForBeam(int position){
+        for(int i = 0; i < beams.size(); i++){
+            if(beams.get(i).getPosition() == position){
+                return beams.get(i);
+            }
+        }
+        return null;
+    }
+
 }

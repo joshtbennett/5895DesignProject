@@ -1,9 +1,5 @@
 package joshbennett.designproject;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageView;
-
 import java.util.ArrayList;
 
 /**
@@ -56,12 +52,8 @@ public class EntityHandler {
     public void moveBeam(Level level, Beam beam, int pos) {
         int length = level.getSideLength();
         int newposition;
-        int currentposition = beam.getPosition();
         char currentDirection = beam.getDirection();
         char newDirection = currentDirection;
-        LevelActivity activity = LevelActivity.getInstance();
-        String currentColor;
-        ArrayList<ImageView> cells = activity.getCells();
 
         if (currentDirection == 'u') {
             newposition = pos - length;
@@ -71,50 +63,6 @@ public class EntityHandler {
             newposition = pos - 1;
         } else {
             newposition = pos + 1;
-        }
-
-        for(int i = 0; i < level.getEntities().size(); i++) {
-            if (level.getEntities().get(i).getPosition() == currentposition) {
-                if(level.getEntities().get(i) instanceof Mirror) {
-                    //outgoing
-                    currentColor = beam.getColor();
-                    Bitmap BeamTopRight = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopright.png", 40);
-                    Bitmap BeamTopLeft = activity.getBitmapFromAssets(currentColor + "/mirrorbeamtopleft.png", 40);
-                    Bitmap currentimage = ((BitmapDrawable) cells.get(level.getEntities().get(i).getPosition()).getDrawable()).getBitmap();
-                    int mirrorposition = level.getEntities().get(i).getPosition();
-
-                    //leaving beam
-                    if (((Mirror)level.getEntities().get(i)).getAngle() == 45) {
-                        if (currentDirection == 'u') {
-                            //topright90
-                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 90);
-                        } else if (currentDirection == 'd') {
-                            //topright270
-                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 270);
-                        } else if (currentDirection == 'l') {
-                            //topleft
-                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 0);
-                        } else {
-                            //topleft180
-                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 180);
-                        }
-                    } else if (((Mirror)level.getEntities().get(i)).getAngle() == 135) {
-                        if (currentDirection == 'u') {
-                            //topleft90
-                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 90);
-                        } else if (currentDirection == 'd') {
-                            //topleft270
-                            activity.displayBeamMirror(BeamTopLeft, currentimage, cells, mirrorposition, 270);
-                        } else if (currentDirection == 'l') {
-                            //topright
-                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 0);
-                        } else {
-                            //topright180
-                            activity.displayBeamMirror(BeamTopRight, currentimage, cells, mirrorposition, 180);
-                        }
-                    }
-                }
-            }
         }
 
         for(int k = 0; k < level.getBeams().size(); k++){
@@ -338,4 +286,5 @@ public class EntityHandler {
         }
         return "white";
     }
+
 }
