@@ -81,13 +81,14 @@ public class Level
         return null;
     }
 
-    public Beam checkCellForBeam(int position){
+    public ArrayList<Beam> checkCellForBeam(int position){
+        ArrayList<Beam> beamlist = new ArrayList<>();
         for(int i = 0; i < beams.size(); i++){
             if(beams.get(i).getPosition() == position){
-                return beams.get(i);
+                beamlist.add(beams.get(i));
             }
         }
-        return null;
+        return beamlist;
     }
 
 }

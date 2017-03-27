@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 
 /**
@@ -50,15 +49,5 @@ public class ImageManipulator {
         canvas.drawBitmap(image1, new Matrix(), null);
         canvas.drawBitmap(image2, 0, 0, null);
         return bmOverlay;
-    }
-
-    public Bitmap flip(Bitmap d)
-    {
-        Matrix m = new Matrix();
-        m.preScale(-1, 1);
-        Bitmap src = d;
-        Bitmap dst = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
-        dst.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-        return dst;
     }
 }
