@@ -54,49 +54,6 @@
             android:layout_marginTop="12dp"
             android:onClick="start"/>
 
-        <ToggleButton
-            android:id="@+id/PlaceMirrorToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:onClick="PlaceButton"
-            android:text="Place"
-            android:textOff="Place"
-            android:textOn="Place"
-            android:layout_marginBottom="35dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/DeleteMirrorToggle"
-            android:layout_toStartOf="@+id/DeleteMirrorToggle" />
-
-        <ToggleButton
-            android:text="Delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/DeleteMirrorToggle"
-            android:onClick="DeleteButton"
-            android:textOff="Delete"
-            android:textOn="Delete"
-            android:checked="false"
-            android:layout_alignBaseline="@+id/PlaceMirrorToggle"
-            android:layout_alignBottom="@+id/PlaceMirrorToggle"
-            android:layout_toLeftOf="@+id/FlipMirrorToggle"
-            android:layout_toStartOf="@+id/FlipMirrorToggle" />
-
-        <ToggleButton
-            android:text="Flip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/FlipMirrorToggle"
-            android:onClick="FlipButton"
-            android:textOn="Flip"
-            android:textOff="Flip"
-            android:checked="false"
-            android:textIsSelectable="false"
-            android:layout_alignBaseline="@+id/DeleteMirrorToggle"
-            android:layout_alignBottom="@+id/DeleteMirrorToggle"
-            android:layout_alignLeft="@+id/startButton"
-            android:layout_alignStart="@+id/startButton" />
-
 
         <ImageView
             android:id="@+id/indicator"
@@ -115,5 +72,14 @@
             android:layout_alignParentBottom="true"
             android:layout_alignLeft="@+id/levelTitle"
             android:layout_alignStart="@+id/levelTitle" />
+
+        <ImageView
+            android:id="@+id/mirrorPreview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignBottom="@+id/indicator"
+            android:layout_alignEnd="@+id/startButton"
+            android:layout_alignRight="@+id/startButton"
+            app:srcCompat="@drawable/emptycell" />
 
 </RelativeLayout>
