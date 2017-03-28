@@ -920,12 +920,28 @@ public class LevelActivity extends AppCompatActivity {
                 Bitmap topright = getBitmapFromAssets(color+"/mirrorbeamtopright.png", 40);
 
                 if(currentPos%length == 1) {
-                    nextPos = currentPos + 1;
-                    direction = 'r';
+                    if (level.checkCellForEntity(currentPos - 1) instanceof Collector) {
+                        nextPos = currentPos + 1;
+                        direction = 'r';
+                    } else if (level.checkCellForEntity(currentPos - length) instanceof Collector) {
+                        nextPos = currentPos + length;
+                        direction = 'd';
+                    } else {
+                        nextPos = currentPos - length;
+                        direction = 'u';
+                    }
                 }
                 else if(currentPos%length == length-2) {
-                    nextPos = currentPos - 1;
-                    direction = 'l';
+                    if (level.checkCellForEntity(currentPos + 1) instanceof Collector) {
+                        nextPos = currentPos - 1;
+                        direction = 'l';
+                    } else if (level.checkCellForEntity(currentPos - length) instanceof Collector) {
+                        nextPos = currentPos + length;
+                        direction = 'd';
+                    } else {
+                        nextPos = currentPos - length;
+                        direction = 'u';
+                    }
                 }
                 else if(currentPos < 2*length-1 && currentPos > length) {
                     nextPos = currentPos + length;
@@ -938,31 +954,29 @@ public class LevelActivity extends AppCompatActivity {
 
                 if(level.checkCellForEntity(nextPos) instanceof Mirror) {
                     nextMirror = ((Mirror) level.checkCellForEntity(nextPos));
-                    if(nextMirror.getAngle() == 45){
-                        if(direction == 'u'){
+                    if(nextMirror.getAngle() == 45) {
+                        if (direction == 'u') {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topright = manipulator.rotateImage(topright, 270);
                             topright = manipulator.overlayImages(background, topright);
                             cell = cells.get(nextPos);
                             cell.setImageBitmap(topright);
                             cells.set(nextPos, cell);
-                        }
-                        else if(direction == 'd'){
+                        } else if (direction == 'd') {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topright = manipulator.rotateImage(topright, 90);
                             topright = manipulator.overlayImages(background, topright);
                             cell = cells.get(nextPos);
                             cell.setImageBitmap(topright);
-                            cells.set(nextPos, cell);}
-                        else if(direction == 'l'){
+                            cells.set(nextPos, cell);
+                        } else if (direction == 'l') {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topleft = manipulator.rotateImage(topleft, 180);
                             topleft = manipulator.overlayImages(background, topleft);
                             cell = cells.get(nextPos);
                             cell.setImageBitmap(topleft);
                             cells.set(nextPos, cell);
-                        }
-                        else {
+                        } else {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topleft = manipulator.rotateImage(topleft, 0);
                             topleft = manipulator.overlayImages(background, topleft);
@@ -971,31 +985,29 @@ public class LevelActivity extends AppCompatActivity {
                             cells.set(nextPos, cell);
                         }
                     }
-                    else{
-                        if(direction == 'u'){
+                    else {
+                        if (direction == 'u') {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topleft = manipulator.rotateImage(topleft, 270);
                             topleft = manipulator.overlayImages(background, topleft);
                             cell = cells.get(nextPos);
                             cell.setImageBitmap(topleft);
                             cells.set(nextPos, cell);
-                        }
-                        else if(direction == 'd'){
+                        } else if (direction == 'd') {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topleft = manipulator.rotateImage(topleft, 90);
                             topleft = manipulator.overlayImages(background, topleft);
                             cell = cells.get(nextPos);
                             cell.setImageBitmap(topleft);
-                            cells.set(nextPos, cell);}
-                        else if(direction == 'l'){
+                            cells.set(nextPos, cell);
+                        } else if (direction == 'l') {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topright = manipulator.rotateImage(topright, 180);
                             topright = manipulator.overlayImages(background, topright);
                             cell = cells.get(nextPos);
                             cell.setImageBitmap(topright);
                             cells.set(nextPos, cell);
-                        }
-                        else {
+                        } else {
                             background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                             topright = manipulator.rotateImage(topright, 0);
                             topright = manipulator.overlayImages(background, topright);
@@ -1029,31 +1041,29 @@ public class LevelActivity extends AppCompatActivity {
 
             if(level.checkCellForEntity(nextPos) instanceof Mirror){
                 nextMirror = ((Mirror)level.checkCellForEntity(nextPos));
-                if(nextMirror.getAngle() == 45){
-                    if(direction == 'u'){
+                if(nextMirror.getAngle() == 45) {
+                    if (direction == 'u') {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topright = manipulator.rotateImage(topright, 270);
                         topright = manipulator.overlayImages(background, topright);
                         cell = cells.get(nextPos);
                         cell.setImageBitmap(topright);
                         cells.set(nextPos, cell);
-                    }
-                    else if(direction == 'd'){
+                    } else if (direction == 'd') {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topright = manipulator.rotateImage(topright, 90);
                         topright = manipulator.overlayImages(background, topright);
                         cell = cells.get(nextPos);
                         cell.setImageBitmap(topright);
-                        cells.set(nextPos, cell);}
-                    else if(direction == 'l'){
+                        cells.set(nextPos, cell);
+                    } else if (direction == 'l') {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topleft = manipulator.rotateImage(topleft, 180);
                         topleft = manipulator.overlayImages(background, topleft);
                         cell = cells.get(nextPos);
                         cell.setImageBitmap(topleft);
                         cells.set(nextPos, cell);
-                    }
-                    else {
+                    } else {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topleft = manipulator.rotateImage(topleft, 0);
                         topleft = manipulator.overlayImages(background, topleft);
@@ -1062,31 +1072,29 @@ public class LevelActivity extends AppCompatActivity {
                         cells.set(nextPos, cell);
                     }
                 }
-                else{
-                    if(direction == 'u'){
+                else {
+                    if (direction == 'u') {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topleft = manipulator.rotateImage(topleft, 270);
                         topleft = manipulator.overlayImages(background, topleft);
                         cell = cells.get(nextPos);
                         cell.setImageBitmap(topleft);
                         cells.set(nextPos, cell);
-                    }
-                    else if(direction == 'd'){
+                    } else if (direction == 'd') {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topleft = manipulator.rotateImage(topleft, 90);
                         topleft = manipulator.overlayImages(background, topleft);
                         cell = cells.get(nextPos);
                         cell.setImageBitmap(topleft);
-                        cells.set(nextPos, cell);}
-                    else if(direction == 'l'){
+                        cells.set(nextPos, cell);
+                    } else if (direction == 'l') {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topright = manipulator.rotateImage(topright, 180);
                         topright = manipulator.overlayImages(background, topright);
                         cell = cells.get(nextPos);
                         cell.setImageBitmap(topright);
                         cells.set(nextPos, cell);
-                    }
-                    else {
+                    } else {
                         background = ((BitmapDrawable) cells.get(nextPos).getDrawable()).getBitmap();
                         topright = manipulator.rotateImage(topright, 0);
                         topright = manipulator.overlayImages(background, topright);
