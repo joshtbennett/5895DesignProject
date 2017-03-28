@@ -283,7 +283,8 @@ public class EntityHandler {
                 return "white";
             else
                 return color2;
-        } else if (color1.equals("green")) {
+        }
+        else if (color1.equals("green")) {
             if (color2.equals("red"))
                 return "yellow";
             else if (color2.equals("blue"))
@@ -292,7 +293,8 @@ public class EntityHandler {
                 return "white";
             else
                 return color2;
-        } else if (color1.equals("blue")) {
+        }
+        else if (color1.equals("blue")) {
             if (color2.equals("green"))
                 return "cyan";
             else if (color2.equals("red"))
@@ -301,22 +303,26 @@ public class EntityHandler {
                 return "white";
             else
                 return color2;
-        } else if (color1.equals("cyan")) {
-            if (color2.equals("green") || color2.equals("blue") || color2.equals("cyan"))
+        }
+        else if (color1.equals("cyan")) {
+            if (color2.equals("cyan") || color2.equals("blue") || color2.equals("green"))
                 return "cyan";
             else
                 return "white";
-        } else if (color1.equals("yellow")) {
+        }
+        else if (color1.equals("yellow")) {
             if (color2.equals("yellow") || color2.equals("red") || color2.equals("green"))
                 return "yellow";
             else
                 return "white";
-        } else if (color1.equals("magenta")) {
-            if (color2.equals("magenta") || color2.equals("blue") || color2.equals("red")) {
+        }
+        else if (color1.equals("magenta")) {
+            if (color2.equals("magenta") || color2.equals("blue") || color2.equals("red"))
                 return "magenta";
-            }else
+            else
                 return "white";
-        } else
+        }
+        else
             return "white";
     }
 }
