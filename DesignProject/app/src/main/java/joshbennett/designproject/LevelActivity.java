@@ -39,6 +39,7 @@ public class LevelActivity extends AppCompatActivity {
     private ArrayList<LevelEntity> entities;
     private ImageView colorWheel;
     private ImageView indicator;
+    private ImageView mirrorPreview;
     private ToggleButton deleteButton;
     private ToggleButton placeButton;
     private ToggleButton flipButton;
@@ -61,15 +62,17 @@ public class LevelActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_level);
 
-        deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
+        /* deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
         placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
-        flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle);
+        flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle); */
         startButton = (Button)findViewById(R.id.startButton);
         indicator = (ImageView)findViewById(R.id.indicator);
 
         level = levelFactory.generateLevel();
         length = level.getSideLength();
         entities = level.getEntities();
+
+
 
         TextView levelnumber = (TextView) findViewById(R.id.levelnumber);
         levelnumber.setText(Integer.toString(level.levelNum));
@@ -127,6 +130,7 @@ public class LevelActivity extends AppCompatActivity {
                 }
                 Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
                 indicator.setImageBitmap(indicatorRing);
+                updateMirrorPreview();
                 return true;
             }
         });
@@ -136,8 +140,27 @@ public class LevelActivity extends AppCompatActivity {
         Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
         indicator.setImageBitmap(indicatorRing);
 
+        mirrorPreview = (ImageView)findViewById(R.id.mirrorPreview);
+        mirrorPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                level.mirrorIsTLBR = !level.mirrorIsTLBR;
+                updateMirrorPreview();
+            }
+        });
+
+        updateMirrorPreview();
+
         if(level instanceof TutorialLevel)
             displayTextBox();
+    }
+
+    private void updateMirrorPreview() {
+        Bitmap mirrorToDraw = getBitmapFromAssets(color+"/45mirror.png", 150);
+        if (!level.mirrorIsTLBR) {
+            mirrorToDraw = manipulator.rotateImage(mirrorToDraw, 90);
+        }
+        mirrorPreview.setImageBitmap(mirrorToDraw);
     }
 
     /*
@@ -455,7 +478,7 @@ public class LevelActivity extends AppCompatActivity {
 
                 //touched cell containing mirror
                 if(mirrorCheck){
-                    if(placeButton.isChecked()){
+                    /*if(placeButton.isChecked()){
                         //replace current mirror
                         Bitmap newimage = getBitmapFromAssets(color + "/45mirror.png", 40);
                         ImageView cell = cells.get(position);
@@ -467,13 +490,13 @@ public class LevelActivity extends AppCompatActivity {
                         entityHandler.removeMirror(level, position);
                         //add new mirror
                         entityHandler.addMirror(level, mirror);
-                    }
-                    else if(deleteButton.isChecked()){
+                    }*/
+                   // else if(deleteButton.isChecked()){
                         //delete current mirror
                         Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
                         clickableimage.setImageBitmap(emptycell);
                         entityHandler.removeMirror(level, position);
-                    }
+                   /* }
                     else{
                         //flip current mirror
                         Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
@@ -493,21 +516,27 @@ public class LevelActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                    }
+                    } */
                 }
 
                 //touched empty cell
                 else if(!wallCheck && !entityCheck && !mirrorCheck){
-                    if(placeButton.isChecked()){
+                  //  if(placeButton.isChecked()){
                         //place a new mirror
-                        Bitmap newimage = getBitmapFromAssets(color + "/45mirror.png", 40);
+                        Bitmap newimage = getBitmapFromAssets(color+"/45mirror.png", 40);
+                        if (!level.mirrorIsTLBR) {
+                            newimage = manipulator.rotateImage(newimage, 90);
+                        }
                         ImageView cell = cells.get(position);
                         cell.setImageBitmap(newimage);
                         cells.set(position, cell);
 
                         Mirror mirror = new Mirror(color, position);
                         entityHandler.addMirror(level, mirror);
-                    }
+                        if (!level.mirrorIsTLBR) {
+                            entityHandler.flipMirror(level, position);
+                        }
+               //     }
                 }
             }
         });

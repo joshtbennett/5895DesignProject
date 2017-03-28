@@ -16,6 +16,7 @@ public class Level
     public boolean isRunning = false;
     public int levelNum;
     public boolean nextLevelExists;
+    public boolean mirrorIsTLBR = true;
 
     public Level(ArrayList<LevelEntity> entities,  int sideLength, int par){
         this.sideLength = sideLength;
