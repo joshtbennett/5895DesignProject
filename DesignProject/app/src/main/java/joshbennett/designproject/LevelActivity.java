@@ -626,6 +626,7 @@ public class LevelActivity extends AppCompatActivity {
             });
             drawLevel();
             color = "white";
+            updateMirrorPreview();
             Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
             indicator.setImageBitmap(indicatorRing);
             }
