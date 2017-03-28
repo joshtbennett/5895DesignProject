@@ -40,9 +40,6 @@ public class LevelActivity extends AppCompatActivity {
     private ImageView colorWheel;
     private ImageView indicator;
     private ImageView mirrorPreview;
-    private ToggleButton deleteButton;
-    private ToggleButton placeButton;
-    private ToggleButton flipButton;
     private Button startButton;
     private PopupWindow endwindow;
     private int length;
@@ -62,9 +59,6 @@ public class LevelActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_level);
 
-        /* deleteButton = (ToggleButton) findViewById(R.id.DeleteMirrorToggle);
-        placeButton = (ToggleButton) findViewById(R.id.PlaceMirrorToggle);
-        flipButton = (ToggleButton) findViewById(R.id.FlipMirrorToggle); */
         startButton = (Button)findViewById(R.id.startButton);
         indicator = (ImageView)findViewById(R.id.indicator);
 
@@ -82,15 +76,14 @@ public class LevelActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (level.isRunning) {
+                if (level.isRunning)
                     return false;
-                }
                 double xp, yp;
                 //center of the circle
                 double xc = v.getHeight()/2;
                 double yc = v.getWidth()/2;
 
-                if (event.getAction() == MotionEvent.ACTION_UP){
+                if (event.getAction() == MotionEvent.ACTION_MOVE){
                     xp = event.getX();
                     yp = event.getY();
 
@@ -144,6 +137,8 @@ public class LevelActivity extends AppCompatActivity {
         mirrorPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (level.isRunning)
+                    return;
                 level.mirrorIsTLBR = !level.mirrorIsTLBR;
                 updateMirrorPreview();
             }
@@ -179,39 +174,6 @@ public class LevelActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /*
-    * Untoggles the place and flip buttons as well as toggling the delete button
-    * */
-    public void DeleteButton(View v){
-        if(placeButton.isChecked())
-            placeButton.setChecked(false);
-        if(flipButton.isChecked())
-            flipButton.setChecked(false);
-        deleteButton.setChecked(true);
-    }
-
-    /*
-    * Untoggles the delete and flip buttons as well as toggling the place button
-    * */
-    public void PlaceButton(View v){
-        if(deleteButton.isChecked())
-            deleteButton.setChecked(false);
-        if(flipButton.isChecked())
-            flipButton.setChecked(false);
-        placeButton.setChecked(true);
-    }
-
-    /*
-    * Untoggles the place and delete buttons as well as toggling the flip button
-    * */
-    public void FlipButton(View v){
-        if(deleteButton.isChecked())
-            deleteButton.setChecked(false);
-        if(placeButton.isChecked())
-            placeButton.setChecked(false);
-        flipButton.setChecked(true);
     }
 
     /*
@@ -478,65 +440,27 @@ public class LevelActivity extends AppCompatActivity {
 
                 //touched cell containing mirror
                 if(mirrorCheck){
-                    /*if(placeButton.isChecked()){
-                        //replace current mirror
-                        Bitmap newimage = getBitmapFromAssets(color + "/45mirror.png", 40);
-                        ImageView cell = cells.get(position);
-                        cell.setImageBitmap(newimage);
-                        cells.set(position, cell);
-
-                        Mirror mirror = new Mirror(color, position);
-                        //remove current mirror
-                        entityHandler.removeMirror(level, position);
-                        //add new mirror
-                        entityHandler.addMirror(level, mirror);
-                    }*/
-                   // else if(deleteButton.isChecked()){
-                        //delete current mirror
-                        Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
-                        clickableimage.setImageBitmap(emptycell);
-                        entityHandler.removeMirror(level, position);
-                   /* }
-                    else{
-                        //flip current mirror
-                        Bitmap current = ((BitmapDrawable) clickableimage.getDrawable()).getBitmap();
-                        current = manipulator.rotateImage(current, 90);
-                        clickableimage.setImageBitmap(current);
-
-                        for(int i = 0; i < entities.size(); i++)
-                        {
-                            if(entities.get(i).getPosition() == position && entities.get(i) instanceof Mirror){
-                                if(((Mirror)entities.get(i)).getAngle() == 45){
-                                    Mirror temp = ((Mirror)entities.get(i));
-                                    entityHandler.flipMirror(level, position);
-                                }
-                                else if(((Mirror)entities.get(i)).getAngle() == 135){
-                                    Mirror temp = ((Mirror)entities.get(i));
-                                    entityHandler.flipMirror(level, position);
-                                }
-                            }
-                        }
-                    } */
+                    Bitmap emptycell = getBitmapFromAssets("emptycell.png", 40);
+                    clickableimage.setImageBitmap(emptycell);
+                    entityHandler.removeMirror(level, position);
                 }
 
                 //touched empty cell
                 else if(!wallCheck && !entityCheck && !mirrorCheck){
-                  //  if(placeButton.isChecked()){
-                        //place a new mirror
-                        Bitmap newimage = getBitmapFromAssets(color+"/45mirror.png", 40);
-                        if (!level.mirrorIsTLBR) {
-                            newimage = manipulator.rotateImage(newimage, 90);
-                        }
-                        ImageView cell = cells.get(position);
-                        cell.setImageBitmap(newimage);
-                        cells.set(position, cell);
+                    //place a new mirror
+                    Bitmap newimage = getBitmapFromAssets(color+"/45mirror.png", 40);
+                    if (!level.mirrorIsTLBR) {
+                        newimage = manipulator.rotateImage(newimage, 90);
+                    }
+                    ImageView cell = cells.get(position);
+                    cell.setImageBitmap(newimage);
+                    cells.set(position, cell);
 
-                        Mirror mirror = new Mirror(color, position);
-                        entityHandler.addMirror(level, mirror);
-                        if (!level.mirrorIsTLBR) {
-                            entityHandler.flipMirror(level, position);
-                        }
-               //     }
+                    Mirror mirror = new Mirror(color, position);
+                    entityHandler.addMirror(level, mirror);
+                    if (!level.mirrorIsTLBR) {
+                        entityHandler.flipMirror(level, position);
+                    }
                 }
             }
         });
@@ -767,7 +691,7 @@ public class LevelActivity extends AppCompatActivity {
         endscreen.addView(starlayout, starParams);
         endscreen.addView(buttonslayout, buttonParams);
 
-        endwindow = new PopupWindow(endscreen, 900, 430);
+        endwindow = new PopupWindow(endscreen, RelativeLayout.LayoutParams.WRAP_CONTENT, 430);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -993,7 +917,6 @@ public class LevelActivity extends AppCompatActivity {
         }
     }
 
-
     /*
     * Displays a tutorial Text box on the screen above the game board
     * */
@@ -1016,7 +939,7 @@ public class LevelActivity extends AppCompatActivity {
 
         int width = manipulator.dpToPx(400);
 
-        endwindow = new PopupWindow(tutorialbox, width, 600);
+        endwindow = new PopupWindow(tutorialbox, width, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
