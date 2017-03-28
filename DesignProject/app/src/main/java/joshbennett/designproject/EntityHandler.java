@@ -187,7 +187,7 @@ public class EntityHandler {
     /*
     * Calculates the new direction a beam will go based on the current direction and the angle of the mirror
     * */
-    public char reflect(char direction, int angle){
+    private char reflect(char direction, int angle){
         char newDirection;
         if (angle == 135) {
             if (direction == 'u') {

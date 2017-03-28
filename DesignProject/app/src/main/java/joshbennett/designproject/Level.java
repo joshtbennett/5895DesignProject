@@ -9,7 +9,7 @@ import java.util.Collections;
 
 public class Level
 {
-    ArrayList<LevelEntity> entities;
+    private ArrayList<LevelEntity> entities;
     private ArrayList<Beam> beams;
     private int sideLength;
     public int par;
@@ -28,7 +28,7 @@ public class Level
     /*
     *   Compares the number of Mirrors used by the player to the predetermined par for the level to determine a score from 1 to 3 stars
     * */
-    int calculateScore(){
+    public int calculateScore(){
         int idealScore = par;
         int playerScore = 0;
 

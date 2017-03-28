@@ -12,14 +12,13 @@ import java.util.ArrayList;
 
 public class LevelFactory {
 
-    ArrayList<LevelEntity> entities = new ArrayList<>();
-    ArrayList<Wall> walls = new ArrayList<>();
-    TextBox textBox;
-    int sideLength;
-    int levelNum;
-    int par;
-    boolean tableHasNextLevel;
-    boolean isTutorial;
+    private ArrayList<LevelEntity> entities = new ArrayList<>();
+    private TextBox textBox;
+    private int sideLength;
+    private int levelNum;
+    private int par;
+    private boolean tableHasNextLevel;
+    private boolean isTutorial;
 
     /*
     * Takes info from the database to be used to create the level for the user
@@ -36,20 +35,6 @@ public class LevelFactory {
             db = mDbHelper.getReadableDatabase();
             entry = new LevelDatabaseEntry(levelNum, isTutorial);
 
-            /*String[] projection = {
-                    entry.COLUMN_ENTITY_TYPE,
-                    entry.COLUMN_ENTITY_X,
-                    entry.COLUMN_ENTITY_Y,
-                    entry.COLUMN_ENTITY_COLOR,
-                    entry.COLUMN_ENTITY_PAR
-            };
-
-            String selection = entry.COLUMN_ENTITY_TYPE + " = ?";
-            String[] selectionArgs = { "*" };
-
-            String sortOrder =
-                    entry.COLUMN_ENTITY_TYPE + " DESC";
-            */
             cursor = db.rawQuery("select * from " + entry.TABLE_NAME + " where " + entry.COLUMN_ENTITY_TYPE + "='data'", null);
             if (cursor.moveToFirst()) {
                 sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
@@ -93,10 +78,6 @@ public class LevelFactory {
                     case "message":
                         textBox = new TextBox(cursor.getString((cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_MESSAGE))));
                         break;
-                    /*case "data":
-                        sideLength = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_X));
-                        par = cursor.getInt(cursor.getColumnIndexOrThrow(entry.COLUMN_ENTITY_PAR));
-                        break; */
                     default:
                 }
 
@@ -106,33 +87,6 @@ public class LevelFactory {
             e.getCause();
         }
         cursor.close();
-
-        // DATABASE WRITING CODE, KEEP FOR LATER
-        //if (db.rawQuery("SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?", new String[] {"table", entry.TABLE_NAME}) == 0)
-
-        /* mDbHelper.createTableIfNotExist(db, entry.TABLE_NAME);
-
-
-
-        ContentValues values = new ContentValues();
-        values.put(entry.COLUMN_ENTITY_X, 6);
-        values.put(entry.COLUMN_ENTITY_Y, 6);
-        values.put(entry.COLUMN_ENTITY_COLOR, "blue");
-        values.put(entry.COLUMN_ENTITY_ANGLE, 0);
-        values.put(entry.COLUMN_ENTITY_TYPE, "mirror"); */
-
-
-        /* LevelDatabaseEntry entry = new LevelDatabaseEntry(levelNum);
-        String SQL_CREATE_ENTRIES =
-                "CREATE TABLE " + entry.TABLE_NAME + " (" +
-                        entry.COLUMN_ENTITY_ANGLE + " INTEGER," +
-                        entry.COLUMN_ENTITY_COLOR + " TEXT," +
-                        entry.COLUMN_ENTITY_TYPE + " TEXT," +
-                        entry.COLUMN_ENTITY_X + " INTEGER," +
-                        entry.COLUMN_ENTITY_Y + " INTEGER," +
-                        entry.COLUMN_LEVEL_SIZE + " INTEGER)";
-
-        db.execSQL(SQL_CREATE_ENTRIES); */
     }
 
     /*

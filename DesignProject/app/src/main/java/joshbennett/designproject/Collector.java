@@ -34,14 +34,14 @@ public class Collector implements LevelEntity, ColorableEntity{
     /*
     * Sets the status of the collector
     * */
-    public void setReceived(boolean received) {
+    void setReceived(boolean received) {
         collected = received;
     }
 
     /*
     * Returns the status of the collector
     * */
-    public boolean getReceived(){
+    boolean getReceived(){
         return collected;
     }
 }

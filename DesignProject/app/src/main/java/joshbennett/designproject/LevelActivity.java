@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,8 +65,6 @@ public class LevelActivity extends AppCompatActivity {
         length = level.getSideLength();
         entities = level.getEntities();
 
-
-
         TextView levelnumber = (TextView) findViewById(R.id.levelnumber);
         levelnumber.setText(Integer.toString(level.levelNum));
 
@@ -92,36 +89,34 @@ public class LevelActivity extends AppCompatActivity {
 
                     if(Math.sqrt(((xc-xp)*(xc-xp)) + ((yp-yc)*(yp-yc))) < v.getHeight()/4)
                         color = "white";
-                    else if(xp > xc){
-                        if(yp < yc){
-                            if(angle > 0.523599)
+                    else if(xp > xc) {
+                        if (yp < yc) {
+                            if (angle > 0.523599)
                                 color = "red";
                             else
                                 color = "yellow";
-                        }
-                        else{
-                            if(angle > 0.523599)
+                        } else {
+                            if (angle > 0.523599)
                                 color = "green";
                             else
                                 color = "yellow";
                         }
                     }
-                    else if(xp < xc){
-                        if(yp < yc){
-                            if(angle > 0.523599)
+                    else if(xp < xc) {
+                        if (yp < yc) {
+                            if (angle > 0.523599)
                                 color = "magenta";
                             else
                                 color = "blue";
-                        }
-                        else{
-                            if(angle > 0.523599)
+                        } else {
+                            if (angle > 0.523599)
                                 color = "cyan";
                             else
                                 color = "blue";
                         }
                     }
                 }
-                Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
+                Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", manipulator.dpToPx(150));
                 indicator.setImageBitmap(indicatorRing);
                 updateMirrorPreview();
                 return true;
@@ -130,7 +125,7 @@ public class LevelActivity extends AppCompatActivity {
 
         drawLevel();
         color = "white";
-        Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
+        Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", manipulator.dpToPx(150));
         indicator.setImageBitmap(indicatorRing);
 
         mirrorPreview = (ImageView)findViewById(R.id.mirrorPreview);

@@ -31,7 +31,7 @@ public class Beam implements ColorableEntity{
     /*
     * Returns the direction that the beam is currently travelling
     * */
-    public char getDirection(){ return direction; }
+    char getDirection(){ return direction; }
 
     /*
     * sets the color of the beam to the color passed in to the method
@@ -41,7 +41,7 @@ public class Beam implements ColorableEntity{
     /*
     * returns the opposite direction of the one given to the method
     * */
-    public char getOppositeDirection(){
+    char getOppositeDirection(){
         if(direction == 'u')
             return 'd';
         if(direction == 'd')
