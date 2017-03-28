@@ -662,34 +662,24 @@ public class LevelActivity extends AppCompatActivity {
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < entities.size(); i++){
-                    if(entities.get(i) instanceof Collector) {
-                        ((Collector)entities.get(i)).setReceived(false);
-                    }
+            level.getBeams().clear();
+            for (LevelEntity i : level.getEntities())
+                if (i instanceof Collector)
+                    ((Collector)i).setReceived(false);
+            level.removeMirrors();
+            startButton.setEnabled(true);
+            endwindow.dismiss();
+            level.isRunning = false;
+            startButton.setText("Start");
+            startButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    start(v);
                 }
-                level.getBeams().clear();
-                for(int i = 0; i < level.getEntities().size(); i++){
-                    if(level.getEntities().get(i) instanceof Mirror)
-                        level.getEntities().remove(i);
-                }
-                for (LevelEntity i : level.getEntities()) {
-                    if (i instanceof Collector) {
-                        ((Collector)i).setReceived(false);
-                    }
-                }
-                startButton.setEnabled(true);
-                endwindow.dismiss();
-                level.isRunning = false;
-                startButton.setText("Start");
-                startButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        start(v);
-                    }
-                });
-                drawLevel();
-                color = "white";
-                Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
-                indicator.setImageBitmap(indicatorRing);
+            });
+            drawLevel();
+            color = "white";
+            Bitmap indicatorRing = getBitmapFromAssets(color+"/indicator.png", 150);
+            indicator.setImageBitmap(indicatorRing);
             }
         });
 
@@ -1025,6 +1015,11 @@ public class LevelActivity extends AppCompatActivity {
             char direction = level.getBeams().get(i).getDirection();
             int currentPos = level.getBeams().get(i).getPosition();
             String color = level.getBeams().get(i).getColor();
+            ArrayList<Beam> beamlist = level.checkCellForBeam(currentPos);
+
+            for (int k = 0; k < beamlist.size(); k++) {
+                color = entityHandler.combineColors(color, beamlist.get(k).getColor());
+            }
 
             Mirror nextMirror;
             Bitmap topleft = getBitmapFromAssets(color+"/mirrorbeamtopleft.png", 40);

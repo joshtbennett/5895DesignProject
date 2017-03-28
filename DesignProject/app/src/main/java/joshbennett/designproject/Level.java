@@ -1,6 +1,7 @@
 package joshbennett.designproject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Josh Bennett on 2/1/2017.
@@ -104,6 +105,12 @@ public class Level
             }
         }
         return beamlist;
+    }
+
+    public void removeMirrors() {
+        for(int i = entities.size()-1; i > 0; i--)
+            if(entities.get(i) instanceof Mirror)
+                entities.remove(i);
     }
 
 }

@@ -229,7 +229,6 @@ public class EntityHandler {
                 return true;
             else
                 return false;
-
         }
 
         //magenta is a combination of red and blue
@@ -272,20 +271,19 @@ public class EntityHandler {
     /*
     * Combines the 2 colors passed in
     * */
-    String combineColors(String color1, String color2){
-        if(color1.equals(color2))
+    String combineColors(String color1, String color2) {
+        if (color1.equals(color2))
             return color1;
-        if(color1.equals("red")){
-            if(color2.equals("green"))
+        if (color1.equals("red")) {
+            if (color2.equals("green"))
                 return "yellow";
-            else if(color2.equals("blue"))
+            else if (color2.equals("blue"))
                 return "magenta";
-            else if(color2.equals("cyan"))
+            else if (color2.equals("cyan"))
                 return "white";
             else
                 return color2;
-        }
-        else if(color1.equals("green")) {
+        } else if (color1.equals("green")) {
             if (color2.equals("red"))
                 return "yellow";
             else if (color2.equals("blue"))
@@ -294,8 +292,7 @@ public class EntityHandler {
                 return "white";
             else
                 return color2;
-        }
-        else if(color1.equals("blue")) {
+        } else if (color1.equals("blue")) {
             if (color2.equals("green"))
                 return "cyan";
             else if (color2.equals("red"))
@@ -304,28 +301,22 @@ public class EntityHandler {
                 return "white";
             else
                 return color2;
-        }
-        else if(color1.equals("cyan")){
-            if(color2.equals("cyan") || color2.equals("blue") || color2.equals("cyan"))
+        } else if (color1.equals("cyan")) {
+            if (color2.equals("green") || color2.equals("blue") || color2.equals("cyan"))
                 return "cyan";
             else
                 return "white";
-        }
-
-        else if(color1.equals("yellow")){
-            if(color2.equals("yellow") || color2.equals("red") || color2.equals("green"))
-                return "cyan";
+        } else if (color1.equals("yellow")) {
+            if (color2.equals("yellow") || color2.equals("red") || color2.equals("green"))
+                return "yellow";
             else
                 return "white";
-        }
-
-        else if(color1.equals("magenta")){
-            if(color2.equals("magenta") || color2.equals("blue") || color2.equals("red"))
-                return "cyan";
-            else
+        } else if (color1.equals("magenta")) {
+            if (color2.equals("magenta") || color2.equals("blue") || color2.equals("red")) {
+                return "magenta";
+            }else
                 return "white";
-        }
-        else
+        } else
             return "white";
     }
 }
