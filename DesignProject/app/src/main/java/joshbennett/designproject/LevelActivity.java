@@ -953,6 +953,7 @@ public class LevelActivity extends AppCompatActivity {
         }, 0);
     }
 
+
     public void placenearbeam(int nextPos, Bitmap topright, Bitmap topleft, char direction){
 
 

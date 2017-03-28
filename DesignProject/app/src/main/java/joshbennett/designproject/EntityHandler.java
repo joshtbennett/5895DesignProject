@@ -113,8 +113,30 @@ public class EntityHandler {
         if (entity != null) {
             if (entity instanceof Collector) {
                 if (((ColorableEntity) entity).getColor().equals(beam.getColor())) {
-                    ((Collector) entity).setReceived(true);
-                    return;
+                    if(length < newposition && newposition < 2*length-1) {
+                        if(level.checkCellForEntity(newposition-length) instanceof Collector && currentDirection == 'u') {
+                            ((Collector) entity).setReceived(true);
+                            return;
+                        }
+                    }
+                    if(newposition%length == 1){
+                        if(level.checkCellForEntity(newposition-1) instanceof Collector && currentDirection == 'l') {
+                            ((Collector) entity).setReceived(true);
+                            return;
+                        }
+                    }
+                    if(newposition%length == length-2){
+                        if(level.checkCellForEntity(newposition+1) instanceof Collector && currentDirection == 'r') {
+                            ((Collector) entity).setReceived(true);
+                            return;
+                        }
+                    }
+                    if((length*length)-(2*length) < newposition && newposition < (length*length)-length-1){
+                        if(level.checkCellForEntity(newposition+length) instanceof Collector && currentDirection == 'd') {
+                            ((Collector) entity).setReceived(true);
+                            return;
+                        }
+                    }
                 } else {
                     ((Collector) entity).setReceived(false);
                     return;
