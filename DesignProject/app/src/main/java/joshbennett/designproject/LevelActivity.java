@@ -80,7 +80,7 @@ public class LevelActivity extends AppCompatActivity {
                 double xc = v.getHeight()/2;
                 double yc = v.getWidth()/2;
 
-                if (event.getAction() == MotionEvent.ACTION_MOVE){
+                if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN){
                     xp = event.getX();
                     yp = event.getY();
 
