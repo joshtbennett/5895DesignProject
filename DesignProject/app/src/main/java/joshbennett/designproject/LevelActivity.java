@@ -698,7 +698,7 @@ public class LevelActivity extends AppCompatActivity {
                 endwindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
             }
 
-        }, 1000);
+        }, 2000);   //was 1000, increased delay for demo purposes
     }
 
     /*
